@@ -37,7 +37,7 @@ const OwnerBookings = () => {
     try {
       const res = await api.patch(`/bookings/${bookingId}/confirm`);
       const autoRejected = res.data.autoRejectedCount || 0;
-      let msg = 'Booking confirmed successfully!';
+      let msg = 'Booking approved! Status is now Awaiting Payment from renter.';
       if (autoRejected > 0) {
         msg += ` ${autoRejected} overlapping pending booking(s) were automatically rejected.`;
       }
@@ -151,13 +151,20 @@ const OwnerBookings = () => {
     return new Date(endDate) <= new Date();
   };
 
+  const formatStatusLabel = (status) => {
+    if (status === 'awaiting_payment') return 'AWAITING PAYMENT';
+    return status.toUpperCase();
+  };
+
   const filteredBookings = bookings.filter((b) => {
     if (statusFilter === 'all') return true;
     return b.status === statusFilter;
   });
 
   const pendingCount = bookings.filter((b) => b.status === 'pending').length;
+  const awaitingCount = bookings.filter((b) => b.status === 'awaiting_payment').length;
   const confirmedCount = bookings.filter((b) => b.status === 'confirmed').length;
+  const completedCount = bookings.filter((b) => b.status === 'completed').length;
 
   if (loading) {
     return (
@@ -175,7 +182,7 @@ const OwnerBookings = () => {
         <div>
           <h1 className="page-title">Equipment Booking Requests</h1>
           <p className="page-subtitle">
-            Manage incoming rental reservations, approvals, and completions for your machinery
+            Manage incoming rental reservations, approvals, payments, and completions
           </p>
         </div>
         <Link to="/my-listings" className="btn-secondary">
@@ -214,6 +221,12 @@ const OwnerBookings = () => {
           Pending Action ({pendingCount})
         </button>
         <button
+          className={`filter-chip ${statusFilter === 'awaiting_payment' ? 'filter-active' : ''}`}
+          onClick={() => setStatusFilter('awaiting_payment')}
+        >
+          Awaiting Payment ({awaitingCount})
+        </button>
+        <button
           className={`filter-chip ${statusFilter === 'confirmed' ? 'filter-active' : ''}`}
           onClick={() => setStatusFilter('confirmed')}
         >
@@ -223,7 +236,7 @@ const OwnerBookings = () => {
           className={`filter-chip ${statusFilter === 'completed' ? 'filter-active' : ''}`}
           onClick={() => setStatusFilter('completed')}
         >
-          Completed
+          Completed ({completedCount})
         </button>
       </div>
 
@@ -248,9 +261,10 @@ const OwnerBookings = () => {
                 : null;
             const days = calculateDays(booking.startDate, booking.endDate);
             const isPending = booking.status === 'pending';
+            const isAwaitingPayment = booking.status === 'awaiting_payment';
             const isConfirmed = booking.status === 'confirmed';
             const canComplete = isConfirmed && hasEndDatePassed(booking.endDate);
-            const canCancel = isPending || isConfirmed;
+            const canCancel = isPending || isAwaitingPayment || isConfirmed;
 
             return (
               <div key={booking._id} className="booking-card-item">
@@ -271,9 +285,14 @@ const OwnerBookings = () => {
                     <span className="detail-type-pill">
                       {equip.type ? equip.type.toUpperCase() : 'EQUIPMENT'}
                     </span>
-                    <span className={`status-badge status-${booking.status}`}>
-                      {booking.status.toUpperCase()}
-                    </span>
+                    <div className="status-badges-cluster">
+                      <span className={`status-badge status-${booking.status}`}>
+                        {formatStatusLabel(booking.status)}
+                      </span>
+                      {booking.paymentStatus === 'paid' && (
+                        <span className="payment-paid-badge">PAID ✅</span>
+                      )}
+                    </div>
                   </div>
 
                   <h3 className="booking-equip-title">
@@ -321,6 +340,21 @@ const OwnerBookings = () => {
                     </div>
                   </div>
 
+                  {/* Awaiting Payment Notice for Owner */}
+                  {isAwaitingPayment && (
+                    <div className="owner-payment-notice">
+                      <span className="owner-notice-icon">⏳</span>
+                      <div>
+                        <strong>Awaiting Renter Payment:</strong>
+                        <p>
+                          You approved this booking. The renter must complete online payment
+                          before equipment handover. Do not release equipment until status changes
+                          to CONFIRMED.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Actions Bar */}
                   <div className="booking-footer-actions">
                     {isPending && (
@@ -330,7 +364,7 @@ const OwnerBookings = () => {
                           disabled={actionLoading === booking._id}
                           className="btn-confirm-action"
                         >
-                          {actionLoading === booking._id ? 'Confirming...' : '✓ Confirm Booking'}
+                          {actionLoading === booking._id ? 'Approving...' : '✓ Approve Request'}
                         </button>
                         <button
                           onClick={() => handleReject(booking._id)}
@@ -354,7 +388,7 @@ const OwnerBookings = () => {
 
                     {isConfirmed && !canComplete && (
                       <span className="booking-confirmed-hint">
-                        ⏳ Rental in progress or upcoming. Can be marked completed after {formatDate(booking.endDate)}.
+                        ✅ Payment received. Machinery ready for rental handover. Can be marked completed after {formatDate(booking.endDate)}.
                       </span>
                     )}
 

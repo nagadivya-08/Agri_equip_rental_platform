@@ -69,7 +69,7 @@ const createBooking = async (req, res) => {
     // Overlap logic: (existingStart <= requestedEnd) AND (existingEnd >= requestedStart)
     const existingConflict = await Booking.findOne({
       equipmentId,
-      status: { $in: ['pending', 'confirmed'] },
+      status: { $in: ['pending', 'awaiting_payment', 'confirmed'] },
       startDate: { $lte: requestedEnd },
       endDate: { $gte: requestedStart },
     });
@@ -213,7 +213,7 @@ const confirmBooking = async (req, res) => {
       }
     );
 
-    booking.status = 'confirmed';
+    booking.status = 'awaiting_payment';
     await booking.save();
 
     const populatedBooking = await Booking.findById(booking._id)
@@ -222,7 +222,7 @@ const confirmBooking = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: `Booking confirmed successfully. ${autoRejectResult.modifiedCount} overlapping pending booking(s) were automatically rejected.`,
+      message: `Booking approved by owner. Status is now awaiting payment from renter. ${autoRejectResult.modifiedCount} overlapping pending booking(s) were automatically rejected.`,
       autoRejectedCount: autoRejectResult.modifiedCount,
       data: populatedBooking,
     });
@@ -304,7 +304,7 @@ const cancelBooking = async (req, res) => {
       });
     }
 
-    if (!['pending', 'confirmed'].includes(booking.status)) {
+    if (!['pending', 'awaiting_payment', 'confirmed'].includes(booking.status)) {
       return res.status(400).json({
         success: false,
         message: `Cannot cancel a booking that is already '${booking.status}'`,

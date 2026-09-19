@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 
 const MyBookings = () => {
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,6 +31,103 @@ const MyBookings = () => {
   useEffect(() => {
     fetchBookings();
   }, []);
+
+  const handlePayNow = async (booking) => {
+    if (!window.Razorpay) {
+      setActionMessage({
+        type: 'error',
+        text: 'Razorpay checkout SDK could not be loaded. Please check your internet connection.',
+      });
+      return;
+    }
+
+    setActionLoading(booking._id);
+    setActionMessage(null);
+
+    try {
+      // 1. Create Razorpay order on backend
+      const res = await api.post('/payments/create-order', {
+        bookingId: booking._id,
+      });
+
+      const { orderId, amount, currency, keyId } = res.data;
+
+      // 2. Open Razorpay Checkout modal
+      const options = {
+        key: keyId,
+        amount: amount,
+        currency: currency,
+        name: 'Agri-Equipment Rental Platform',
+        description: `Rental payment for ${booking.equipmentId?.name || 'Equipment'}`,
+        order_id: orderId,
+        handler: async function (response) {
+          setActionLoading(booking._id);
+          try {
+            // 3. Verify signature on backend
+            const verifyRes = await api.post('/payments/verify', {
+              bookingId: booking._id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            setActionMessage({
+              type: 'success',
+              text:
+                verifyRes.data.message ||
+                'Payment successful! Your equipment booking is now confirmed.',
+            });
+            fetchBookings();
+          } catch (verifyErr) {
+            setActionMessage({
+              type: 'error',
+              text:
+                verifyErr.response?.data?.message ||
+                'Payment verification failed. Please contact support.',
+            });
+          } finally {
+            setActionLoading(null);
+          }
+        },
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || '',
+          contact: user?.phone || '',
+        },
+        theme: {
+          color: '#15803d',
+        },
+        modal: {
+          ondismiss: function () {
+            setActionLoading(null);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on('payment.failed', function (failResponse) {
+        setActionMessage({
+          type: 'error',
+          text:
+            failResponse.error?.description ||
+            'Payment failed. Please try again or use another payment method.',
+        });
+        setActionLoading(null);
+      });
+
+      rzp.open();
+    } catch (err) {
+      setActionMessage({
+        type: 'error',
+        text:
+          err.response?.data?.message ||
+          err.message ||
+          'Failed to initialize payment order. Please ensure Razorpay keys are configured in server/.env.',
+      });
+      setActionLoading(null);
+    }
+  };
 
   const handleCancel = async (bookingId) => {
     const confirmCancel = window.confirm(
@@ -85,6 +184,11 @@ const MyBookings = () => {
     return diff;
   };
 
+  const formatStatusLabel = (status) => {
+    if (status === 'awaiting_payment') return 'AWAITING PAYMENT';
+    return status.toUpperCase();
+  };
+
   if (loading) {
     return (
       <div className="page-container">
@@ -101,7 +205,7 @@ const MyBookings = () => {
         <div>
           <h1 className="page-title">My Bookings</h1>
           <p className="page-subtitle">
-            Track and manage your agricultural equipment rental reservations
+            Track and manage your agricultural equipment rental reservations & payments
           </p>
         </div>
         <Link to="/equipment" className="btn-primary">
@@ -143,7 +247,10 @@ const MyBookings = () => {
                 ? getFullImageUrl(equip.images[0])
                 : null;
             const days = calculateDays(booking.startDate, booking.endDate);
-            const canCancel = ['pending', 'confirmed'].includes(booking.status);
+            const isAwaitingPayment = booking.status === 'awaiting_payment';
+            const canCancel = ['pending', 'awaiting_payment', 'confirmed'].includes(
+              booking.status
+            );
 
             return (
               <div key={booking._id} className="booking-card-item">
@@ -164,9 +271,14 @@ const MyBookings = () => {
                     <span className="detail-type-pill">
                       {equip.type ? equip.type.toUpperCase() : 'EQUIPMENT'}
                     </span>
-                    <span className={`status-badge status-${booking.status}`}>
-                      {booking.status.toUpperCase()}
-                    </span>
+                    <div className="status-badges-cluster">
+                      <span className={`status-badge status-${booking.status}`}>
+                        {formatStatusLabel(booking.status)}
+                      </span>
+                      {booking.paymentStatus === 'paid' && (
+                        <span className="payment-paid-badge">PAID ✅</span>
+                      )}
+                    </div>
                   </div>
 
                   <h3 className="booking-equip-title">
@@ -215,20 +327,53 @@ const MyBookings = () => {
                     )}
                   </div>
 
+                  {/* Payment Alert Banner for Awaiting Payment */}
+                  {isAwaitingPayment && (
+                    <div className="awaiting-payment-banner">
+                      <span className="awaiting-payment-icon">💡</span>
+                      <div>
+                        <strong>Owner Approved!</strong>
+                        <p>
+                          Your reservation request was accepted. Please complete the online
+                          payment to confirm the rental and secure the machine.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="booking-footer-actions">
-                    {canCancel && (
-                      <button
-                        onClick={() => handleCancel(booking._id)}
-                        disabled={actionLoading === booking._id}
-                        className="btn-cancel-booking"
-                      >
-                        {actionLoading === booking._id ? 'Cancelling...' : 'Cancel Booking'}
-                      </button>
-                    )}
+                    <div className="booking-left-action-group">
+                      {isAwaitingPayment && (
+                        <button
+                          onClick={() => handlePayNow(booking)}
+                          disabled={actionLoading === booking._id}
+                          className="btn-pay-now"
+                        >
+                          {actionLoading === booking._id
+                            ? 'Opening Razorpay...'
+                            : `💳 Pay Now • ₹${booking.totalPrice?.toLocaleString('en-IN')}`}
+                        </button>
+                      )}
+
+                      {canCancel && (
+                        <button
+                          onClick={() => handleCancel(booking._id)}
+                          disabled={actionLoading === booking._id}
+                          className="btn-cancel-booking"
+                        >
+                          {actionLoading === booking._id ? 'Cancelling...' : 'Cancel Booking'}
+                        </button>
+                      )}
+                    </div>
 
                     {booking.status === 'confirmed' && (
                       <span className="booking-confirmed-hint">
-                        🎉 Booking confirmed! The owner is expecting you for the rental.
+                        🎉 Booking confirmed & paid! The owner is expecting you for the rental.
+                        {booking.razorpayPaymentId && (
+                          <span className="payment-id-tag">
+                            Ref: {booking.razorpayPaymentId}
+                          </span>
+                        )}
                       </span>
                     )}
 

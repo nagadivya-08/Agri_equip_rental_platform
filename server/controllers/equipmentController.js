@@ -347,7 +347,7 @@ const getEquipmentAvailability = async (req, res) => {
   try {
     const bookings = await Booking.find({
       equipmentId: req.params.id,
-      status: 'confirmed',
+      status: { $in: ['confirmed', 'awaiting_payment'] },
     }).select('startDate endDate');
 
     const availability = bookings.map((b) => ({
