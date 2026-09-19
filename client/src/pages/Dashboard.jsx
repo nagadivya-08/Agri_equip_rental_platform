@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import api from '../api/axios';
 
 const Dashboard = () => {
@@ -52,6 +52,39 @@ const Dashboard = () => {
             ⚠️ {redirectMessage}
           </div>
         )}
+
+        {/* Quick Action Cards Based on Role */}
+        <div className="dashboard-actions-section">
+          <h3>Quick Actions</h3>
+          <div className="dashboard-actions-grid">
+            {user?.role === 'owner' && (
+              <>
+                <Link to="/add-equipment" className="action-card action-primary">
+                  <span className="action-icon">➕</span>
+                  <div className="action-info">
+                    <h4>Add Equipment</h4>
+                    <p>List a new machine for rent with photos & pricing</p>
+                  </div>
+                </Link>
+                <Link to="/my-listings" className="action-card">
+                  <span className="action-icon">📋</span>
+                  <div className="action-info">
+                    <h4>My Listings</h4>
+                    <p>View, edit, and track status of your equipment</p>
+                  </div>
+                </Link>
+              </>
+            )}
+
+            <Link to="/equipment" className="action-card">
+              <span className="action-icon">🚜</span>
+              <div className="action-info">
+                <h4>Browse Equipment</h4>
+                <p>Explore tractors, harvesters, and tools for rent</p>
+              </div>
+            </Link>
+          </div>
+        </div>
 
         <div className="user-details-grid">
           <div className="detail-item">
