@@ -14,6 +14,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminPendingListings from './pages/AdminPendingListings';
 import AdminAllListings from './pages/AdminAllListings';
 import AdminUsers from './pages/AdminUsers';
+import MyBookings from './pages/MyBookings';
+import OwnerBookings from './pages/OwnerBookings';
 import './App.css';
 
 // Root redirect handler: / -> /dashboard if logged in, /equipment if visitor/logged out
@@ -81,6 +83,24 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['owner']}>
                 <EditEquipment />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Booking Routes */}
+          <Route
+            path="/my-bookings"
+            element={
+              <ProtectedRoute allowedRoles={['renter']}>
+                <MyBookings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/owner-bookings"
+            element={
+              <ProtectedRoute allowedRoles={['owner']}>
+                <OwnerBookings />
               </ProtectedRoute>
             }
           />

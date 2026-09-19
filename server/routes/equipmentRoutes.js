@@ -7,6 +7,7 @@ const {
   getEquipmentById,
   updateEquipment,
   deleteEquipment,
+  getEquipmentAvailability,
 } = require('../controllers/equipmentController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -28,6 +29,9 @@ router.get('/my', protect, authorizeRoles('owner'), getMyEquipment);
 
 // Single equipment details
 router.get('/:id', getEquipmentById);
+
+// Equipment confirmed booking availability (for calendar)
+router.get('/:id/availability', getEquipmentAvailability);
 
 // Update equipment
 router.patch(

@@ -1,4 +1,5 @@
 const Equipment = require('../models/Equipment');
+const Booking = require('../models/Booking');
 
 // @desc    Create new equipment listing
 // @route   POST /api/equipment
@@ -339,6 +340,34 @@ const deleteEquipment = async (req, res) => {
   }
 };
 
+// @desc    Get confirmed booking dates for an equipment (for calendar availability)
+// @route   GET /api/equipment/:id/availability
+// @access  Public
+const getEquipmentAvailability = async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      equipmentId: req.params.id,
+      status: 'confirmed',
+    }).select('startDate endDate');
+
+    const availability = bookings.map((b) => ({
+      startDate: b.startDate,
+      endDate: b.endDate,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: availability,
+    });
+  } catch (error) {
+    console.error('Get equipment availability error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching availability',
+    });
+  }
+};
+
 module.exports = {
   createEquipment,
   getEquipment,
@@ -346,4 +375,5 @@ module.exports = {
   getEquipmentById,
   updateEquipment,
   deleteEquipment,
+  getEquipmentAvailability,
 };

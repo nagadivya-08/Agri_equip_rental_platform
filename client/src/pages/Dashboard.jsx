@@ -66,6 +66,13 @@ const Dashboard = () => {
                     <p>List a new machine for rent with photos & pricing</p>
                   </div>
                 </Link>
+                <Link to="/owner-bookings" className="action-card">
+                  <span className="action-icon">📥</span>
+                  <div className="action-info">
+                    <h4>Booking Requests</h4>
+                    <p>Approve, reject, or complete equipment rentals</p>
+                  </div>
+                </Link>
                 <Link to="/my-listings" className="action-card">
                   <span className="action-icon">📋</span>
                   <div className="action-info">
@@ -74,6 +81,16 @@ const Dashboard = () => {
                   </div>
                 </Link>
               </>
+            )}
+
+            {user?.role === 'renter' && (
+              <Link to="/my-bookings" className="action-card action-primary">
+                <span className="action-icon">📅</span>
+                <div className="action-info">
+                  <h4>My Bookings</h4>
+                  <p>View confirmed dates, status, and receipts</p>
+                </div>
+              </Link>
             )}
 
             <Link to="/equipment" className="action-card">

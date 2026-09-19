@@ -40,10 +40,20 @@ const Navbar = () => {
               <Link to="/my-listings" className="nav-link">
                 My Listings
               </Link>
+              <Link to="/owner-bookings" className="nav-link">
+                Booking Requests
+              </Link>
               <Link to="/add-equipment" className="nav-link nav-btn-primary">
                 + Add Equipment
               </Link>
             </>
+          )}
+
+          {/* Renter Navigation */}
+          {user && user.role === 'renter' && (
+            <Link to="/my-bookings" className="nav-link">
+              My Bookings
+            </Link>
           )}
 
           {user ? (
