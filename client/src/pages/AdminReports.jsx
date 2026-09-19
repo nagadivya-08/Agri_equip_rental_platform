@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
+import Spinner from '../components/Spinner';
 
 const AdminReports = () => {
   const [reports, setReports] = useState([]);
@@ -36,15 +38,19 @@ const AdminReports = () => {
     setActionMessage(null);
     try {
       const res = await api.patch(`/admin/reports/${reportId}/dismiss`);
+      const msg = res.data.message || 'Report dismissed.';
+      toast.success(msg);
       setActionMessage({
         type: 'success',
-        text: res.data.message || 'Report dismissed.',
+        text: msg,
       });
       fetchReports();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to dismiss report.';
+      toast.error(errMsg);
       setActionMessage({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to dismiss report.',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -63,15 +69,19 @@ const AdminReports = () => {
       const res = await api.patch(`/admin/reports/${reportId}/resolve`, {
         action: 'remove_listing',
       });
+      const msg = res.data.message || 'Report resolved and listing removed.';
+      toast.success(msg);
       setActionMessage({
         type: 'success',
-        text: res.data.message || 'Report resolved and listing removed.',
+        text: msg,
       });
       fetchReports();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to resolve report.';
+      toast.error(errMsg);
       setActionMessage({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to resolve report.',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -83,15 +93,19 @@ const AdminReports = () => {
     setActionMessage(null);
     try {
       const res = await api.patch(`/admin/reports/${reportId}/resolve`);
+      const msg = res.data.message || 'Report marked as reviewed.';
+      toast.success(msg);
       setActionMessage({
         type: 'success',
-        text: res.data.message || 'Report marked as reviewed.',
+        text: msg,
       });
       fetchReports();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to resolve report.';
+      toast.error(errMsg);
       setActionMessage({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to resolve report.',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -176,9 +190,7 @@ const AdminReports = () => {
       </div>
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading reported listings queue...</p>
-        </div>
+        <Spinner message="Loading reported listings queue..." />
       ) : reports.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">🛡️</span>

@@ -7,9 +7,10 @@ const {
   resolveReport,
 } = require('../controllers/reportController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
+const { reportValidation } = require('../middleware/validators');
 
 // Public/authenticated user submit report
-router.post('/', protect, createReport);
+router.post('/', protect, reportValidation, createReport);
 
 // Admin moderation endpoints
 router.get('/', protect, authorizeRoles('admin'), getReports);

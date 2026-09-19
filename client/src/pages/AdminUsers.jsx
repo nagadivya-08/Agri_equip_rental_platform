@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
+import Spinner from '../components/Spinner';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -37,12 +39,17 @@ const AdminUsers = () => {
     if (!confirmPrompt) return;
 
     try {
+      let noticeMsg = '';
       if (user.banned) {
         await api.patch(`/admin/users/${user._id}/unban`);
-        setActionNotice(`✅ User "${user.name}" has been unbanned.`);
+        noticeMsg = `User "${user.name}" has been unbanned.`;
+        toast.success(`✅ ${noticeMsg}`);
+        setActionNotice(`✅ ${noticeMsg}`);
       } else {
         await api.patch(`/admin/users/${user._id}/ban`);
-        setActionNotice(`🚫 User "${user.name}" has been banned.`);
+        noticeMsg = `User "${user.name}" has been banned.`;
+        toast.success(`🚫 ${noticeMsg}`);
+        setActionNotice(`🚫 ${noticeMsg}`);
       }
 
       // Update state locally
@@ -52,11 +59,11 @@ const AdminUsers = () => {
 
       setTimeout(() => setActionNotice(''), 4000);
     } catch (err) {
-      alert(
+      const errMsg =
         err.response?.data?.message ||
         err.message ||
-        `Failed to ${actionName} user`
-      );
+        `Failed to ${actionName} user`;
+      toast.error(errMsg);
     }
   };
 
@@ -67,9 +74,9 @@ const AdminUsers = () => {
           <div className="breadcrumb-nav">
             <Link to="/admin">← Admin Dashboard</Link>
           </div>
-          <h2>👥 Platform User Management</h2>
+          <h2>👥 Registered Users Directory</h2>
           <p className="page-subtitle">
-            Inspect all registered owners, renters, and administrator accounts
+            Manage user accounts, roles, and platform permissions
           </p>
         </div>
         <button onClick={fetchUsers} className="btn-secondary">
@@ -84,9 +91,7 @@ const AdminUsers = () => {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading registered users...</p>
-        </div>
+        <Spinner message="Loading user directory..." />
       ) : users.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">👥</span>

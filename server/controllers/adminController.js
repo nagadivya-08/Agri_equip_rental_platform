@@ -1,5 +1,6 @@
 const Equipment = require('../models/Equipment');
 const User = require('../models/User');
+const { sendEmailNotification } = require('../utils/sendEmail');
 
 // @desc    Get all pending equipment listings
 // @route   GET /api/admin/listings/pending
@@ -47,6 +48,15 @@ const approveListing = async (req, res) => {
       'name email phone'
     );
 
+    if (populated?.ownerId?.email) {
+      sendEmailNotification({
+        to: populated.ownerId.email,
+        subject: `🎉 Your Equipment Listing "${equipment.name}" Has Been Approved!`,
+        text: `Hello ${populated.ownerId.name},\n\nGreat news! Your equipment listing for "${equipment.name}" has been approved by the platform administrators and is now live for farmers and renters to book.`,
+        html: `<h3>Listing Approved!</h3><p>Hello <strong>${populated.ownerId.name}</strong>,</p><p>Great news! Your equipment listing for <strong>${equipment.name}</strong> has been reviewed and approved by administrators. It is now live on the platform for renters to book.</p>`,
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: `Equipment "${equipment.name}" has been approved.`,
@@ -87,6 +97,15 @@ const rejectListing = async (req, res) => {
       'ownerId',
       'name email phone'
     );
+
+    if (populated?.ownerId?.email) {
+      sendEmailNotification({
+        to: populated.ownerId.email,
+        subject: `Update on Your Equipment Listing "${equipment.name}"`,
+        text: `Hello ${populated.ownerId.name},\n\nYour equipment listing for "${equipment.name}" was not approved.\nReason: ${finalReason.trim()}\n\nYou can edit and re-submit your listing from your dashboard.`,
+        html: `<h3>Listing Review Update</h3><p>Hello <strong>${populated.ownerId.name}</strong>,</p><p>Your equipment listing for <strong>${equipment.name}</strong> was not approved.</p><p><strong>Reason provided:</strong> ${finalReason.trim()}</p><p>You can make the required adjustments and re-submit from your dashboard.</p>`,
+      });
+    }
 
     return res.status(200).json({
       success: true,

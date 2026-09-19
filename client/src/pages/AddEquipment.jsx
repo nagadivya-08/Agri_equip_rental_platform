@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
 
 const AddEquipment = () => {
@@ -18,6 +19,7 @@ const AddEquipment = () => {
   const [selectedImages, setSelectedImages] = useState([]); // File objects
   const [imagePreviews, setImagePreviews] = useState([]); // Object URLs for previews
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -56,14 +58,17 @@ const AddEquipment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
 
-    if (!formData.name || !formData.type || !formData.pricePerDay) {
-      setError('Please provide equipment name, type, and price per day.');
-      return;
-    }
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Equipment name is required';
+    if (!formData.type) newErrors.type = 'Equipment type is required';
+    if (!formData.pricePerDay) newErrors.pricePerDay = 'Price per day is required';
+    else if (Number(formData.pricePerDay) < 0) newErrors.pricePerDay = 'Price cannot be negative';
 
-    if (Number(formData.pricePerDay) < 0) {
-      setError('Price per day cannot be negative.');
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      toast.error('Please fix the required fields before submitting.');
       return;
     }
 
@@ -90,6 +95,7 @@ const AddEquipment = () => {
         },
       });
 
+      toast.success('🚜 Equipment listing submitted! Awaiting administrator review.');
       navigate('/my-listings');
     } catch (err) {
       const msg =
@@ -97,6 +103,15 @@ const AddEquipment = () => {
         err.message ||
         'Failed to create equipment listing';
       setError(msg);
+      toast.error(msg);
+
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const backendMap = {};
+        err.response.data.errors.forEach((e) => {
+          backendMap[e.field] = e.message;
+        });
+        setFieldErrors(backendMap);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -20,12 +21,14 @@ const Login = () => {
 
     if (!email || !password) {
       setError('Please provide both email and password.');
+      toast.error('Please fill in both email and password.');
       return;
     }
 
     setSubmitting(true);
     try {
       await login(email, password);
+      toast.success('👋 Welcome back! Logged in successfully.');
       navigate(from, { replace: true });
     } catch (err) {
       const msg =
@@ -33,6 +36,7 @@ const Login = () => {
         err?.message ||
         'Login failed. Please check your credentials.';
       setError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

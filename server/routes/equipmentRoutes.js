@@ -11,6 +11,7 @@ const {
 } = require('../controllers/equipmentController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const { equipmentValidation } = require('../middleware/validators');
 
 // Public routes
 router.get('/', getEquipment);
@@ -21,6 +22,7 @@ router.post(
   protect,
   authorizeRoles('owner'),
   upload.array('images', 5),
+  equipmentValidation,
   createEquipment
 );
 

@@ -6,6 +6,8 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ReviewsList from '../components/ReviewsList';
 import { getImageUrl } from '../utils/imageUrl';
+import Spinner from '../components/Spinner';
+import toast from 'react-hot-toast';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -122,24 +124,26 @@ const EquipmentDetail = () => {
         endDate: endDate.toISOString(),
       });
 
-      setBookingSuccess(
-        res.data.message || 'Booking request submitted successfully! The owner will review it.'
-      );
+      const successMsg = res.data.message || 'Booking request submitted successfully! The owner will review it.';
+      setBookingSuccess(successMsg);
+      toast.success('🚜 Booking request sent! Owner has been notified.');
       setDateRange([null, null]);
       // Refresh availability
       fetchAvailability();
     } catch (err) {
       if (err.response && err.response.status === 409) {
-        setBookingError(
+        const conflictMsg =
           err.response.data.message ||
-          'Date conflict: This machine is already reserved or has a pending booking for the selected dates.'
-        );
+          'Date conflict: This machine is already reserved or has a pending booking for the selected dates.';
+        setBookingError(conflictMsg);
+        toast.error(conflictMsg);
       } else {
-        setBookingError(
+        const errorMsg =
           err.response?.data?.message ||
           err.message ||
-          'Failed to place booking. Please try again.'
-        );
+          'Failed to place booking. Please try again.';
+        setBookingError(errorMsg);
+        toast.error(errorMsg);
       }
     } finally {
       setBookingLoading(false);
@@ -149,7 +153,7 @@ const EquipmentDetail = () => {
   const handleReportSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
-      alert('Please log in to report this listing.');
+      toast.error('Please log in to report this listing.');
       return;
     }
 
@@ -159,7 +163,7 @@ const EquipmentDetail = () => {
         : reportReasonCategory + (reportCustomReason.trim() ? `: ${reportCustomReason.trim()}` : '');
 
     if (!finalReason) {
-      alert('Please provide a reason for the report.');
+      toast.error('Please provide a reason for the report.');
       return;
     }
 
@@ -172,6 +176,7 @@ const EquipmentDetail = () => {
         reason: finalReason,
       });
 
+      toast.success('Listing reported. Our moderation team has been notified.');
       setReportMessage({
         type: 'success',
         text: 'Listing reported. Our moderation team will inspect this equipment.',
@@ -180,11 +185,13 @@ const EquipmentDetail = () => {
         setShowReportModal(false);
         setReportCustomReason('');
         setReportMessage(null);
-      }, 2500);
+      }, 2000);
     } catch (err) {
+      const errTxt = err.response?.data?.message || 'Failed to submit report.';
+      toast.error(errTxt);
       setReportMessage({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to submit report.',
+        text: errTxt,
       });
     } finally {
       setSubmittingReport(false);
@@ -194,9 +201,7 @@ const EquipmentDetail = () => {
   if (loading) {
     return (
       <div className="page-container">
-        <div className="loading-container">
-          <p>Loading equipment specifications...</p>
-        </div>
+        <Spinner message="Loading equipment specifications and real-time availability..." />
       </div>
     );
   }

@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import EquipmentCard from '../components/EquipmentCard';
+import MapView from '../components/MapView';
+import Spinner from '../components/Spinner';
 
 const BrowseEquipment = () => {
+  const [searchParams] = useSearchParams();
   const [equipmentList, setEquipmentList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
 
-  // Filters state
+  // Filters state (prefill from query string if available)
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('all');
+  const [type, setType] = useState(searchParams.get('type') || 'all');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
@@ -130,9 +135,7 @@ const BrowseEquipment = () => {
 
       {/* Results Section */}
       {loading ? (
-        <div className="loading-container">
-          <p>Finding available equipment...</p>
-        </div>
+        <Spinner message="Searching verified agricultural equipment..." />
       ) : equipmentList.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">🔍</span>
@@ -149,17 +152,41 @@ const BrowseEquipment = () => {
         <>
           <div className="results-count-bar">
             <span>Showing {equipmentList.length} available equipment</span>
+            
+            <div className="view-mode-toggle">
+              <button
+                type="button"
+                className={`btn-view-toggle ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+                title="View equipment cards"
+              >
+                📋 List View
+              </button>
+              <button
+                type="button"
+                className={`btn-view-toggle ${viewMode === 'map' ? 'active' : ''}`}
+                onClick={() => setViewMode('map')}
+                title="View equipment on map"
+              >
+                🗺️ Map View
+              </button>
+            </div>
           </div>
-          <div className="equipment-grid">
-            {equipmentList.map((item) => (
-              <EquipmentCard
-                key={item._id}
-                equipment={item}
-                isOwnerView={false}
-                showStatus={false}
-              />
-            ))}
-          </div>
+
+          {viewMode === 'map' ? (
+            <MapView equipmentList={equipmentList} />
+          ) : (
+            <div className="equipment-grid">
+              {equipmentList.map((item) => (
+                <EquipmentCard
+                  key={item._id}
+                  equipment={item}
+                  isOwnerView={false}
+                  showStatus={false}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
     </div>

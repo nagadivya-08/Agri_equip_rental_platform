@@ -19,13 +19,25 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const { getUserReviews } = require('./controllers/reviewController');
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // Middleware
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN;
+app.use(
+  cors({
+    origin: corsOrigin ? (corsOrigin === '*' ? true : corsOrigin.split(',').map(s => s.trim())) : true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
-// Serve static uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Ensure uploads directory exists and serve static uploads
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -38,10 +50,14 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/admin/reports', reportRoutes);
 app.get('/api/users/:id/reviews', getUserReviews);
 
-// Base route
+// Health check / base route
 app.get('/', (req, res) => {
-  res.send('API is running');
+  res.json({ status: 'ok', message: 'AgriRent API is running smoothly' });
 });
+
+// Centralized 404 & Error Handling Middleware
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

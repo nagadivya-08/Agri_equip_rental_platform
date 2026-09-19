@@ -8,9 +8,11 @@ const {
 } = require('../controllers/authController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 
+const { registerValidation, loginValidation } = require('../middleware/validators');
+
 // Public routes
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', registerValidation, register);
+router.post('/login', loginValidation, login);
 
 // Protected routes
 router.get('/me', protect, getMe);

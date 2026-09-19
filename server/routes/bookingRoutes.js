@@ -10,9 +10,10 @@ const {
   completeBooking,
 } = require('../controllers/bookingController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
+const { bookingValidation } = require('../middleware/validators');
 
 // Renter routes
-router.post('/', protect, authorizeRoles('renter'), createBooking);
+router.post('/', protect, authorizeRoles('renter'), bookingValidation, createBooking);
 router.get('/my', protect, authorizeRoles('renter'), getMyBookings);
 
 // Owner routes

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
+import Spinner from '../components/Spinner';
 
 const AdminPendingListings = () => {
   const [pendingListings, setPendingListings] = useState([]);
@@ -38,14 +40,16 @@ const AdminPendingListings = () => {
     try {
       await api.patch(`/admin/listings/${id}/approve`);
       setPendingListings((prev) => prev.filter((item) => item._id !== id));
-      setActionMessage(`✅ "${name}" has been approved and is now live on the marketplace.`);
+      const msg = `"${name}" approved and published to marketplace.`;
+      toast.success(msg);
+      setActionMessage(`✅ ${msg}`);
       setTimeout(() => setActionMessage(''), 4000);
     } catch (err) {
-      alert(
+      const errMsg =
         err.response?.data?.message ||
         err.message ||
-        'Failed to approve equipment'
-      );
+        'Failed to approve equipment';
+      toast.error(errMsg);
     }
   };
 
@@ -68,15 +72,17 @@ const AdminPendingListings = () => {
         reason: rejectReason || 'Listing does not meet quality or safety standards.',
       });
       setPendingListings((prev) => prev.filter((item) => item._id !== rejectingItem._id));
-      setActionMessage(`❌ "${rejectingItem.name}" has been rejected.`);
+      const msg = `"${rejectingItem.name}" has been rejected.`;
+      toast.success(msg);
+      setActionMessage(`❌ ${msg}`);
       closeRejectModal();
       setTimeout(() => setActionMessage(''), 4000);
     } catch (err) {
-      alert(
+      const errMsg =
         err.response?.data?.message ||
         err.message ||
-        'Failed to reject equipment'
-      );
+        'Failed to reject equipment';
+      toast.error(errMsg);
     } finally {
       setProcessing(false);
     }
@@ -112,9 +118,7 @@ const AdminPendingListings = () => {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading pending listings...</p>
-        </div>
+        <Spinner message="Loading pending equipment listings for review..." />
       ) : pendingListings.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">🎉</span>

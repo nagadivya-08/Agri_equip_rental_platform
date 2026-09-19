@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/ReviewForm';
+import Spinner from '../components/Spinner';
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -73,19 +75,20 @@ const MyBookings = () => {
               razorpay_signature: response.razorpay_signature,
             });
 
+            toast.success('🎉 Payment verified and booking confirmed!');
             setActionMessage({
               type: 'success',
-              text:
-                verifyRes.data.message ||
-                'Payment successful! Your equipment booking is now confirmed.',
+              text: 'Payment verified and booking confirmed successfully!',
             });
             fetchBookings();
           } catch (verifyErr) {
+            const errTxt =
+              verifyErr.response?.data?.message ||
+              'Payment verification failed. Please contact support.';
+            toast.error(errTxt);
             setActionMessage({
               type: 'error',
-              text:
-                verifyErr.response?.data?.message ||
-                'Payment verification failed. Please contact support.',
+              text: errTxt,
             });
           } finally {
             setActionLoading(null);
@@ -109,23 +112,27 @@ const MyBookings = () => {
       const rzp = new window.Razorpay(options);
 
       rzp.on('payment.failed', function (failResponse) {
+        const failTxt =
+          failResponse.error?.description ||
+          'Payment failed. Please try again or use another payment method.';
+        toast.error(failTxt);
         setActionMessage({
           type: 'error',
-          text:
-            failResponse.error?.description ||
-            'Payment failed. Please try again or use another payment method.',
+          text: failTxt,
         });
         setActionLoading(null);
       });
 
       rzp.open();
     } catch (err) {
+      const orderErr =
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to initialize payment order.';
+      toast.error(orderErr);
       setActionMessage({
         type: 'error',
-        text:
-          err.response?.data?.message ||
-          err.message ||
-          'Failed to initialize payment order. Please ensure Razorpay keys are configured in server/.env.',
+        text: orderErr,
       });
       setActionLoading(null);
     }
@@ -141,21 +148,25 @@ const MyBookings = () => {
     setActionMessage(null);
     try {
       const res = await api.patch(`/bookings/${bookingId}/cancel`);
+      const msg = res.data.message || 'Booking cancelled successfully';
+      toast.success(msg);
       setActionMessage({
         type: 'success',
-        text: res.data.message || 'Booking cancelled successfully',
+        text: msg,
       });
       // Update local state
       setBookings((prev) =>
         prev.map((b) => (b._id === bookingId ? { ...b, status: 'cancelled' } : b))
       );
     } catch (err) {
+      const errMsg =
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to cancel booking';
+      toast.error(errMsg);
       setActionMessage({
         type: 'error',
-        text:
-          err.response?.data?.message ||
-          err.message ||
-          'Failed to cancel booking',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -194,9 +205,7 @@ const MyBookings = () => {
   if (loading) {
     return (
       <div className="page-container">
-        <div className="loading-container">
-          <p>Loading your rental bookings...</p>
-        </div>
+        <Spinner message="Loading your rental bookings & payment records..." />
       </div>
     );
   }

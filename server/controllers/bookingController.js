@@ -1,5 +1,7 @@
 const Booking = require('../models/Booking');
 const Equipment = require('../models/Equipment');
+const User = require('../models/User');
+const { sendEmailNotification } = require('../utils/sendEmail');
 
 // Helper to calculate difference in calendar days inclusive of both start and end dates
 const calculateInclusiveDays = (startDate, endDate) => {
@@ -107,6 +109,18 @@ const createBooking = async (req, res) => {
     const populatedBooking = await Booking.findById(booking._id)
       .populate('equipmentId', 'name type images pricePerDay locationName')
       .populate('renterId', 'name email phone');
+
+    // Trigger notification email to equipment owner (fire-and-forget)
+    User.findById(equipment.ownerId).then((owner) => {
+      if (owner && owner.email) {
+        sendEmailNotification({
+          to: owner.email,
+          subject: `🚜 New Booking Request for "${equipment.name}"`,
+          text: `Hello ${owner.name},\n\nYou have received a new booking request for "${equipment.name}" from ${req.user.name || 'a renter'}.\nDates: ${requestedStart.toDateString()} to ${requestedEnd.toDateString()}\nTotal: ₹${totalPrice}\n\nPlease log in to AgriRent to accept or decline.`,
+          html: `<h3>New Booking Request</h3><p>Hello <strong>${owner.name}</strong>,</p><p>You have received a new booking request for <strong>${equipment.name}</strong> from <strong>${req.user.name || 'a renter'}</strong>.</p><ul><li><strong>Dates:</strong> ${requestedStart.toDateString()} to ${requestedEnd.toDateString()}</li><li><strong>Total:</strong> ₹${totalPrice}</li></ul><p>Please log in to your AgriRent account to review the request.</p>`,
+        });
+      }
+    }).catch((err) => console.error('Error fetching owner for email:', err.message));
 
     return res.status(201).json({
       success: true,
@@ -220,6 +234,18 @@ const confirmBooking = async (req, res) => {
       .populate('equipmentId', 'name type images pricePerDay')
       .populate('renterId', 'name email phone');
 
+    // Send email to renter asking them to complete payment (fire-and-forget)
+    const renter = populatedBooking.renterId;
+    const equipName = populatedBooking.equipmentId?.name || 'Equipment';
+    if (renter && renter.email) {
+      sendEmailNotification({
+        to: renter.email,
+        subject: `🎉 Booking Approved! Please Complete Payment for "${equipName}"`,
+        text: `Hello ${renter.name},\n\nGreat news! Your booking request for "${equipName}" has been approved by the owner.\nTotal Amount: ₹${populatedBooking.totalPrice}\n\nPlease log in to your AgriRent dashboard and complete payment to confirm your reservation.`,
+        html: `<h3>Booking Approved!</h3><p>Hello <strong>${renter.name}</strong>,</p><p>Great news! Your booking request for <strong>${equipName}</strong> has been approved by the owner.</p><p><strong>Total Amount:</strong> ₹${populatedBooking.totalPrice}</p><p>Please log in to your AgriRent dashboard and click <strong>Pay Now</strong> to confirm your reservation.</p>`,
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: `Booking approved by owner. Status is now awaiting payment from renter. ${autoRejectResult.modifiedCount} overlapping pending booking(s) were automatically rejected.`,
@@ -265,6 +291,19 @@ const rejectBooking = async (req, res) => {
 
     booking.status = 'rejected';
     await booking.save();
+
+    // Fire-and-forget rejection email to renter
+    Booking.findById(booking._id).populate('renterId').populate('equipmentId').then((pop) => {
+      if (pop?.renterId?.email) {
+        const equipTitle = pop.equipmentId?.name || 'Equipment';
+        sendEmailNotification({
+          to: pop.renterId.email,
+          subject: `Booking Request Declined for "${equipTitle}"`,
+          text: `Hello ${pop.renterId.name},\n\nYour booking request for "${equipTitle}" was declined by the equipment owner. You can browse other available equipment on AgriRent.`,
+          html: `<h3>Booking Request Declined</h3><p>Hello <strong>${pop.renterId.name}</strong>,</p><p>Your booking request for <strong>${equipTitle}</strong> was declined by the equipment owner. You can browse other available equipment on AgriRent.</p>`,
+        });
+      }
+    }).catch((e) => console.error(e.message));
 
     return res.status(200).json({
       success: true,
@@ -313,6 +352,27 @@ const cancelBooking = async (req, res) => {
 
     booking.status = 'cancelled';
     await booking.save();
+
+    // Fire-and-forget cancellation email to the other party
+    Booking.findById(booking._id).populate('renterId').populate('ownerId').populate('equipmentId').then((pop) => {
+      if (!pop) return;
+      const equipTitle = pop.equipmentId?.name || 'Equipment';
+      if (isRenter && pop.ownerId?.email) {
+        sendEmailNotification({
+          to: pop.ownerId.email,
+          subject: `Booking Cancelled for "${equipTitle}"`,
+          text: `Hello ${pop.ownerId.name},\n\nThe renter (${pop.renterId?.name || 'Renter'}) has cancelled their reservation for "${equipTitle}".`,
+          html: `<p>Hello <strong>${pop.ownerId.name}</strong>,</p><p>The renter (<strong>${pop.renterId?.name || 'Renter'}</strong>) has cancelled their reservation for <strong>${equipTitle}</strong>.</p>`,
+        });
+      } else if (isOwner && pop.renterId?.email) {
+        sendEmailNotification({
+          to: pop.renterId.email,
+          subject: `Booking Cancelled for "${equipTitle}"`,
+          text: `Hello ${pop.renterId.name},\n\nThe equipment owner has cancelled your reservation for "${equipTitle}".`,
+          html: `<p>Hello <strong>${pop.renterId.name}</strong>,</p><p>The equipment owner has cancelled your reservation for <strong>${equipTitle}</strong>.</p>`,
+        });
+      }
+    }).catch((e) => console.error(e.message));
 
     return res.status(200).json({
       success: true,

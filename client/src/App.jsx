@@ -1,7 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -19,34 +22,34 @@ import MyBookings from './pages/MyBookings';
 import OwnerBookings from './pages/OwnerBookings';
 import './App.css';
 
-// Root redirect handler: / -> /dashboard if logged in, /equipment if visitor/logged out
-const HomeRedirect = () => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <p>Loading session...</p>
-      </div>
-    );
-  }
-
-  return user ? <Navigate to="/dashboard" replace /> : <Navigate to="/equipment" replace />;
-};
-
 function App() {
   return (
-    <div className="app-layout">
-      <Navbar />
+    <ErrorBoundary>
+      <div className="app-layout">
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#ffffff',
+              color: '#1f2937',
+              borderRadius: '8px',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              fontSize: '0.92rem',
+            },
+          }}
+        />
+        <Navbar />
 
-      <main className="content-wrapper">
-        <Routes>
-          {/* Default entry */}
-          <Route path="/" element={<HomeRedirect />} />
+        <main className="content-wrapper">
+          <Routes>
+            {/* Landing Page */}
+            <Route path="/" element={<Home />} />
 
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
           {/* User Dashboard */}
           <Route
@@ -148,12 +151,13 @@ function App() {
             }
           />
 
-          {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/equipment" replace />} />
+          {/* Catch-all 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>
-  );
+  </ErrorBoundary>
+);
 }
 
 export default App;

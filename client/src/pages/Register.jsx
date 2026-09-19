@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
@@ -11,6 +12,7 @@ const Register = () => {
     role: 'renter',
   });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   const { register } = useAuth();
@@ -22,25 +24,32 @@ const Register = () => {
       [e.target.name]: e.target.value,
     });
     if (error) setError('');
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
 
-    if (!formData.name || !formData.email || !formData.password) {
-      setError('Please fill in all required fields (Name, Email, Password).');
-      return;
-    }
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email address is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      toast.error('Please fix the errors indicated in the form.');
       return;
     }
 
     setSubmitting(true);
     try {
       await register(formData);
+      toast.success('🎉 Welcome to AgriRent! Your account has been created.');
       navigate('/dashboard');
     } catch (err) {
       const msg =
@@ -48,6 +57,15 @@ const Register = () => {
         err?.message ||
         'Registration failed. Please try again.';
       setError(msg);
+      toast.error(msg);
+
+      if (err?.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const backendFieldMap = {};
+        err.response.data.errors.forEach((e) => {
+          backendFieldMap[e.field] = e.message;
+        });
+        setFieldErrors(backendFieldMap);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -71,8 +89,10 @@ const Register = () => {
               placeholder="e.g. John Doe"
               value={formData.name}
               onChange={handleChange}
+              className={fieldErrors.name ? 'input-error' : ''}
               required
             />
+            {fieldErrors.name && <span className="field-error-msg">{fieldErrors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -84,8 +104,10 @@ const Register = () => {
               placeholder="e.g. john@example.com"
               value={formData.email}
               onChange={handleChange}
+              className={fieldErrors.email ? 'input-error' : ''}
               required
             />
+            {fieldErrors.email && <span className="field-error-msg">{fieldErrors.email}</span>}
           </div>
 
           <div className="form-group">
@@ -97,8 +119,10 @@ const Register = () => {
               placeholder="At least 6 characters"
               value={formData.password}
               onChange={handleChange}
+              className={fieldErrors.password ? 'input-error' : ''}
               required
             />
+            {fieldErrors.password && <span className="field-error-msg">{fieldErrors.password}</span>}
           </div>
 
           <div className="form-group">

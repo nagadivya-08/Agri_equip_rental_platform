@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
 import EquipmentCard from '../components/EquipmentCard';
+import Spinner from '../components/Spinner';
 
 const MyListings = () => {
   const [equipmentList, setEquipmentList] = useState([]);
@@ -38,15 +40,17 @@ const MyListings = () => {
 
     try {
       await api.delete(`/equipment/${id}`);
-      setDeleteMessage(`"${name}" was successfully deleted.`);
+      const successMsg = `"${name}" was successfully deleted.`;
+      toast.success(successMsg);
+      setDeleteMessage(successMsg);
       setEquipmentList((prev) => prev.filter((item) => item._id !== id));
       setTimeout(() => setDeleteMessage(''), 4000);
     } catch (err) {
-      alert(
+      const errMsg =
         err.response?.data?.message ||
         err.message ||
-        'Failed to delete equipment listing'
-      );
+        'Failed to delete equipment listing';
+      toast.error(errMsg);
     }
   };
 
@@ -73,9 +77,7 @@ const MyListings = () => {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading your equipment listings...</p>
-        </div>
+        <Spinner message="Loading your equipment listings..." />
       ) : equipmentList.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">🚜</span>

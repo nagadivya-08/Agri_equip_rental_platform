@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
 import ReviewForm from '../components/ReviewForm';
+import Spinner from '../components/Spinner';
 
 const OwnerBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -43,12 +45,15 @@ const OwnerBookings = () => {
       if (autoRejected > 0) {
         msg += ` ${autoRejected} overlapping pending booking(s) were automatically rejected.`;
       }
+      toast.success(msg);
       setActionNotice({ type: 'success', text: msg });
       fetchOwnerBookings();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to confirm booking';
+      toast.error(errMsg);
       setActionNotice({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to confirm booking',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -65,15 +70,18 @@ const OwnerBookings = () => {
     setActionNotice(null);
     try {
       await api.patch(`/bookings/${bookingId}/reject`);
+      toast.success('Booking request rejected');
       setActionNotice({
         type: 'success',
         text: 'Booking request rejected',
       });
       fetchOwnerBookings();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to reject booking';
+      toast.error(errMsg);
       setActionNotice({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to reject booking',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -85,15 +93,18 @@ const OwnerBookings = () => {
     setActionNotice(null);
     try {
       await api.patch(`/bookings/${bookingId}/complete`);
+      toast.success('Booking marked as completed. Equipment availability restored.');
       setActionNotice({
         type: 'success',
         text: 'Booking marked as completed. Equipment availability restored.',
       });
       fetchOwnerBookings();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to mark as completed';
+      toast.error(errMsg);
       setActionNotice({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to mark as completed',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
@@ -110,20 +121,31 @@ const OwnerBookings = () => {
     setActionNotice(null);
     try {
       await api.patch(`/bookings/${bookingId}/cancel`);
+      toast.success('Booking cancelled successfully');
       setActionNotice({
         type: 'success',
         text: 'Booking cancelled successfully',
       });
       fetchOwnerBookings();
     } catch (err) {
+      const errMsg = err.response?.data?.message || 'Failed to cancel booking';
+      toast.error(errMsg);
       setActionNotice({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to cancel booking',
+        text: errMsg,
       });
     } finally {
       setActionLoading(null);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <Spinner message="Loading incoming equipment booking requests..." />
+      </div>
+    );
+  }
 
   const getFullImageUrl = (path) => {
     if (!path) return null;

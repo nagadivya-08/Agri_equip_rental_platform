@@ -6,9 +6,10 @@ const {
   getUserReviews,
 } = require('../controllers/reviewController');
 const { protect } = require('../middleware/authMiddleware');
+const { reviewValidation } = require('../middleware/validators');
 
 // Create review (protected)
-router.post('/', protect, createReview);
+router.post('/', protect, reviewValidation, createReview);
 
 // Public review lookups
 router.get('/equipment/:id', getEquipmentReviews);

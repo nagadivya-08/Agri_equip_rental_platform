@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Booking = require('../models/Booking');
+const { sendEmailNotification } = require('../utils/sendEmail');
 
 // Initialize Razorpay client helper
 const getRazorpayInstance = () => {
@@ -177,7 +178,31 @@ const verifyPayment = async (req, res) => {
 
     const populatedBooking = await Booking.findById(booking._id)
       .populate('equipmentId', 'name type images pricePerDay')
-      .populate('renterId', 'name email phone');
+      .populate('renterId', 'name email phone')
+      .populate('ownerId', 'name email phone');
+
+    // Fire-and-forget emails to both parties
+    const renter = populatedBooking.renterId;
+    const owner = populatedBooking.ownerId;
+    const equipTitle = populatedBooking.equipmentId?.name || 'Equipment';
+
+    if (renter?.email) {
+      sendEmailNotification({
+        to: renter.email,
+        subject: `✅ Payment Received & Booking Confirmed for "${equipTitle}"`,
+        text: `Hello ${renter.name},\n\nYour payment of ₹${booking.totalPrice} has been processed successfully. Your booking for "${equipTitle}" is now officially CONFIRMED.\n\nTransaction ID: ${razorpay_payment_id}\n\nThank you for choosing AgriRent!`,
+        html: `<h3>Payment Confirmed!</h3><p>Hello <strong>${renter.name}</strong>,</p><p>Your payment of <strong>₹${booking.totalPrice}</strong> has been received and verified. Your booking for <strong>${equipTitle}</strong> is now officially <strong>CONFIRMED</strong>.</p><p><strong>Transaction ID:</strong> <code>${razorpay_payment_id}</code></p><p>Thank you for using AgriRent!</p>`,
+      });
+    }
+
+    if (owner?.email) {
+      sendEmailNotification({
+        to: owner.email,
+        subject: `💰 Payment Received for "${equipTitle}" - Reservation Confirmed`,
+        text: `Hello ${owner.name},\n\nGreat news! The renter (${renter?.name || 'Renter'}) has completed online payment of ₹${booking.totalPrice} for "${equipTitle}". The booking is now CONFIRMED.\n\nPlease prepare the equipment for handover on the scheduled start date.`,
+        html: `<h3>Payment Received</h3><p>Hello <strong>${owner.name}</strong>,</p><p>The renter (<strong>${renter?.name || 'Renter'}</strong>) has completed online payment of <strong>₹${booking.totalPrice}</strong> for <strong>${equipTitle}</strong>. The reservation is now <strong>CONFIRMED</strong>.</p><p>Please prepare the equipment for handover on the scheduled date.</p>`,
+      });
+    }
 
     return res.status(200).json({
       success: true,
