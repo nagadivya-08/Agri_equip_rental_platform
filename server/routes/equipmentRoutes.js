@@ -33,6 +33,10 @@ router.get('/:id', getEquipmentById);
 // Equipment confirmed booking availability (for calendar)
 router.get('/:id/availability', getEquipmentAvailability);
 
+// Equipment reviews
+const { getEquipmentReviews } = require('../controllers/reviewController');
+router.get('/:id/reviews', getEquipmentReviews);
+
 // Update equipment
 router.patch(
   '/:id',

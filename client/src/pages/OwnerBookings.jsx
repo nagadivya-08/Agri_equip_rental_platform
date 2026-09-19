@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import ReviewForm from '../components/ReviewForm';
 
 const OwnerBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -9,6 +10,7 @@ const OwnerBookings = () => {
   const [actionLoading, setActionLoading] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [actionNotice, setActionNotice] = useState(null);
+  const [activeReviewBooking, setActiveReviewBooking] = useState(null);
 
   const fetchOwnerBookings = async () => {
     setLoading(true);
@@ -386,6 +388,15 @@ const OwnerBookings = () => {
                       </button>
                     )}
 
+                    {booking.status === 'completed' && (
+                      <button
+                        onClick={() => setActiveReviewBooking(booking)}
+                        className="btn-leave-review"
+                      >
+                        ⭐ Rate & Review Renter
+                      </button>
+                    )}
+
                     {isConfirmed && !canComplete && (
                       <span className="booking-confirmed-hint">
                         ✅ Payment received. Machinery ready for rental handover. Can be marked completed after {formatDate(booking.endDate)}.
@@ -407,6 +418,22 @@ const OwnerBookings = () => {
             );
           })}
         </div>
+      )}
+
+      {/* Review Modal for Owner */}
+      {activeReviewBooking && (
+        <ReviewForm
+          booking={activeReviewBooking}
+          onSuccess={() => {
+            setActiveReviewBooking(null);
+            setActionNotice({
+              type: 'success',
+              text: 'Thank you! Your feedback for this renter has been submitted.',
+            });
+            fetchOwnerBookings();
+          }}
+          onCancel={() => setActiveReviewBooking(null)}
+        />
       )}
     </div>
   );

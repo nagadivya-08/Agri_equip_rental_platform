@@ -127,6 +127,15 @@ const AdminDashboard = () => {
                 </div>
                 <span className="module-arrow">→</span>
               </Link>
+
+              <Link to="/admin/reports" className="admin-module-card module-reports">
+                <span className="module-icon">🚩</span>
+                <div className="module-info">
+                  <h4>Community Reports & Flags</h4>
+                  <p>Investigate user complaints, dismiss false flags, or remove fraudulent listings.</p>
+                </div>
+                <span className="module-arrow">→</span>
+              </Link>
             </div>
           </div>
         </>

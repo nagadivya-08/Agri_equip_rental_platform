@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import ReviewsList from '../components/ReviewsList';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -13,6 +14,18 @@ const EquipmentDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Reviews state
+  const [reviews, setReviews] = useState([]);
+  const [reviewsCount, setReviewsCount] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+
+  // Report Modal state
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReasonCategory, setReportReasonCategory] = useState('Fake listing');
+  const [reportCustomReason, setReportCustomReason] = useState('');
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [reportMessage, setReportMessage] = useState(null);
 
   // Booking & Availability state
   const [availability, setAvailability] = useState([]);
@@ -28,6 +41,10 @@ const EquipmentDetail = () => {
     try {
       const res = await api.get(`/equipment/${id}`);
       setEquipment(res.data.data);
+      if (res.data.data.averageRating !== undefined) {
+        setAverageRating(res.data.data.averageRating);
+        setReviewsCount(res.data.data.reviewCount || 0);
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -48,10 +65,22 @@ const EquipmentDetail = () => {
     }
   }, [id]);
 
+  const fetchReviews = useCallback(async () => {
+    try {
+      const res = await api.get(`/equipment/${id}/reviews`);
+      setReviews(res.data.data || []);
+      setReviewsCount(res.data.count || 0);
+      setAverageRating(res.data.averageRating || 0);
+    } catch (err) {
+      console.error('Failed to load reviews:', err);
+    }
+  }, [id]);
+
   useEffect(() => {
     fetchDetail();
     fetchAvailability();
-  }, [fetchDetail, fetchAvailability]);
+    fetchReviews();
+  }, [fetchDetail, fetchAvailability, fetchReviews]);
 
   const getFullImageUrl = (path) => {
     if (!path) return null;
@@ -118,6 +147,51 @@ const EquipmentDetail = () => {
     }
   };
 
+  const handleReportSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      alert('Please log in to report this listing.');
+      return;
+    }
+
+    const finalReason =
+      reportReasonCategory === 'Other'
+        ? reportCustomReason.trim()
+        : reportReasonCategory + (reportCustomReason.trim() ? `: ${reportCustomReason.trim()}` : '');
+
+    if (!finalReason) {
+      alert('Please provide a reason for the report.');
+      return;
+    }
+
+    setSubmittingReport(true);
+    setReportMessage(null);
+
+    try {
+      await api.post('/reports', {
+        listingId: id,
+        reason: finalReason,
+      });
+
+      setReportMessage({
+        type: 'success',
+        text: 'Listing reported. Our moderation team will inspect this equipment.',
+      });
+      setTimeout(() => {
+        setShowReportModal(false);
+        setReportCustomReason('');
+        setReportMessage(null);
+      }, 2500);
+    } catch (err) {
+      setReportMessage({
+        type: 'error',
+        text: err.response?.data?.message || 'Failed to submit report.',
+      });
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="page-container">
@@ -152,6 +226,13 @@ const EquipmentDetail = () => {
     <div className="page-container">
       <div className="breadcrumb-bar">
         <Link to="/equipment">← Back to All Equipment</Link>
+        <button
+          onClick={() => setShowReportModal(true)}
+          className="btn-report-trigger"
+          title="Report this listing to administrators"
+        >
+          🚩 Report Listing
+        </button>
       </div>
 
       <div className="equipment-detail-layout">
@@ -193,9 +274,24 @@ const EquipmentDetail = () => {
         {/* Right Column: Specs, Owner Info & Booking Calendar */}
         <div className="detail-info-col">
           <div className="detail-header">
-            <span className="detail-type-pill">
-              {equipment.type ? equipment.type.toUpperCase() : 'EQUIPMENT'}
-            </span>
+            <div className="detail-type-rating-line">
+              <span className="detail-type-pill">
+                {equipment.type ? equipment.type.toUpperCase() : 'EQUIPMENT'}
+              </span>
+              <div className="detail-rating-pill">
+                {reviewsCount > 0 ? (
+                  <>
+                    <span className="rating-star-gold">★ {averageRating}</span>
+                    <span className="rating-count-sub">
+                      ({reviewsCount} {reviewsCount === 1 ? 'review' : 'reviews'})
+                    </span>
+                  </>
+                ) : (
+                  <span className="rating-new-tag">★ No reviews yet</span>
+                )}
+              </div>
+            </div>
+
             <h1 className="detail-title">{equipment.name}</h1>
             <p className="detail-location">
               📍 {equipment.locationName || 'Location not specified'}
@@ -282,7 +378,7 @@ const EquipmentDetail = () => {
                     dateFormat="MMM d, yyyy"
                   />
                   <span className="datepicker-hint">
-                    * Confirmed booked dates are disabled automatically.
+                    * Confirmed & reserved dates are disabled automatically.
                   </span>
                 </div>
 
@@ -336,6 +432,99 @@ const EquipmentDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Reviews Section */}
+      <div className="detail-reviews-container">
+        <ReviewsList
+          reviews={reviews}
+          averageRating={averageRating}
+          count={reviewsCount}
+        />
+      </div>
+
+      {/* Report Listing Modal */}
+      {showReportModal && (
+        <div className="modal-backdrop">
+          <div className="modal-box report-modal-box">
+            <div className="modal-header">
+              <h3>🚩 Report Equipment Listing</h3>
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="modal-close-btn"
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="report-modal-subtitle">
+              Flagging <strong>{equipment.name}</strong> for moderator review.
+            </p>
+
+            {reportMessage && (
+              <div
+                className={`notice-banner ${
+                  reportMessage.type === 'success' ? 'success-banner' : 'warning-banner'
+                }`}
+              >
+                {reportMessage.type === 'success' ? '✅' : '⚠️'} {reportMessage.text}
+              </div>
+            )}
+
+            <form onSubmit={handleReportSubmit} className="report-form">
+              <div className="form-group">
+                <label htmlFor="report-category">Reason for Report:</label>
+                <select
+                  id="report-category"
+                  value={reportReasonCategory}
+                  onChange={(e) => setReportReasonCategory(e.target.value)}
+                  className="form-select"
+                >
+                  <option value="Fake listing">Fake listing</option>
+                  <option value="Misleading photos">Misleading photos</option>
+                  <option value="Inappropriate content">Inappropriate content</option>
+                  <option value="Other">Other reason</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="report-details">
+                  {reportReasonCategory === 'Other'
+                    ? 'Please specify details (required):'
+                    : 'Additional details (optional):'}
+                </label>
+                <textarea
+                  id="report-details"
+                  rows={3}
+                  value={reportCustomReason}
+                  onChange={(e) => setReportCustomReason(e.target.value)}
+                  placeholder="Explain what is suspicious or incorrect about this listing..."
+                  className="form-textarea"
+                  required={reportReasonCategory === 'Other'}
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  onClick={() => setShowReportModal(false)}
+                  disabled={submittingReport}
+                  className="btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingReport}
+                  className="btn-danger-action"
+                >
+                  {submittingReport ? 'Submitting...' : 'Submit Report'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

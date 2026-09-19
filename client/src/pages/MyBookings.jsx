@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import ReviewForm from '../components/ReviewForm';
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -10,6 +11,7 @@ const MyBookings = () => {
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
+  const [activeReviewBooking, setActiveReviewBooking] = useState(null);
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -364,6 +366,15 @@ const MyBookings = () => {
                           {actionLoading === booking._id ? 'Cancelling...' : 'Cancel Booking'}
                         </button>
                       )}
+
+                      {booking.status === 'completed' && (
+                        <button
+                          onClick={() => setActiveReviewBooking(booking)}
+                          className="btn-leave-review"
+                        >
+                          ⭐ Leave a Review
+                        </button>
+                      )}
                     </div>
 
                     {booking.status === 'confirmed' && (
@@ -374,6 +385,12 @@ const MyBookings = () => {
                             Ref: {booking.razorpayPaymentId}
                           </span>
                         )}
+                      </span>
+                    )}
+
+                    {booking.status === 'completed' && (
+                      <span className="booking-completed-hint">
+                        🏁 Rental completed! You can share your review and feedback above.
                       </span>
                     )}
 
@@ -388,6 +405,22 @@ const MyBookings = () => {
             );
           })}
         </div>
+      )}
+
+      {/* Review Modal */}
+      {activeReviewBooking && (
+        <ReviewForm
+          booking={activeReviewBooking}
+          onSuccess={() => {
+            setActiveReviewBooking(null);
+            setActionMessage({
+              type: 'success',
+              text: 'Thank you! Your review has been published.',
+            });
+            fetchBookings();
+          }}
+          onCancel={() => setActiveReviewBooking(null)}
+        />
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 const Equipment = require('../models/Equipment');
 const Booking = require('../models/Booking');
+const Review = require('../models/Review');
 
 // @desc    Create new equipment listing
 // @route   POST /api/equipment
@@ -127,10 +128,39 @@ const getEquipment = async (req, res) => {
 
     const equipment = await queryBuilder;
 
+    // Aggregate average rating and review count for retrieved listings
+    const equipmentIds = equipment.map((e) => e._id);
+    const ratingStats = await Review.aggregate([
+      { $match: { equipmentId: { $in: equipmentIds } } },
+      {
+        $group: {
+          _id: '$equipmentId',
+          averageRating: { $avg: '$rating' },
+          reviewCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const ratingMap = {};
+    ratingStats.forEach((stat) => {
+      ratingMap[stat._id.toString()] = {
+        averageRating: Math.round(stat.averageRating * 10) / 10,
+        reviewCount: stat.reviewCount,
+      };
+    });
+
+    const dataWithRatings = equipment.map((item) => {
+      const obj = item.toObject ? item.toObject() : { ...item };
+      const stat = ratingMap[item._id.toString()];
+      obj.averageRating = stat ? stat.averageRating : 0;
+      obj.reviewCount = stat ? stat.reviewCount : 0;
+      return obj;
+    });
+
     return res.status(200).json({
       success: true,
-      count: equipment.length,
-      data: equipment,
+      count: dataWithRatings.length,
+      data: dataWithRatings,
     });
   } catch (error) {
     console.error('Get equipment error:', error);
@@ -181,9 +211,20 @@ const getEquipmentById = async (req, res) => {
       });
     }
 
+    const reviews = await Review.find({ equipmentId: req.params.id });
+    const reviewCount = reviews.length;
+    const averageRating =
+      reviewCount > 0
+        ? Math.round((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount) * 10) / 10
+        : 0;
+
+    const equipObj = equipment.toObject ? equipment.toObject() : { ...equipment };
+    equipObj.averageRating = averageRating;
+    equipObj.reviewCount = reviewCount;
+
     return res.status(200).json({
       success: true,
-      data: equipment,
+      data: equipObj,
     });
   } catch (error) {
     console.error('Get equipment by ID error:', error);

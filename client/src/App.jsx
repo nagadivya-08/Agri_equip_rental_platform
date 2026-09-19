@@ -14,6 +14,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminPendingListings from './pages/AdminPendingListings';
 import AdminAllListings from './pages/AdminAllListings';
 import AdminUsers from './pages/AdminUsers';
+import AdminReports from './pages/AdminReports';
 import MyBookings from './pages/MyBookings';
 import OwnerBookings from './pages/OwnerBookings';
 import './App.css';
@@ -135,6 +136,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminReports />
               </ProtectedRoute>
             }
           />

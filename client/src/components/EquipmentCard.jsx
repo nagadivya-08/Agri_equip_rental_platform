@@ -59,6 +59,17 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
           {equipment.name}
         </h3>
 
+        <div className="card-rating-line">
+          {equipment.reviewCount > 0 ? (
+            <span className="card-rating-badge">
+              ★ {equipment.averageRating}{' '}
+              <span className="card-rating-count">({equipment.reviewCount})</span>
+            </span>
+          ) : (
+            <span className="card-rating-new">★ New</span>
+          )}
+        </div>
+
         <p className="card-location">
           📍 {equipment.locationName || 'Location not specified'}
         </p>

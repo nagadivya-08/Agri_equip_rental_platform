@@ -16,6 +16,9 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const reportRoutes = require('./routes/reportRoutes');
+const { getUserReviews } = require('./controllers/reviewController');
 
 // Middleware
 app.use(cors());
@@ -30,6 +33,10 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/admin/reports', reportRoutes);
+app.get('/api/users/:id/reviews', getUserReviews);
 
 // Base route
 app.get('/', (req, res) => {

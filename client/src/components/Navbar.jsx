@@ -31,6 +31,9 @@ const Navbar = () => {
               <Link to="/admin/pending" className="nav-link">
                 Pending Approvals
               </Link>
+              <Link to="/admin/reports" className="nav-link">
+                Reports
+              </Link>
             </>
           )}
 
