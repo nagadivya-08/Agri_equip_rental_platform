@@ -26,6 +26,13 @@ const protect = async (req, res, next) => {
         });
       }
 
+      if (user.banned) {
+        return res.status(401).json({
+          success: false,
+          message: 'Your account has been banned. Please contact support.',
+        });
+      }
+
       req.user = user;
       return next();
     } catch (error) {

@@ -22,6 +22,19 @@ const Navbar = () => {
             Browse Equipment
           </Link>
 
+          {/* Admin Navigation */}
+          {user && user.role === 'admin' && (
+            <>
+              <Link to="/admin" className="nav-link nav-btn-admin">
+                🛡️ Admin Panel
+              </Link>
+              <Link to="/admin/pending" className="nav-link">
+                Pending Approvals
+              </Link>
+            </>
+          )}
+
+          {/* Owner Navigation */}
           {user && user.role === 'owner' && (
             <>
               <Link to="/my-listings" className="nav-link">

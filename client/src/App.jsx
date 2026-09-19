@@ -10,6 +10,10 @@ import EquipmentDetail from './pages/EquipmentDetail';
 import MyListings from './pages/MyListings';
 import AddEquipment from './pages/AddEquipment';
 import EditEquipment from './pages/EditEquipment';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminPendingListings from './pages/AdminPendingListings';
+import AdminAllListings from './pages/AdminAllListings';
+import AdminUsers from './pages/AdminUsers';
 import './App.css';
 
 // Root redirect handler: / -> /dashboard if logged in, /equipment if visitor/logged out
@@ -77,6 +81,40 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['owner']}>
                 <EditEquipment />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Moderation Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/pending"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminPendingListings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/listings"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminAllListings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminUsers />
               </ProtectedRoute>
             }
           />

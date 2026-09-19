@@ -1,0 +1,298 @@
+const Equipment = require('../models/Equipment');
+const User = require('../models/User');
+
+// @desc    Get all pending equipment listings
+// @route   GET /api/admin/listings/pending
+// @access  Private (Admin)
+const getPendingListings = async (req, res) => {
+  try {
+    const listings = await Equipment.find({ status: 'pending' })
+      .populate('ownerId', 'name email phone location')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: listings.length,
+      data: listings,
+    });
+  } catch (error) {
+    console.error('Error fetching pending listings:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching pending listings',
+    });
+  }
+};
+
+// @desc    Approve an equipment listing
+// @route   PATCH /api/admin/listings/:id/approve
+// @access  Private (Admin)
+const approveListing = async (req, res) => {
+  try {
+    const equipment = await Equipment.findById(req.params.id);
+
+    if (!equipment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Equipment listing not found',
+      });
+    }
+
+    equipment.status = 'approved';
+    equipment.rejectionReason = '';
+    await equipment.save();
+
+    const populated = await Equipment.findById(equipment._id).populate(
+      'ownerId',
+      'name email phone'
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: `Equipment "${equipment.name}" has been approved.`,
+      data: populated,
+    });
+  } catch (error) {
+    console.error('Error approving listing:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error approving listing',
+    });
+  }
+};
+
+// @desc    Reject an equipment listing
+// @route   PATCH /api/admin/listings/:id/reject
+// @access  Private (Admin)
+const rejectListing = async (req, res) => {
+  try {
+    const { reason, rejectionReason } = req.body;
+    const finalReason =
+      reason || rejectionReason || 'Listing does not meet quality or safety guidelines.';
+
+    const equipment = await Equipment.findById(req.params.id);
+
+    if (!equipment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Equipment listing not found',
+      });
+    }
+
+    equipment.status = 'rejected';
+    equipment.rejectionReason = finalReason.trim();
+    await equipment.save();
+
+    const populated = await Equipment.findById(equipment._id).populate(
+      'ownerId',
+      'name email phone'
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: `Equipment "${equipment.name}" has been rejected.`,
+      data: populated,
+    });
+  } catch (error) {
+    console.error('Error rejecting listing:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error rejecting listing',
+    });
+  }
+};
+
+// @desc    Get all equipment listings across all statuses
+// @route   GET /api/admin/listings
+// @access  Private (Admin)
+const getAllListings = async (req, res) => {
+  try {
+    const query = {};
+    if (req.query.status && req.query.status !== 'all') {
+      query.status = req.query.status.toLowerCase().trim();
+    }
+
+    const listings = await Equipment.find(query)
+      .populate('ownerId', 'name email phone location')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: listings.length,
+      data: listings,
+    });
+  } catch (error) {
+    console.error('Error fetching all listings:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching listings',
+    });
+  }
+};
+
+// @desc    Get all registered users
+// @route   GET /api/admin/users
+// @access  Private (Admin)
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching users',
+    });
+  }
+};
+
+// @desc    Ban a user
+// @route   PATCH /api/admin/users/:id/ban
+// @access  Private (Admin)
+const banUser = async (req, res) => {
+  try {
+    const userToBan = await User.findById(req.params.id);
+
+    if (!userToBan) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    // Safety: Prevent banning admins or oneself
+    if (userToBan.role === 'admin') {
+      return res.status(400).json({
+        success: false,
+        message: 'Admin accounts cannot be banned.',
+      });
+    }
+
+    userToBan.banned = true;
+    await userToBan.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `User "${userToBan.name}" has been banned.`,
+      data: {
+        _id: userToBan._id,
+        name: userToBan.name,
+        email: userToBan.email,
+        role: userToBan.role,
+        banned: userToBan.banned,
+      },
+    });
+  } catch (error) {
+    console.error('Error banning user:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error banning user',
+    });
+  }
+};
+
+// @desc    Unban a user
+// @route   PATCH /api/admin/users/:id/unban
+// @access  Private (Admin)
+const unbanUser = async (req, res) => {
+  try {
+    const userToUnban = await User.findById(req.params.id);
+
+    if (!userToUnban) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    userToUnban.banned = false;
+    await userToUnban.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `User "${userToUnban.name}" has been unbanned.`,
+      data: {
+        _id: userToUnban._id,
+        name: userToUnban.name,
+        email: userToUnban.email,
+        role: userToUnban.role,
+        banned: userToUnban.banned,
+      },
+    });
+  } catch (error) {
+    console.error('Error unbanning user:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error unbanning user',
+    });
+  }
+};
+
+// @desc    Get moderation overview statistics
+// @route   GET /api/admin/stats
+// @access  Private (Admin)
+const getStats = async (req, res) => {
+  try {
+    const [
+      totalUsers,
+      totalOwners,
+      totalRenters,
+      bannedUsers,
+      totalEquipment,
+      pendingEquipment,
+      approvedEquipment,
+      rejectedEquipment,
+    ] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ role: 'owner' }),
+      User.countDocuments({ role: 'renter' }),
+      User.countDocuments({ banned: true }),
+      Equipment.countDocuments(),
+      Equipment.countDocuments({ status: 'pending' }),
+      Equipment.countDocuments({ status: 'approved' }),
+      Equipment.countDocuments({ status: 'rejected' }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        users: {
+          total: totalUsers,
+          owners: totalOwners,
+          renters: totalRenters,
+          banned: bannedUsers,
+        },
+        equipment: {
+          total: totalEquipment,
+          pending: pendingEquipment,
+          approved: approvedEquipment,
+          rejected: rejectedEquipment,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching admin stats:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching statistics',
+    });
+  }
+};
+
+module.exports = {
+  getPendingListings,
+  approveListing,
+  rejectListing,
+  getAllListings,
+  getAllUsers,
+  banUser,
+  unbanUser,
+  getStats,
+};

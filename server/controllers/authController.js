@@ -111,6 +111,14 @@ const login = async (req, res) => {
       });
     }
 
+    // Check if account is banned
+    if (user.banned) {
+      return res.status(401).json({
+        success: false,
+        message: 'Your account has been banned. Please contact support.',
+      });
+    }
+
     const token = generateToken(user._id);
 
     return res.status(200).json({

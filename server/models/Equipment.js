@@ -55,6 +55,11 @@ const equipmentSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  rejectionReason: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   isAvailable: {
     type: Boolean,
     default: true,

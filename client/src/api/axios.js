@@ -18,4 +18,22 @@ api.interceptors.request.use(
   }
 );
 
+// Response interceptor: handle banned account 401 response
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      const msg = error.response.data?.message || '';
+      if (msg.toLowerCase().includes('banned')) {
+        localStorage.removeItem('token');
+        alert('Your account has been banned. Please contact support.');
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
