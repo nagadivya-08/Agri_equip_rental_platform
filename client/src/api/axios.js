@@ -1,7 +1,23 @@
 import axios from 'axios';
 
+// Determine backend base URL:
+// 1. If VITE_API_BASE_URL is set in environment, use it.
+// 2. If running in production on the same host (fullstack service), use window.location.origin.
+// 3. Otherwise (local dev default), use http://localhost:5000.
+const getBackendUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '');
+  }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return window.location.origin;
+  }
+  return 'http://localhost:5000';
+};
+
+export const BACKEND_URL = getBackendUrl();
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: `${BACKEND_URL}/api`,
 });
 
 // Request interceptor: attach token from localStorage if present

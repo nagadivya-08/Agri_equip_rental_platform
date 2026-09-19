@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../utils/imageUrl';
 
 const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
-  // Build image URL: if relative /uploads/..., prefix with backend server host
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    return `http://localhost:5000${imagePath}`;
-  };
 
   const primaryImage =
     equipment.images && equipment.images.length > 0

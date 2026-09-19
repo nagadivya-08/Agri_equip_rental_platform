@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ReviewsList from '../components/ReviewsList';
+import { getImageUrl } from '../utils/imageUrl';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -83,9 +84,7 @@ const EquipmentDetail = () => {
   }, [fetchDetail, fetchAvailability, fetchReviews]);
 
   const getFullImageUrl = (path) => {
-    if (!path) return null;
-    if (path.startsWith('http')) return path;
-    return `http://localhost:5000${path}`;
+    return getImageUrl(path);
   };
 
   const calculateDays = (start, end) => {
