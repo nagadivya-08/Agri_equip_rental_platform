@@ -211,7 +211,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: radial-gradient(circle at 35% 30%, #153828 0%, #0c1f16 65%, #06110b 100%);
+  background: radial-gradient(circle at 25% 32%, #153828 0%, #0c1f16 65%, #06110b 100%);
 }
 
 .three-bg-canvas-wrapper canvas {

@@ -143,10 +143,10 @@ const ThreeAgriculturalBackground = () => {
     frontReel.position.set(0, 0.6, 3.1);
     machineryGroup.add(frontReel);
 
-    // Position tractor on the left side of the screen
-    let machineryBaseX = (container.clientWidth || window.innerWidth) < 850 ? 0 : -3.3;
+    // Position tractor clearly on the left side of the screen
+    let machineryBaseX = (container.clientWidth || window.innerWidth) < 850 ? 0 : -4.8;
     machineryGroup.position.set(machineryBaseX, 0.4, 0.2);
-    machineryGroup.rotation.y = machineryBaseX === 0 ? -Math.PI / 5 : -Math.PI / 6.5;
+    machineryGroup.rotation.y = machineryBaseX === 0 ? -Math.PI / 5 : -Math.PI / 7;
     scene.add(machineryGroup);
 
     // 7. Ambient Floating Wheat / Bio Particles
@@ -195,7 +195,7 @@ const ThreeAgriculturalBackground = () => {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-      machineryBaseX = width < 850 ? 0 : -3.3;
+      machineryBaseX = width < 850 ? 0 : -4.8;
     };
 
     window.addEventListener('resize', onResize);
@@ -209,7 +209,7 @@ const ThreeAgriculturalBackground = () => {
       const time = clock.getElapsedTime();
 
       // Gentle floating and subtle slow rotation for machinery on the left
-      const baseAngle = machineryBaseX === 0 ? -Math.PI / 5 : -Math.PI / 6.5;
+      const baseAngle = machineryBaseX === 0 ? -Math.PI / 5 : -Math.PI / 7;
       machineryGroup.rotation.y = baseAngle + Math.sin(time * 0.4) * 0.1;
       machineryGroup.position.x = machineryBaseX;
       machineryGroup.position.y = 0.4 + Math.sin(time * 0.8) * 0.08;
