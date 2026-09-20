@@ -8,6 +8,7 @@ import ReviewsList from '../components/ReviewsList';
 import { getImageUrl } from '../utils/imageUrl';
 import Spinner from '../components/Spinner';
 import toast from 'react-hot-toast';
+import SpecularButton from '../components/SpecularButton';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -424,13 +425,25 @@ const EquipmentDetail = () => {
                   </div>
                 )}
 
-                <button
+                <SpecularButton
                   type="submit"
+                  size="lg"
+                  radius={12}
+                  tint="#059669"
+                  tintOpacity={!startDate || !endDate || bookingLoading || daysCount <= 0 ? 0.35 : 0.95}
+                  textColor="#ffffff"
+                  lineColor="#34d399"
+                  baseColor="#047857"
+                  intensity={1.5}
+                  shineSize={18}
+                  shineFade={45}
+                  thickness={1.5}
+                  followMouse
                   disabled={!startDate || !endDate || bookingLoading || daysCount <= 0}
-                  className="btn-book-now"
+                  className="w-full-btn"
                 >
                   {bookingLoading ? 'Processing Reservation...' : `Book Now • ₹${totalPrice.toLocaleString('en-IN')}`}
-                </button>
+                </SpecularButton>
               </form>
             )}
           </div>

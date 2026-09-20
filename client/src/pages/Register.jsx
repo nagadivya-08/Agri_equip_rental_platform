@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import ThreeAgriculturalBackground from '../components/ThreeAgriculturalBackground';
+import SpecularButton from '../components/SpecularButton';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -153,9 +154,25 @@ const Register = () => {
             </select>
           </div>
 
-          <button type="submit" className="auth-button" disabled={submitting}>
+          <SpecularButton
+            type="submit"
+            size="md"
+            radius={12}
+            tint="#059669"
+            tintOpacity={0.92}
+            textColor="#ffffff"
+            lineColor="#34d399"
+            baseColor="#047857"
+            intensity={1.5}
+            shineSize={18}
+            shineFade={45}
+            thickness={1.5}
+            followMouse
+            disabled={submitting}
+            className="w-full-btn"
+          >
             {submitting ? 'Registering...' : 'Register'}
-          </button>
+          </SpecularButton>
         </form>
 
         <p className="auth-switch">

@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SpecularButton from '../components/SpecularButton';
 
 const Home = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const categories = [
     { type: 'tractor', name: 'Tractors', icon: '🚜', desc: 'Powerful 40-75 HP utility and 4WD tractors' },
@@ -31,17 +33,63 @@ const Home = () => {
           </p>
 
           <div className="home-hero-actions">
-            <Link to="/equipment" className="btn-hero-primary">
+            <SpecularButton
+              size="lg"
+              radius={14}
+              tint="#10b981"
+              tintOpacity={0.9}
+              textColor="#ffffff"
+              lineColor="#6ee7b7"
+              baseColor="#047857"
+              intensity={1.5}
+              shineSize={20}
+              shineFade={45}
+              thickness={1.5}
+              speed={0.4}
+              followMouse
+              onClick={() => navigate('/equipment')}
+            >
               🚜 Browse Equipment
-            </Link>
+            </SpecularButton>
+
             {user ? (
-              <Link to="/dashboard" className="btn-hero-secondary">
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#ffffff"
+                tintOpacity={0.16}
+                blur={12}
+                textColor="#ffffff"
+                lineColor="#fbbf24"
+                baseColor="#334155"
+                intensity={1.3}
+                shineSize={18}
+                shineFade={40}
+                thickness={1.2}
+                followMouse
+                onClick={() => navigate('/dashboard')}
+              >
                 Go to Dashboard ({user.name}) →
-              </Link>
+              </SpecularButton>
             ) : (
-              <Link to="/register" className="btn-hero-secondary">
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#ffffff"
+                tintOpacity={0.16}
+                blur={12}
+                textColor="#ffffff"
+                lineColor="#fbbf24"
+                baseColor="#334155"
+                intensity={1.3}
+                shineSize={18}
+                shineFade={40}
+                thickness={1.2}
+                followMouse
+                onClick={() => navigate('/register')}
+              >
                 ✨ Join AgriRent Free
-              </Link>
+              </SpecularButton>
             )}
           </div>
 
@@ -148,13 +196,41 @@ const Home = () => {
           </div>
           <div className="owner-cta-action">
             {user?.role === 'owner' ? (
-              <Link to="/add-equipment" className="btn-cta-white">
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#ffffff"
+                tintOpacity={0.96}
+                textColor="#064e3b"
+                lineColor="#10b981"
+                baseColor="#d1fae5"
+                intensity={1.5}
+                shineSize={20}
+                shineFade={45}
+                thickness={1.5}
+                followMouse
+                onClick={() => navigate('/add-equipment')}
+              >
                 + List New Equipment
-              </Link>
+              </SpecularButton>
             ) : (
-              <Link to="/register" className="btn-cta-white">
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#ffffff"
+                tintOpacity={0.96}
+                textColor="#064e3b"
+                lineColor="#10b981"
+                baseColor="#d1fae5"
+                intensity={1.5}
+                shineSize={20}
+                shineFade={45}
+                thickness={1.5}
+                followMouse
+                onClick={() => navigate('/register')}
+              >
                 Register as an Owner
-              </Link>
+              </SpecularButton>
             )}
           </div>
         </div>
