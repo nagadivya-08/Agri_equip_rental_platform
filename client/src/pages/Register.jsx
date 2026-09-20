@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import ThreeAgriculturalBackground from '../components/ThreeAgriculturalBackground';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -72,10 +73,12 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Register for AgriRent</h2>
-        <p className="auth-subtitle">Create an account as an Equipment Owner or Renter</p>
+    <div className="auth-page-wrapper">
+      <ThreeAgriculturalBackground />
+      <div className="auth-container">
+        <div className="auth-card auth-card-glass">
+          <h2>Register for AgriRent</h2>
+          <p className="auth-subtitle">Create an account as an Equipment Owner or Renter</p>
 
         {error && <p className="error-text">{error}</p>}
 
@@ -160,6 +163,7 @@ const Register = () => {
         </p>
       </div>
     </div>
+  </div>
   );
 };
 

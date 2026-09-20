@@ -176,14 +176,42 @@
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.38);
 }
 
+/* 3D Agricultural Three.js Background Canvas */
+.auth-page-wrapper {
+  position: relative;
+  min-height: calc(100vh - 70px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.three-bg-canvas-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 25%, #153828 0%, #0c1f16 65%, #06110b 100%);
+}
+
+.three-bg-canvas-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
 /* Auth Pages & Cards */
 .auth-container,
 .dashboard-container {
+  position: relative;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 75vh;
-  padding: 24px;
+  padding: 36px 20px;
 }
 
 .auth-card,
@@ -198,6 +226,17 @@
   padding: 38px 32px;
   box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
   transition: box-shadow 0.3s ease;
+}
+
+.auth-card-glass {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.35),
+    0 0 35px rgba(16, 185, 129, 0.18) !important;
+  border-radius: 22px !important;
 }
 
 .dashboard-card {
