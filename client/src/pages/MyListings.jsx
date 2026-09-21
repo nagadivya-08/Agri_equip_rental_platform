@@ -55,54 +55,56 @@ const MyListings = () => {
   };
 
   return (
-    <div className="page-container">
-      <div className="my-listings-header">
-        <div>
-          <h2>My Equipment Listings</h2>
-          <p className="page-subtitle">
-            Manage your registered agricultural machinery and view review statuses
-          </p>
-        </div>
-        <Link to="/add-equipment" className="btn-primary">
-          + Add New Equipment
-        </Link>
-      </div>
-
-      {deleteMessage && (
-        <div className="notice-banner success-banner">
-          ✅ {deleteMessage}
-        </div>
-      )}
-
-      {error && <p className="error-text">{error}</p>}
-
-      {loading ? (
-        <Spinner message="Loading your equipment listings..." />
-      ) : equipmentList.length === 0 ? (
-        <div className="empty-state-card">
-          <span className="empty-icon">🚜</span>
-          <h3>No Equipment Listed Yet</h3>
-          <p>
-            You haven't added any equipment to the platform yet. Start earning by
-            renting out your idle farm machinery!
-          </p>
+    <div className="my-listings-page">
+      <div className="page-container">
+        <div className="my-listings-header">
+          <div>
+            <h2>My Equipment Listings</h2>
+            <p className="page-subtitle">
+              Manage your registered agricultural machinery and view review statuses
+            </p>
+          </div>
           <Link to="/add-equipment" className="btn-primary">
-            List Your First Equipment
+            + Add New Equipment
           </Link>
         </div>
-      ) : (
-        <div className="equipment-grid">
-          {equipmentList.map((item) => (
-            <EquipmentCard
-              key={item._id}
-              equipment={item}
-              isOwnerView={true}
-              showStatus={true}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      )}
+
+        {deleteMessage && (
+          <div className="notice-banner success-banner">
+            ✅ {deleteMessage}
+          </div>
+        )}
+
+        {error && <p className="error-text">{error}</p>}
+
+        {loading ? (
+          <Spinner message="Loading your equipment listings..." />
+        ) : equipmentList.length === 0 ? (
+          <div className="empty-state-card">
+            <span className="empty-icon">🚜</span>
+            <h3>No Equipment Listed Yet</h3>
+            <p>
+              You haven't added any equipment to the platform yet. Start earning by
+              renting out your idle farm machinery!
+            </p>
+            <Link to="/add-equipment" className="btn-primary">
+              List Your First Equipment
+            </Link>
+          </div>
+        ) : (
+          <div className="equipment-grid">
+            {equipmentList.map((item) => (
+              <EquipmentCard
+                key={item._id}
+                equipment={item}
+                isOwnerView={true}
+                showStatus={true}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -5253,5 +5253,204 @@
   color: #475569;
 }
 
+/* =========================================================
+   My Listings & Booking Requests - Agricultural Theme Styles
+   ========================================================= */
+.my-listings-page,
+.owner-bookings-page,
+.my-bookings-page {
+  min-height: calc(100vh - 70px);
+  background-color: #f1f8f4;
+  background-image: 
+    radial-gradient(ellipse at 12% 14%, rgba(16, 185, 129, 0.16) 0%, transparent 45%),
+    radial-gradient(ellipse at 88% 12%, rgba(245, 158, 11, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 55%, rgba(5, 150, 105, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse at 82% 88%, rgba(16, 185, 129, 0.14) 0%, transparent 45%),
+    linear-gradient(165deg, #ebf7ef 0%, #f6fdf8 30%, #eff8f3 70%, #e5f5eb 100%);
+  background-attachment: fixed;
+  padding: 10px 0 60px 0;
+  position: relative;
+}
+
+/* Subtle Top Agricultural Ribbon */
+.my-listings-page::before,
+.owner-bookings-page::before,
+.my-bookings-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #10b981 0%, #059669 35%, #f59e0b 70%, #10b981 100%);
+  opacity: 0.85;
+}
+
+/* Elevated Glassmorphic Header Card */
+.my-listings-page .my-listings-header,
+.owner-bookings-page .page-header-row,
+.my-bookings-page .page-header-row {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(167, 243, 208, 0.8);
+  border-radius: 18px;
+  padding: 24px 32px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 4px 20px -2px rgba(6, 95, 70, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.my-listings-page .my-listings-header h2,
+.owner-bookings-page .page-title,
+.my-bookings-page .page-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #064e3b;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.my-listings-page .my-listings-header .page-subtitle,
+.owner-bookings-page .page-subtitle,
+.my-bookings-page .page-subtitle {
+  color: #047857;
+  font-size: 0.96rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Primary Button Accent in Headers */
+.my-listings-page .btn-primary,
+.owner-bookings-page .btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.my-listings-page .btn-primary:hover,
+.owner-bookings-page .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.owner-bookings-page .btn-secondary {
+  background: #ffffff;
+  color: #065f46;
+  border: 1.5px solid #a7f3d0;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.owner-bookings-page .btn-secondary:hover {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+  transform: translateY(-1px);
+}
+
+/* Filter Chips on Booking Requests */
+.owner-bookings-page .admin-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.owner-bookings-page .admin-filter-bar .filter-chip {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #d1fae5;
+  color: #065f46;
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(6, 95, 70, 0.04);
+}
+
+.owner-bookings-page .admin-filter-bar .filter-chip:hover {
+  background: #ecfdf5;
+  border-color: #34d399;
+  transform: translateY(-1px);
+}
+
+.owner-bookings-page .admin-filter-bar .filter-chip.filter-active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  font-weight: 700;
+}
+
+/* Booking Card Enhancements */
+.owner-bookings-page .booking-card-item,
+.my-bookings-page .booking-card-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(167, 243, 208, 0.7);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px -2px rgba(6, 95, 70, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.owner-bookings-page .booking-card-item:hover,
+.my-bookings-page .booking-card-item:hover {
+  transform: translateY(-4px);
+  border-color: #10b981;
+  box-shadow: 0 12px 28px -4px rgba(6, 95, 70, 0.12);
+}
+
+/* Empty State Card Enhancement */
+.my-listings-page .empty-state-card,
+.owner-bookings-page .empty-state-card,
+.my-bookings-page .empty-state-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(167, 243, 208, 0.8);
+  border-radius: 20px;
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow: 0 8px 24px -4px rgba(6, 95, 70, 0.06);
+}
+
+.my-listings-page .empty-state-card h3,
+.owner-bookings-page .empty-state-card h3,
+.my-bookings-page .empty-state-card h3 {
+  color: #064e3b;
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 1.5rem;
+  margin-top: 12px;
+}
+
+.my-listings-page .empty-state-card p,
+.owner-bookings-page .empty-state-card p,
+.my-bookings-page .empty-state-card p {
+  color: #047857;
+  max-width: 480px;
+  margin: 8px auto 24px auto;
+  font-size: 0.98rem;
+}
+
+
 
 

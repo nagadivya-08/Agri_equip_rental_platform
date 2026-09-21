@@ -204,15 +204,18 @@ const MyBookings = () => {
 
   if (loading) {
     return (
-      <div className="page-container">
-        <Spinner message="Loading your rental bookings & payment records..." />
+      <div className="my-bookings-page">
+        <div className="page-container">
+          <Spinner message="Loading your rental bookings & payment records..." />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="page-header-row">
+    <div className="my-bookings-page">
+      <div className="page-container">
+        <div className="page-header-row">
         <div>
           <h1 className="page-title">My Bookings</h1>
           <p className="page-subtitle">
@@ -431,6 +434,7 @@ const MyBookings = () => {
           onCancel={() => setActiveReviewBooking(null)}
         />
       )}
+      </div>
     </div>
   );
 };

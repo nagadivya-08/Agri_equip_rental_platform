@@ -192,17 +192,20 @@ const OwnerBookings = () => {
 
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="loading-container">
-          <p>Loading incoming equipment bookings...</p>
+      <div className="owner-bookings-page">
+        <div className="page-container">
+          <div className="loading-container">
+            <p>Loading incoming equipment bookings...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="page-header-row">
+    <div className="owner-bookings-page">
+      <div className="page-container">
+        <div className="page-header-row">
         <div>
           <h1 className="page-title">Equipment Booking Requests</h1>
           <p className="page-subtitle">
@@ -457,6 +460,7 @@ const OwnerBookings = () => {
           onCancel={() => setActiveReviewBooking(null)}
         />
       )}
+      </div>
     </div>
   );
 };
