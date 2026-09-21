@@ -24,9 +24,8 @@ const { getUserReviews } = require('./controllers/reviewController');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // CORS Configuration
-const defaultAllowedOrigins = [
+const allowedOrigins = [
   'https://agri-equip-rental-platform.vercel.app',
-  'https://agri-equip-frontend.onrender.com',
   'https://agri-equip-backend.onrender.com',
   'http://localhost:5173',
   'http://localhost:3000',
@@ -35,39 +34,36 @@ const defaultAllowedOrigins = [
   'http://127.0.0.1:3000',
 ];
 
-const envOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim().replace(/\/$/, ''))
-  : [];
-
-const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envOrigins])];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-
-    const cleanOrigin = origin.replace(/\/$/, '');
-
-    // Allow exact matches, or any vercel.app / onrender.com preview domains
-    if (
-      allowedOrigins.includes(cleanOrigin) ||
-      cleanOrigin.endsWith('.vercel.app') ||
-      cleanOrigin.endsWith('.onrender.com') ||
-      process.env.CORS_ORIGIN === '*'
-    ) {
-      return callback(null, true);
+if (process.env.CORS_ORIGIN) {
+  process.env.CORS_ORIGIN.split(',').forEach((o) => {
+    const trimmed = o.trim().replace(/\/$/, '');
+    if (trimmed && !allowedOrigins.includes(trimmed)) {
+      allowedOrigins.push(trimmed);
     }
+  });
+}
 
-    // Permissive fallback so production requests never fail due to CORS
-    return callback(null, true);
-  },
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
 
-app.use(cors(corsOptions));
+      const cleanOrigin = origin.replace(/\/$/, '');
+      if (
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app') ||
+        cleanOrigin.endsWith('.onrender.com')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  })
+);
 app.use(express.json());
 
 // Ensure uploads directory exists and serve static uploads

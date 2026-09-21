@@ -13,7 +13,7 @@ const getBackendUrl = () => {
     return url;
   }
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return window.location.origin;
+    return 'https://agri-equip-backend.onrender.com';
   }
   return 'http://localhost:5000';
 };

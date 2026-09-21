@@ -26,7 +26,7 @@ services:
       - key: RAZORPAY_KEY_SECRET
         sync: false
       - key: CORS_ORIGIN
-        value: https://agri-equip-rental-platform.vercel.app,https://agri-equip-frontend.onrender.com
+        value: https://agri-equip-rental-platform.vercel.app
 
   # =========================================================
   # AgriRent Frontend Static Site (React + Vite SPA)
