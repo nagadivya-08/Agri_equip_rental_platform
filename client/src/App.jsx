@@ -20,9 +20,29 @@ import AdminUsers from './pages/AdminUsers';
 import AdminReports from './pages/AdminReports';
 import MyBookings from './pages/MyBookings';
 import OwnerBookings from './pages/OwnerBookings';
+import { useAuth } from './context/AuthContext';
+import Loader from './components/Loader';
 import './App.css';
 
 function App() {
+  const { loading } = useAuth();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  if (loading && token) {
+    return (
+      <div className="app-layout">
+        <Navbar />
+        <main className="content-wrapper">
+          <Loader
+            fullPage
+            message="Loading session..."
+            submessage="Verifying your credentials and connecting to machinery network..."
+          />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <div className="app-layout">
@@ -31,11 +51,11 @@ function App() {
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#ffffff',
-              color: '#1f2937',
-              borderRadius: '8px',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              background: '#0c231b',
+              color: '#f8fafc',
+              borderRadius: '10px',
+              border: '1px solid rgba(52, 211, 153, 0.35)',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
               fontSize: '0.92rem',
             },
           }}

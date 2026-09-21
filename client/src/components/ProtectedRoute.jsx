@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Loader from './Loader';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -7,9 +8,11 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <p>Loading session...</p>
-      </div>
+      <Loader
+        fullPage
+        message="Loading session..."
+        submessage="Verifying your credentials and access permissions..."
+      />
     );
   }
 
