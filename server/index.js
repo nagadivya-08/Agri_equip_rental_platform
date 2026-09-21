@@ -3,14 +3,16 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
-// Load environment variables
+const path = require('path');
+
+// Load environment variables (supports running from both root and server directory)
+dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 // Connect to MongoDB Database
 connectDB();
 
 const app = express();
-const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const equipmentRoutes = require('./routes/equipmentRoutes');
 const adminRoutes = require('./routes/adminRoutes');

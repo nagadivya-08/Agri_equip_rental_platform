@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import EquipmentCard from '../components/EquipmentCard';
 import MapView from '../components/MapView';
 import Spinner from '../components/Spinner';
+import AudioToggle from '../components/AudioToggle';
 
 const BrowseEquipment = () => {
   const [searchParams] = useSearchParams();
@@ -12,11 +13,73 @@ const BrowseEquipment = () => {
   const [error, setError] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
 
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleAudio = () => {
+    if (videoRef.current) {
+      const nextMuted = !isMuted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+      if (!nextMuted) {
+        videoRef.current.play().catch(() => {});
+      }
+    }
+  };
+
   // Filters state (prefill from query string if available)
   const [search, setSearch] = useState('');
   const [type, setType] = useState(searchParams.get('type') || 'all');
-  const [minPrice, setMinPrice] = useState('');
+  const [minPrice, setMinPrice] = useState('500');
   const [maxPrice, setMaxPrice] = useState('');
+
+  // Stepper handlers for price filters (starts from ₹500, step 100)
+  const handleMinPriceIncrement = () => {
+    setMinPrice((prev) => {
+      const num = Number(prev);
+      if (!prev || isNaN(num) || num < 500) {
+        return '500';
+      }
+      return String(num + 100);
+    });
+  };
+
+  const handleMinPriceDecrement = () => {
+    setMinPrice((prev) => {
+      const num = Number(prev);
+      if (!prev || isNaN(num) || num <= 500) {
+        return '500';
+      }
+      return String(Math.max(500, num - 100));
+    });
+  };
+
+  const handleMinPriceBlur = () => {
+    if (minPrice !== '' && !isNaN(Number(minPrice)) && Number(minPrice) < 500) {
+      setMinPrice('500');
+    }
+  };
+
+  const handleMaxPriceIncrement = () => {
+    setMaxPrice((prev) => {
+      const num = Number(prev);
+      if (!prev || isNaN(num)) {
+        const minVal = Number(minPrice);
+        return String(!isNaN(minVal) && minVal >= 500 ? minVal + 500 : '1000');
+      }
+      return String(num + 100);
+    });
+  };
+
+  const handleMaxPriceDecrement = () => {
+    setMaxPrice((prev) => {
+      const num = Number(prev);
+      if (!prev || isNaN(num) || num <= 500) {
+        return '500';
+      }
+      return String(Math.max(500, num - 100));
+    });
+  };
 
   const fetchEquipment = async () => {
     setLoading(true);
@@ -54,13 +117,33 @@ const BrowseEquipment = () => {
   const handleResetFilters = () => {
     setSearch('');
     setType('all');
-    setMinPrice('');
+    setMinPrice('500');
     setMaxPrice('');
   };
 
   return (
-    <div className="page-container">
-      <div className="browse-hero">
+    <div className="browse-page">
+      {/* Fixed Background Video */}
+      <div className="browse-video-bg-container" aria-hidden="true">
+        <video
+          ref={videoRef}
+          className="browse-video-bg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+        >
+          <source src="/equip_browsing.mp4" type="video/mp4" />
+        </video>
+        <div className="browse-video-overlay" />
+      </div>
+
+      {/* Floating Audio On / Off Toggle Switch */}
+      <AudioToggle isMuted={isMuted} onToggle={toggleAudio} id="browseAudioToggle" />
+
+      <div className="page-container browse-content">
+        <div className="browse-hero">
         <h2>🚜 Find Agricultural Equipment for Rent</h2>
         <p className="page-subtitle">
           Affordable, verified machinery from local owners to power your farming operations
@@ -101,21 +184,70 @@ const BrowseEquipment = () => {
           <div className="filter-group price-filter">
             <label>Price Range (₹/day)</label>
             <div className="price-inputs">
-              <input
-                type="number"
-                placeholder="Min"
-                min="0"
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-              />
+              <div className="price-stepper-box">
+                <button
+                  type="button"
+                  className="stepper-btn dec-btn"
+                  onClick={handleMinPriceDecrement}
+                  title="Decrease min price by ₹100"
+                  aria-label="Decrease min price by 100"
+                >
+                  −
+                </button>
+                <span className="stepper-currency">₹</span>
+                <input
+                  id="minPrice"
+                  type="number"
+                  placeholder="500"
+                  min="500"
+                  step="100"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  onBlur={handleMinPriceBlur}
+                />
+                <button
+                  type="button"
+                  className="stepper-btn inc-btn"
+                  onClick={handleMinPriceIncrement}
+                  title="Increase min price by ₹100"
+                  aria-label="Increase min price by 100"
+                >
+                  +
+                </button>
+              </div>
+
               <span className="price-dash">-</span>
-              <input
-                type="number"
-                placeholder="Max"
-                min="0"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-              />
+
+              <div className="price-stepper-box">
+                <button
+                  type="button"
+                  className="stepper-btn dec-btn"
+                  onClick={handleMaxPriceDecrement}
+                  title="Decrease max price by ₹100"
+                  aria-label="Decrease max price by 100"
+                >
+                  −
+                </button>
+                <span className="stepper-currency">₹</span>
+                <input
+                  id="maxPrice"
+                  type="number"
+                  placeholder="Max"
+                  min="500"
+                  step="100"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="stepper-btn inc-btn"
+                  onClick={handleMaxPriceIncrement}
+                  title="Increase max price by ₹100"
+                  aria-label="Increase max price by 100"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
 
@@ -189,6 +321,7 @@ const BrowseEquipment = () => {
           )}
         </>
       )}
+      </div>
     </div>
   );
 };
