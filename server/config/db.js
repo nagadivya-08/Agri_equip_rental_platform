@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+let retryTimer = null;
+let isConnecting = false;
+
 const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
@@ -8,31 +11,57 @@ const connectDB = async () => {
     return;
   }
 
-  // Setup connection event listeners
-  mongoose.connection.on('connected', () => {
-    console.log('✅ MongoDB connection established successfully');
-  });
+  // Setup connection event listeners once
+  if (!mongoose.connection._hasRegisteredListeners) {
+    mongoose.connection._hasRegisteredListeners = true;
 
-  mongoose.connection.on('error', (err) => {
-    console.error('❌ MongoDB runtime error:', err.message);
-  });
+    mongoose.connection.on('connected', () => {
+      console.log('✅ MongoDB connection established successfully');
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+      }
+    });
 
-  mongoose.connection.on('disconnected', () => {
-    console.warn('⚠️ MongoDB disconnected from server');
-  });
+    mongoose.connection.on('error', (err) => {
+      console.error('❌ MongoDB runtime error:', err.message);
+    });
 
-  const connectWithRetry = async (retries = 5, delay = 4000) => {
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️ MongoDB disconnected. Scheduling automatic reconnection...');
+      scheduleRetry(1);
+    });
+  }
+
+  const scheduleRetry = (attempt = 1) => {
+    if (retryTimer || mongoose.connection.readyState === 1) return;
+    const delay = Math.min(10000, 3000 + attempt * 1000);
+    console.log(`⏳ Will attempt MongoDB reconnection in ${delay / 1000}s... (Attempt #${attempt})`);
+    retryTimer = setTimeout(async () => {
+      retryTimer = null;
+      await connectWithRetry(attempt + 1);
+    }, delay);
+  };
+
+  const connectWithRetry = async (attempt = 1) => {
+    if (mongoose.connection.readyState === 1 || isConnecting) {
+      return;
+    }
+
+    isConnecting = true;
     try {
       const conn = await mongoose.connect(mongoUri, {
         serverSelectionTimeoutMS: 5000,
         maxPoolSize: 10,
       });
       console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+      isConnecting = false;
     } catch (error) {
-      console.warn(`⚠️ MongoDB connection attempt failed: ${error.message}`);
+      isConnecting = false;
+      console.warn(`⚠️ MongoDB connection attempt #${attempt} failed: ${error.message}`);
 
-      // If running in local development, attempt local MongoDB fallback
-      if (process.env.NODE_ENV !== 'production') {
+      // If running in local development on first attempt, try local fallback
+      if (process.env.NODE_ENV !== 'production' && attempt === 1) {
         try {
           console.log('Attempting local MongoDB fallback (mongodb://127.0.0.1:27017/agrirent)...');
           const localConn = await mongoose.connect('mongodb://127.0.0.1:27017/agrirent', {
@@ -45,14 +74,12 @@ const connectDB = async () => {
         }
       }
 
-      if (retries > 0) {
-        console.log(`Retrying MongoDB connection in ${delay / 1000}s... (${retries} attempts left)`);
-        setTimeout(() => connectWithRetry(retries - 1, delay), delay);
-      }
+      // Schedule continuous retry until MongoDB Atlas allows access
+      scheduleRetry(attempt);
     }
   };
 
-  await connectWithRetry();
+  await connectWithRetry(1);
 };
 
 module.exports = connectDB;

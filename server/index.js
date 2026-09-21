@@ -74,18 +74,7 @@ if (!fs.existsSync(uploadsDir)) {
 }
 app.use('/uploads', express.static(uploadsDir));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/equipment', equipmentRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/reviews', reviewRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/admin/reports', reportRoutes);
-app.get('/api/users/:id/reviews', getUserReviews);
-
-// Health check / base route
+// Health check / base route (accessible even if database is connecting)
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'AgriRent API is running smoothly' });
 });
@@ -101,6 +90,35 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Guard middleware to prevent 10-second buffering timeouts when database is disconnected
+const requireDbConnection = (req, res, next) => {
+  const mongoose = require('mongoose');
+  if (mongoose.connection.readyState === 1) {
+    return next();
+  }
+  const isConnecting = mongoose.connection.readyState === 2;
+  return res.status(503).json({
+    success: false,
+    message: isConnecting
+      ? 'Database connection is initializing. Please retry in a few seconds.'
+      : 'Database is disconnected. In MongoDB Atlas, ensure Network Access has 0.0.0.0/0 (Allow Access from Anywhere) added and marked Active.',
+    dbState: isConnecting ? 'connecting' : 'disconnected',
+  });
+};
+
+app.use('/api', requireDbConnection);
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/equipment', equipmentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/admin/reports', reportRoutes);
+app.get('/api/users/:id/reviews', getUserReviews);
 
 // Centralized 404 & Error Handling Middleware
 app.use(notFoundHandler);
