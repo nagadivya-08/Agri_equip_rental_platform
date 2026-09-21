@@ -189,7 +189,8 @@ const BrowseEquipment = () => {
                   type="button"
                   className="stepper-btn dec-btn"
                   onClick={handleMinPriceDecrement}
-                  title="Decrease min price by ₹100"
+                  disabled={!minPrice || isNaN(Number(minPrice)) || Number(minPrice) <= 500}
+                  title={!minPrice || Number(minPrice) <= 500 ? 'Minimum price cannot be less than ₹500' : 'Decrease min price by ₹100'}
                   aria-label="Decrease min price by 100"
                 >
                   −
@@ -224,7 +225,8 @@ const BrowseEquipment = () => {
                   type="button"
                   className="stepper-btn dec-btn"
                   onClick={handleMaxPriceDecrement}
-                  title="Decrease max price by ₹100"
+                  disabled={!maxPrice || isNaN(Number(maxPrice)) || Number(maxPrice) <= 500}
+                  title={!maxPrice || Number(maxPrice) <= 500 ? 'Price cannot be less than ₹500' : 'Decrease max price by ₹100'}
                   aria-label="Decrease max price by 100"
                 >
                   −

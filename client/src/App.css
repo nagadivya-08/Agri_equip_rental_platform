@@ -954,10 +954,21 @@
   opacity: 1 !important;
 }
 
+/* Hide native browser up/down arrows on number inputs */
 .price-stepper-box input::-webkit-inner-spin-button,
-.price-stepper-box input::-webkit-outer-spin-button {
-  cursor: pointer;
-  height: 26px;
+.price-stepper-box input::-webkit-outer-spin-button,
+.stepper-price-input::-webkit-inner-spin-button,
+.stepper-price-input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+.price-stepper-box input[type='number'],
+.stepper-price-input[type='number'] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
 }
 
 .browse-page .price-stepper-box .stepper-currency,
@@ -990,16 +1001,25 @@
   line-height: 1 !important;
 }
 
-.browse-page .price-stepper-box .stepper-btn:hover,
-.price-stepper-box .stepper-btn:hover {
+.browse-page .price-stepper-box .stepper-btn:hover:not(:disabled),
+.price-stepper-box .stepper-btn:hover:not(:disabled) {
   background: #e2e8f0 !important;
   color: #047857 !important;
 }
 
-.browse-page .price-stepper-box .stepper-btn:active,
-.price-stepper-box .stepper-btn:active {
+.browse-page .price-stepper-box .stepper-btn:active:not(:disabled),
+.price-stepper-box .stepper-btn:active:not(:disabled) {
   background: #cbd5e1 !important;
   transform: scale(0.92) !important;
+}
+
+.browse-page .price-stepper-box .stepper-btn:disabled,
+.price-stepper-box .stepper-btn:disabled {
+  opacity: 0.28 !important;
+  cursor: not-allowed !important;
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  pointer-events: none !important;
 }
 
 .browse-page .price-dash,
