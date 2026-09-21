@@ -40,6 +40,12 @@ const errorHandler = (err, req, res, next) => {
     message = 'Authentication token expired';
   }
 
+  // 5. Mongoose Connection Buffering Timeout Error
+  if (err.name === 'MongooseError' && err.message.includes('buffering timed out')) {
+    statusCode = 503;
+    message = 'Database connection timed out. Please check MongoDB Atlas Network Access and ensure 0.0.0.0/0 is enabled.';
+  }
+
   console.error(`🚨 [ERROR] ${req.method} ${req.originalUrl} - Status: ${statusCode} - ${message}`);
   if (process.env.NODE_ENV !== 'production' && err.stack) {
     console.error(err.stack);

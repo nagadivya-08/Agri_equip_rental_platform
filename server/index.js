@@ -90,6 +90,18 @@ app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'AgriRent API is running smoothly' });
 });
 
+app.get('/api/health', (req, res) => {
+  const mongoose = require('mongoose');
+  const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  const dbState = states[mongoose.connection.readyState] || 'unknown';
+  res.json({
+    status: dbState === 'connected' ? 'ok' : 'degraded',
+    database: dbState,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Centralized 404 & Error Handling Middleware
 app.use(notFoundHandler);
 app.use(errorHandler);
