@@ -198,6 +198,7 @@ const BrowseEquipment = () => {
                 <input
                   id="minPrice"
                   type="number"
+                  className="stepper-price-input"
                   placeholder="500"
                   min="500"
                   step="100"
@@ -232,6 +233,7 @@ const BrowseEquipment = () => {
                 <input
                   id="maxPrice"
                   type="number"
+                  className="stepper-price-input"
                   placeholder="Max"
                   min="500"
                   step="100"
