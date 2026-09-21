@@ -4940,4 +4940,256 @@
   transform: scale(1.06);
 }
 
+/* =========================================================
+   Vertical Lever Theme Switch & Home Page Theme Transitions
+   ========================================================= */
+
+/* Floating Theme Dock on Home Page */
+.home-theme-toggle-container {
+  position: fixed;
+  bottom: 92px;
+  right: 28px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle-dock {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 30px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 12px rgba(16, 185, 129, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.theme-dock-icon {
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* The vertical switch - the box around the slider */
+.theme-lever-switch {
+  font-size: 13px;
+  position: relative;
+  display: inline-block;
+  width: 1.2em;
+  height: 3.3em;
+}
+
+/* Hide default HTML checkbox */
+.theme-lever-switch .chk {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* The slider */
+.theme-lever-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #94a3b8;
+  transition: 0.4s;
+  border-radius: 5px;
+}
+
+.theme-lever-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 0.5em;
+  width: 2.4em;
+  border-radius: 5px;
+  left: -0.6em;
+  top: 0.2em;
+  background-color: white;
+  box-shadow: 0 6px 7px rgba(0, 0, 0, 0.3);
+  transition: 0.4s;
+}
+
+.theme-lever-switch .slider:before,
+.theme-lever-switch .slider:after {
+  content: "";
+  display: block;
+}
+
+.theme-lever-switch .slider:after {
+  background: linear-gradient(transparent 50%, rgba(255, 255, 255, 0.15) 0) 0 50% / 50% 100%,
+    repeating-linear-gradient(90deg, rgb(255, 255, 255) 0, rgb(255, 255, 255), rgb(255, 255, 255) 20%, rgb(255, 255, 255) 20%, rgb(255, 255, 255) 40%) 0 50% / 50% 100%,
+    radial-gradient(circle at 50% 50%, rgb(255, 255, 255) 25%, transparent 26%);
+  background-repeat: no-repeat;
+  border: 0.25em solid transparent;
+  border-left: 0.4em solid #ffffff;
+  border-right: 0 solid transparent;
+  transition: border-left-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
+  transform: translateX(-22.5%) rotate(90deg);
+  transform-origin: 25% 50%;
+  position: relative;
+  top: 0.5em;
+  left: 0.55em;
+  width: 2em;
+  height: 1em;
+  box-sizing: border-box;
+}
+
+.theme-lever-switch .chk:checked + .slider {
+  background-color: limegreen;
+}
+
+.theme-lever-switch .chk:focus + .slider {
+  box-shadow: 0 0 1px limegreen;
+}
+
+.theme-lever-switch .chk:checked + .slider:before {
+  transform: translateY(2.3em);
+}
+
+.theme-lever-switch .chk:checked + .slider:after {
+  transform: rotateZ(90deg) rotateY(180deg) translateY(0.45em) translateX(-1.4em);
+}
+
+/* --- LIGHT THEME STYLES ON HOME PAGE --- */
+.home-page.theme-light {
+  color: #0f172a;
+}
+
+.home-page.theme-light .theme-toggle-dock {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.home-page.theme-light .home-video-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(240, 253, 244, 0.84) 0%,
+    rgba(255, 255, 255, 0.85) 30%,
+    rgba(248, 250, 252, 0.88) 70%,
+    rgba(241, 245, 249, 0.95) 100%
+  );
+}
+
+.home-page.theme-light .home-hero {
+  color: #0f172a;
+}
+
+.home-page.theme-light .home-hero-badge {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.32);
+  color: #047857;
+}
+
+.home-page.theme-light .home-hero-title {
+  color: #0f172a;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.home-page.theme-light .home-hero-title .text-highlight {
+  background: linear-gradient(90deg, #059669, #15803d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-page.theme-light .home-hero-subtitle {
+  color: #334155;
+  text-shadow: none;
+}
+
+.home-page.theme-light .hero-trust-metrics {
+  border-top-color: rgba(15, 23, 42, 0.12);
+}
+
+.home-page.theme-light .metric-item {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.home-page.theme-light .section-title {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+.home-page.theme-light .section-desc {
+  color: #475569;
+}
+
+.home-page.theme-light .section-eyebrow {
+  color: #059669;
+}
+
+.home-page.theme-light .how-it-works-section {
+  background: rgba(255, 255, 255, 0.4);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Light Theme for 3D Flip Book Cards */
+.home-page.theme-light .book {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+.home-page.theme-light .book-inner-title {
+  color: #0f172a;
+}
+
+.home-page.theme-light .book-inner-desc {
+  color: #475569;
+}
+
+.home-page.theme-light .book-inner-tag {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+/* Light Theme for Categories */
+.home-page.theme-light .category-card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(226, 232, 240, 0.9);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.home-page.theme-light .category-name {
+  color: #0f172a;
+}
+
+.home-page.theme-light .category-desc {
+  color: #64748b;
+}
+
+/* Light Theme for Value Proposition / Community */
+.home-page.theme-light .value-card,
+.home-page.theme-light .feature-item {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(226, 232, 240, 0.9);
+  color: #0f172a;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.home-page.theme-light .value-card h3,
+.home-page.theme-light .feature-item h3 {
+  color: #0f172a;
+}
+
+.home-page.theme-light .value-card p,
+.home-page.theme-light .feature-item p {
+  color: #475569;
+}
+
+
 

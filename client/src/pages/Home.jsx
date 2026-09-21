@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SpecularButton from '../components/SpecularButton';
 import AudioToggle from '../components/AudioToggle';
+import ThemeSwitch from '../components/ThemeSwitch';
 
 const Home = () => {
   const { user } = useAuth();
@@ -10,6 +11,20 @@ const Home = () => {
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [activeStep, setActiveStep] = useState(null);
+
+  // Theme state: dark (default) vs light
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('agri_theme');
+    return saved !== null ? saved === 'dark' : true;
+  });
+
+  const toggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      localStorage.setItem('agri_theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
 
   const toggleAudio = () => {
     if (videoRef.current) {
@@ -55,7 +70,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="home-page">
+    <div className={`home-page ${isDark ? 'theme-dark' : 'theme-light'}`}>
       {/* Fixed Background Video spanning entire page scroll to footer */}
       <div className="home-video-bg-container" aria-hidden="true">
         <video
@@ -71,6 +86,11 @@ const Home = () => {
           <source src="/farm-background.mp4" type="video/mp4" />
         </video>
         <div className="home-video-overlay" />
+      </div>
+
+      {/* Floating Theme Switch (Light / Dark Theme) */}
+      <div className="home-theme-toggle-container">
+        <ThemeSwitch isDark={isDark} onToggle={toggleTheme} id="homeThemeSwitch" />
       </div>
 
       {/* Floating Audio On / Off Toggle Switch */}
