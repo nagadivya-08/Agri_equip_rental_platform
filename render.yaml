@@ -12,12 +12,13 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5000
       - key: MONGO_URI
         sync: false
       - key: MONGODB_URI
-        sync: false
+        fromService:
+          type: web
+          name: agri-equip-backend
+          envVarKey: MONGO_URI
       - key: JWT_SECRET
         generateValue: true
       - key: RAZORPAY_KEY_ID
@@ -31,10 +32,9 @@ services:
   - type: web
     name: agri-equip-frontend
     runtime: static
-    plan: free
     rootDir: client
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
+    staticPublishPath: dist
     routes:
       - type: rewrite
         source: /*
