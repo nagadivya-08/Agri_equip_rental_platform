@@ -80,9 +80,10 @@ const getEquipment = async (req, res) => {
       isAvailable: true,
     };
 
-    // Filter by type
-    if (type && type !== 'all') {
-      query.type = type.toLowerCase().trim();
+    // Filter by type (supports texting/searching by type)
+    if (type && type.toLowerCase() !== 'all' && type.trim() !== '') {
+      const cleanType = type.toLowerCase().trim().replace(/agricultural\s*/i, '');
+      query.type = new RegExp(cleanType, 'i');
     }
 
     // Filter by price range

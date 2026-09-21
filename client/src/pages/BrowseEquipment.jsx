@@ -28,8 +28,7 @@ const BrowseEquipment = () => {
   };
 
   // Filters state (prefill from query string if available)
-  const [search, setSearch] = useState('');
-  const [type, setType] = useState(searchParams.get('type') || 'all');
+  const [type, setType] = useState(searchParams.get('type') || '');
   const [minPrice, setMinPrice] = useState('500');
   const [maxPrice, setMaxPrice] = useState('');
 
@@ -87,8 +86,9 @@ const BrowseEquipment = () => {
 
     try {
       const params = new URLSearchParams();
-      if (search.trim()) params.append('search', search.trim());
-      if (type && type !== 'all') params.append('type', type);
+      if (type && type.toLowerCase() !== 'all' && type.trim() !== '') {
+        params.append('type', type.trim());
+      }
       if (minPrice) params.append('minPrice', minPrice);
       if (maxPrice) params.append('maxPrice', maxPrice);
 
@@ -105,18 +105,17 @@ const BrowseEquipment = () => {
     }
   };
 
-  // Debounced search / filter trigger
+  // Debounced filter trigger
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchEquipment();
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [search, type, minPrice, maxPrice]);
+  }, [type, minPrice, maxPrice]);
 
   const handleResetFilters = () => {
-    setSearch('');
-    setType('all');
+    setType('');
     setMinPrice('500');
     setMaxPrice('');
   };
@@ -153,32 +152,48 @@ const BrowseEquipment = () => {
       {/* Filter Toolbar */}
       <div className="filter-card">
         <div className="filter-row">
-          <div className="filter-group search-filter">
-            <label htmlFor="search">Search Equipment</label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Search by name, model, town..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <div className="filter-group">
+          <div className="filter-group type-search-filter">
             <label htmlFor="type">Equipment Type</label>
-            <select
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="all">All Types</option>
-              <option value="tractor">Tractor</option>
-              <option value="harvester">Harvester</option>
-              <option value="sprayer">Sprayer</option>
-              <option value="tiller">Tiller</option>
-              <option value="drone">Agricultural Drone</option>
-              <option value="other">Other</option>
-            </select>
+            <div className="type-search-input-wrapper">
+              <span className="type-search-icon" aria-hidden="true">🚜</span>
+              <input
+                id="type"
+                list="equipment-types-list"
+                type="text"
+                className="type-search-input"
+                placeholder="Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)"
+                value={type.toLowerCase() === 'all' ? '' : type}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val.toLowerCase() === 'all types' || val.toLowerCase() === 'all') {
+                    setType('');
+                  } else {
+                    setType(val);
+                  }
+                }}
+                autoComplete="off"
+              />
+              {type && type.toLowerCase() !== 'all' && (
+                <button
+                  type="button"
+                  className="type-search-clear-btn"
+                  onClick={() => setType('')}
+                  title="Clear filter / Show all equipment"
+                  aria-label="Clear equipment type filter"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <datalist id="equipment-types-list">
+              <option value="All Types" />
+              <option value="Tractor" />
+              <option value="Harvester" />
+              <option value="Sprayer" />
+              <option value="Tiller" />
+              <option value="Agricultural Drone" />
+              <option value="Other" />
+            </datalist>
           </div>
 
           <div className="filter-group price-filter">
