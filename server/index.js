@@ -23,14 +23,51 @@ const reportRoutes = require('./routes/reportRoutes');
 const { getUserReviews } = require('./controllers/reviewController');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
-// Middleware
-const corsOrigin = process.env.CORS_ORIGIN;
-app.use(
-  cors({
-    origin: corsOrigin ? (corsOrigin === '*' ? true : corsOrigin.split(',').map(s => s.trim())) : true,
-    credentials: true,
-  })
-);
+// CORS Configuration
+const defaultAllowedOrigins = [
+  'https://agri-equip-rental-platform.vercel.app',
+  'https://agri-equip-frontend.onrender.com',
+  'https://agri-equip-backend.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
+];
+
+const envOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim().replace(/\/$/, ''))
+  : [];
+
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envOrigins])];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+
+    const cleanOrigin = origin.replace(/\/$/, '');
+
+    // Allow exact matches, or any vercel.app / onrender.com preview domains
+    if (
+      allowedOrigins.includes(cleanOrigin) ||
+      cleanOrigin.endsWith('.vercel.app') ||
+      cleanOrigin.endsWith('.onrender.com') ||
+      process.env.CORS_ORIGIN === '*'
+    ) {
+      return callback(null, true);
+    }
+
+    // Permissive fallback so production requests never fail due to CORS
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Ensure uploads directory exists and serve static uploads
