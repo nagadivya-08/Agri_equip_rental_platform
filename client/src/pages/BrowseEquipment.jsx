@@ -29,6 +29,12 @@ const BrowseEquipment = () => {
     }
   };
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
   // Filters state (prefill from query string if available)
   const [type, setType] = useState(searchParams.get('type') || '');
   const [minPrice, setMinPrice] = useState('500');
