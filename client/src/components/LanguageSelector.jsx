@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-const LanguageSelector = ({ variant = 'navbar', className = '' }) => {
-  const { currentLanguage, changeLanguage, languages, activeLangMeta, t } = useLanguage();
+const LanguageSelector = ({ className = '' }) => {
+  const { currentLanguage, changeLanguage, languages, activeLangMeta } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -24,41 +24,6 @@ const LanguageSelector = ({ variant = 'navbar', className = '' }) => {
     };
   }, [isOpen]);
 
-  // Variant: Hero Segmented Bar
-  if (variant === 'hero' || variant === 'pill') {
-    return (
-      <div className={`lang-hero-bar ${className}`}>
-        <div className="lang-hero-header">
-          <span className="lang-globe-icon" aria-hidden="true">🌐</span>
-          <span className="lang-hero-label">
-            {t('home.selectLanguagePrompt') || 'Choose Your Preferred Language:'}
-          </span>
-        </div>
-        <div className="lang-pill-group" role="radiogroup" aria-label="Language selection">
-          {languages.map((lang) => {
-            const isSelected = currentLanguage === lang.code;
-            return (
-              <button
-                key={lang.code}
-                type="button"
-                role="radio"
-                aria-checked={isSelected}
-                className={`lang-pill-btn ${isSelected ? 'active' : ''}`}
-                onClick={() => changeLanguage(lang.code)}
-                title={`Switch language to ${lang.name} (${lang.nativeName})`}
-              >
-                <span className="lang-flag">{lang.flag}</span>
-                <span className="lang-native-text">{lang.nativeName}</span>
-                {isSelected && <span className="lang-check-icon">✓</span>}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  // Variant: Navbar Dropdown (compact)
   return (
     <div className={`lang-selector-dropdown-wrapper ${className}`} ref={dropdownRef}>
       <button
@@ -94,7 +59,6 @@ const LanguageSelector = ({ variant = 'navbar', className = '' }) => {
                   setIsOpen(false);
                 }}
               >
-                <span className="lang-flag">{lang.flag}</span>
                 <div className="lang-item-names">
                   <span className="lang-item-native">{lang.nativeName}</span>
                   <span className="lang-item-english">({lang.name})</span>

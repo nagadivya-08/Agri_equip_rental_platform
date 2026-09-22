@@ -5,7 +5,6 @@ import { useLanguage } from '../context/LanguageContext';
 import SpecularButton from '../components/SpecularButton';
 import AudioToggle from '../components/AudioToggle';
 import ThemeSwitch from '../components/ThemeSwitch';
-import LanguageSelector from '../components/LanguageSelector';
 
 const Home = () => {
   const { user } = useAuth();
@@ -127,11 +126,6 @@ const Home = () => {
       {/* Hero Section */}
       <section className="home-hero">
         <div className="home-hero-container">
-          {/* Prominent Language Selection Bar on Home Page */}
-          <div className="home-hero-lang-selector">
-            <LanguageSelector variant="hero" />
-          </div>
-
           <div className="home-hero-badge">
             {t('home.badge') || '🌱 Modern Agricultural Equipment Sharing'}
           </div>

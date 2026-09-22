@@ -27,7 +27,7 @@ const Navbar = () => {
 
         {/* Top Navbar Language Selector (Always visible) */}
         <div className="nav-lang-container">
-          <LanguageSelector variant="navbar" />
+          <LanguageSelector />
         </div>
 
         {/* Mobile Hamburger Toggle Button */}
