@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -38,6 +38,14 @@ const Home = () => {
       }
     }
   };
+
+  // Autoplay video smoothly whenever theme switches or muted toggles
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [isDark, isMuted]);
 
   const steps = [
     {
@@ -101,16 +109,16 @@ const Home = () => {
       {/* Fixed Background Video spanning entire page scroll to footer */}
       <div className="home-video-bg-container" aria-hidden="true">
         <video
+          key={isDark ? 'home-dark-theme-video' : 'home-light-theme-video'}
           ref={videoRef}
           className="home-video-bg"
           autoPlay
           loop
-          muted
+          muted={isMuted}
           playsInline
           preload="auto"
         >
-          <source src="/gemini_generated_video_6f3db13c.mp4" type="video/mp4" />
-          <source src="/farm-background.mp4" type="video/mp4" />
+          <source src={isDark ? '/dark_theme.mp4' : '/light_theme.mp4'} type="video/mp4" />
         </video>
         <div className="home-video-overlay" />
       </div>
