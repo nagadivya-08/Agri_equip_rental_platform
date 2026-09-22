@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import SpecularButton from '../components/SpecularButton';
 import AudioToggle from '../components/AudioToggle';
 import ThemeSwitch from '../components/ThemeSwitch';
@@ -9,24 +10,11 @@ import ThemeSwitch from '../components/ThemeSwitch';
 const Home = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [activeStep, setActiveStep] = useState(null);
-
-  // Theme state: dark (default) vs light
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('agri_theme');
-    return saved !== null ? saved === 'dark' : true;
-  });
-
-  const toggleTheme = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-      localStorage.setItem('agri_theme', next ? 'dark' : 'light');
-      return next;
-    });
-  };
 
   const toggleAudio = () => {
     if (videoRef.current) {
