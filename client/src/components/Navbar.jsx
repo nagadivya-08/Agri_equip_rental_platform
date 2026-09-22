@@ -35,6 +35,9 @@ const Navbar = () => {
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? 'nav-links-mobile-open' : ''}`}>
+          <Link to="/" className="nav-link" onClick={closeMenu}>
+            Home
+          </Link>
           <Link to="/equipment" className="nav-link" onClick={closeMenu}>
             Browse Equipment
           </Link>

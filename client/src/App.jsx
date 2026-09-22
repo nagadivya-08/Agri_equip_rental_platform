@@ -20,29 +20,9 @@ import AdminUsers from './pages/AdminUsers';
 import AdminReports from './pages/AdminReports';
 import MyBookings from './pages/MyBookings';
 import OwnerBookings from './pages/OwnerBookings';
-import { useAuth } from './context/AuthContext';
-import Loader from './components/Loader';
 import './App.css';
 
 function App() {
-  const { loading } = useAuth();
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
-  if (loading && token) {
-    return (
-      <div className="app-layout">
-        <Navbar />
-        <main className="content-wrapper">
-          <Loader
-            fullPage
-            message="Loading session..."
-            submessage="Verifying your credentials and connecting to machinery network..."
-          />
-        </main>
-      </div>
-    );
-  }
-
   return (
     <ErrorBoundary>
       <div className="app-layout">
@@ -66,6 +46,7 @@ function App() {
           <Routes>
             {/* Landing Page */}
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
 
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />

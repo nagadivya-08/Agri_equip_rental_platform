@@ -22,7 +22,7 @@ const BrowseEquipment = () => {
       videoRef.current.muted = nextMuted;
       setIsMuted(nextMuted);
       if (!nextMuted) {
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().catch(() => { });
       }
     }
   };
@@ -143,203 +143,202 @@ const BrowseEquipment = () => {
 
       <div className="page-container browse-content">
         <div className="browse-hero">
-        <h2>🚜 Find Agricultural Equipment for Rent</h2>
-        <p className="page-subtitle">
-          Affordable, verified machinery from local owners to power your farming operations
-        </p>
-      </div>
+          <h2>🚜 Find Agricultural Equipment for Rent</h2>
+          <p className="page-subtitle">
+            Affordable, verified machinery from local owners to power your farming operations
+          </p>
+        </div>
 
-      {/* Filter Toolbar */}
-      <div className="filter-card">
-        <div className="filter-row">
-          <div className="filter-group type-search-filter">
-            <label htmlFor="type">Equipment Type</label>
-            <div className="type-search-input-wrapper">
-              <span className="type-search-icon" aria-hidden="true">🚜</span>
-              <input
-                id="type"
-                list="equipment-types-list"
-                type="text"
-                className="type-search-input"
-                placeholder="Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)"
-                value={type.toLowerCase() === 'all' ? '' : type}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val.toLowerCase() === 'all types' || val.toLowerCase() === 'all') {
-                    setType('');
-                  } else {
-                    setType(val);
-                  }
-                }}
-                autoComplete="off"
-              />
-              {type && type.toLowerCase() !== 'all' && (
-                <button
-                  type="button"
-                  className="type-search-clear-btn"
-                  onClick={() => setType('')}
-                  title="Clear filter / Show all equipment"
-                  aria-label="Clear equipment type filter"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-            <datalist id="equipment-types-list">
-              <option value="All Types" />
-              <option value="Tractor" />
-              <option value="Harvester" />
-              <option value="Sprayer" />
-              <option value="Tiller" />
-              <option value="Agricultural Drone" />
-              <option value="Other" />
-            </datalist>
-          </div>
-
-          <div className="filter-group price-filter">
-            <label>Price Range (₹/day)</label>
-            <div className="price-inputs">
-              <div className="price-stepper-box">
-                <button
-                  type="button"
-                  className="stepper-btn dec-btn"
-                  onClick={handleMinPriceDecrement}
-                  disabled={!minPrice || isNaN(Number(minPrice)) || Number(minPrice) <= 500}
-                  title={!minPrice || Number(minPrice) <= 500 ? 'Minimum price cannot be less than ₹500' : 'Decrease min price by ₹100'}
-                  aria-label="Decrease min price by 100"
-                >
-                  −
-                </button>
-                <span className="stepper-currency">₹</span>
+        {/* Filter Toolbar */}
+        <div className="filter-card">
+          <div className="filter-row">
+            <div className="filter-group type-search-filter">
+              <label htmlFor="type">Equipment Type</label>
+              <div className="type-search-input-wrapper">
+                <span className="type-search-icon" aria-hidden="true">🚜</span>
                 <input
-                  id="minPrice"
-                  type="number"
-                  className="stepper-price-input"
-                  placeholder="500"
-                  min="500"
-                  step="100"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  onBlur={handleMinPriceBlur}
+                  id="type"
+                  list="equipment-types-list"
+                  type="text"
+                  className="type-search-input"
+                  placeholder="Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)"
+                  value={type.toLowerCase() === 'all' ? '' : type}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val.toLowerCase() === 'all types' || val.toLowerCase() === 'all') {
+                      setType('');
+                    } else {
+                      setType(val);
+                    }
+                  }}
+                  autoComplete="off"
                 />
-                <button
-                  type="button"
-                  className="stepper-btn inc-btn"
-                  onClick={handleMinPriceIncrement}
-                  title="Increase min price by ₹100"
-                  aria-label="Increase min price by 100"
-                >
-                  +
-                </button>
+                {type && type.toLowerCase() !== 'all' && (
+                  <button
+                    type="button"
+                    className="type-search-clear-btn"
+                    onClick={() => setType('')}
+                    title="Clear filter / Show all equipment"
+                    aria-label="Clear equipment type filter"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
+              <datalist id="equipment-types-list">
+                <option value="Tractor" />
+                <option value="Harvester" />
+                <option value="Sprayer" />
+                <option value="Tiller" />
+                <option value="Agricultural Drone" />
+                <option value="Other" />
+              </datalist>
+            </div>
 
-              <span className="price-dash">-</span>
+            <div className="filter-group price-filter">
+              <label>Price Range (₹/day)</label>
+              <div className="price-inputs">
+                <div className="price-stepper-box">
+                  <button
+                    type="button"
+                    className="stepper-btn dec-btn"
+                    onClick={handleMinPriceDecrement}
+                    disabled={!minPrice || isNaN(Number(minPrice)) || Number(minPrice) <= 500}
+                    title={!minPrice || Number(minPrice) <= 500 ? 'Minimum price cannot be less than ₹500' : 'Decrease min price by ₹100'}
+                    aria-label="Decrease min price by 100"
+                  >
+                    −
+                  </button>
+                  <span className="stepper-currency">₹</span>
+                  <input
+                    id="minPrice"
+                    type="number"
+                    className="stepper-price-input"
+                    placeholder="500"
+                    min="500"
+                    step="100"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    onBlur={handleMinPriceBlur}
+                  />
+                  <button
+                    type="button"
+                    className="stepper-btn inc-btn"
+                    onClick={handleMinPriceIncrement}
+                    title="Increase min price by ₹100"
+                    aria-label="Increase min price by 100"
+                  >
+                    +
+                  </button>
+                </div>
 
-              <div className="price-stepper-box">
-                <button
-                  type="button"
-                  className="stepper-btn dec-btn"
-                  onClick={handleMaxPriceDecrement}
-                  disabled={!maxPrice || isNaN(Number(maxPrice)) || Number(maxPrice) <= 500}
-                  title={!maxPrice || Number(maxPrice) <= 500 ? 'Price cannot be less than ₹500' : 'Decrease max price by ₹100'}
-                  aria-label="Decrease max price by 100"
-                >
-                  −
-                </button>
-                <span className="stepper-currency">₹</span>
-                <input
-                  id="maxPrice"
-                  type="number"
-                  className="stepper-price-input"
-                  placeholder="Max"
-                  min="500"
-                  step="100"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="stepper-btn inc-btn"
-                  onClick={handleMaxPriceIncrement}
-                  title="Increase max price by ₹100"
-                  aria-label="Increase max price by 100"
-                >
-                  +
-                </button>
+                <span className="price-dash">-</span>
+
+                <div className="price-stepper-box">
+                  <button
+                    type="button"
+                    className="stepper-btn dec-btn"
+                    onClick={handleMaxPriceDecrement}
+                    disabled={!maxPrice || isNaN(Number(maxPrice)) || Number(maxPrice) <= 500}
+                    title={!maxPrice || Number(maxPrice) <= 500 ? 'Price cannot be less than ₹500' : 'Decrease max price by ₹100'}
+                    aria-label="Decrease max price by 100"
+                  >
+                    −
+                  </button>
+                  <span className="stepper-currency">₹</span>
+                  <input
+                    id="maxPrice"
+                    type="number"
+                    className="stepper-price-input"
+                    placeholder="Max"
+                    min="500"
+                    step="100"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="stepper-btn inc-btn"
+                    onClick={handleMaxPriceIncrement}
+                    title="Increase max price by ₹100"
+                    aria-label="Increase max price by 100"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="filter-action">
-            <button
-              onClick={handleResetFilters}
-              className="btn-reset-filters"
-              title="Reset all filters"
-            >
-              Clear Filters
+            <div className="filter-action">
+              <button
+                onClick={handleResetFilters}
+                className="btn-reset-filters"
+                title="Reset all filters"
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {error && <p className="error-text">{error}</p>}
+
+        {/* Results Section */}
+        {loading ? (
+          <Spinner message="Searching verified agricultural equipment..." />
+        ) : equipmentList.length === 0 ? (
+          <div className="empty-state-card">
+            <span className="empty-icon">🔍</span>
+            <h3>No Equipment Found</h3>
+            <p>
+              No approved equipment matches your current search filters. Try adjusting
+              or clearing the filters above.
+            </p>
+            <button onClick={handleResetFilters} className="btn-primary">
+              Reset Filters
             </button>
           </div>
-        </div>
-      </div>
+        ) : (
+          <>
+            <div className="results-count-bar">
+              <span>Showing {equipmentList.length} available equipment</span>
 
-      {error && <p className="error-text">{error}</p>}
-
-      {/* Results Section */}
-      {loading ? (
-        <Spinner message="Searching verified agricultural equipment..." />
-      ) : equipmentList.length === 0 ? (
-        <div className="empty-state-card">
-          <span className="empty-icon">🔍</span>
-          <h3>No Equipment Found</h3>
-          <p>
-            No approved equipment matches your current search filters. Try adjusting
-            or clearing the filters above.
-          </p>
-          <button onClick={handleResetFilters} className="btn-primary">
-            Reset Filters
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="results-count-bar">
-            <span>Showing {equipmentList.length} available equipment</span>
-            
-            <div className="view-mode-toggle">
-              <button
-                type="button"
-                className={`btn-view-toggle ${viewMode === 'list' ? 'active' : ''}`}
-                onClick={() => setViewMode('list')}
-                title="View equipment cards"
-              >
-                📋 List View
-              </button>
-              <button
-                type="button"
-                className={`btn-view-toggle ${viewMode === 'map' ? 'active' : ''}`}
-                onClick={() => setViewMode('map')}
-                title="View equipment on map"
-              >
-                🗺️ Map View
-              </button>
+              <div className="view-mode-toggle">
+                <button
+                  type="button"
+                  className={`btn-view-toggle ${viewMode === 'list' ? 'active' : ''}`}
+                  onClick={() => setViewMode('list')}
+                  title="View equipment cards"
+                >
+                  📋 List View
+                </button>
+                <button
+                  type="button"
+                  className={`btn-view-toggle ${viewMode === 'map' ? 'active' : ''}`}
+                  onClick={() => setViewMode('map')}
+                  title="View equipment on map"
+                >
+                  🗺️ Map View
+                </button>
+              </div>
             </div>
-          </div>
 
-          {viewMode === 'map' ? (
-            <MapView equipmentList={equipmentList} />
-          ) : (
-            <div className="equipment-grid">
-              {equipmentList.map((item) => (
-                <EquipmentCard
-                  key={item._id}
-                  equipment={item}
-                  isOwnerView={false}
-                  showStatus={false}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
+            {viewMode === 'map' ? (
+              <MapView equipmentList={equipmentList} />
+            ) : (
+              <div className="equipment-grid">
+                {equipmentList.map((item) => (
+                  <EquipmentCard
+                    key={item._id}
+                    equipment={item}
+                    isOwnerView={false}
+                    showStatus={false}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
