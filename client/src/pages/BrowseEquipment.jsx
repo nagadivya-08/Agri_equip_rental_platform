@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
+import { useLanguage } from '../context/LanguageContext';
 import EquipmentCard from '../components/EquipmentCard';
 import MapView from '../components/MapView';
 import Spinner from '../components/Spinner';
 import AudioToggle from '../components/AudioToggle';
 
 const BrowseEquipment = () => {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [equipmentList, setEquipmentList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -143,9 +145,9 @@ const BrowseEquipment = () => {
 
       <div className="page-container browse-content">
         <div className="browse-hero">
-          <h2>🚜 Find Agricultural Equipment for Rent</h2>
+          <h2>🚜 {t('browse.title') || 'Find Agricultural Equipment for Rent'}</h2>
           <p className="page-subtitle">
-            Affordable, verified machinery from local owners to power your farming operations
+            {t('browse.subtitle') || 'Affordable, verified machinery from local owners to power your farming operations'}
           </p>
         </div>
 
@@ -153,7 +155,7 @@ const BrowseEquipment = () => {
         <div className="filter-card">
           <div className="filter-row">
             <div className="filter-group type-search-filter">
-              <label htmlFor="type">Equipment Type</label>
+              <label htmlFor="type">{t('browse.equipmentType') || 'Equipment Type'}</label>
               <div className="type-search-input-wrapper">
                 <span className="type-search-icon" aria-hidden="true">🚜</span>
                 <input
@@ -161,7 +163,7 @@ const BrowseEquipment = () => {
                   list="equipment-types-list"
                   type="text"
                   className="type-search-input"
-                  placeholder="Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)"
+                  placeholder={t('browse.searchPlaceholder') || 'Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)'}
                   value={type.toLowerCase() === 'all' ? '' : type}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -178,7 +180,7 @@ const BrowseEquipment = () => {
                     type="button"
                     className="type-search-clear-btn"
                     onClick={() => setType('')}
-                    title="Clear filter / Show all equipment"
+                    title={t('browse.clearFilters') || 'Clear filter / Show all equipment'}
                     aria-label="Clear equipment type filter"
                   >
                     ✕
@@ -196,7 +198,7 @@ const BrowseEquipment = () => {
             </div>
 
             <div className="filter-group price-filter">
-              <label>Price Range (₹/day)</label>
+              <label>{t('browse.priceRange') || 'Price Range (₹/day)'}</label>
               <div className="price-inputs">
                 <div className="price-stepper-box">
                   <button
@@ -273,9 +275,9 @@ const BrowseEquipment = () => {
               <button
                 onClick={handleResetFilters}
                 className="btn-reset-filters"
-                title="Reset all filters"
+                title={t('browse.clearFilters') || 'Clear Filters'}
               >
-                Clear Filters
+                {t('browse.clearFilters') || 'Clear Filters'}
               </button>
             </div>
           </div>
@@ -285,23 +287,23 @@ const BrowseEquipment = () => {
 
         {/* Results Section */}
         {loading ? (
-          <Spinner message="Searching verified agricultural equipment..." />
+          <Spinner message={t('common.loading') || 'Searching verified agricultural equipment...'} />
         ) : equipmentList.length === 0 ? (
           <div className="empty-state-card">
             <span className="empty-icon">🔍</span>
-            <h3>No Equipment Found</h3>
+            <h3>{t('browse.noResultsTitle') || 'No Equipment Found'}</h3>
             <p>
-              No approved equipment matches your current search filters. Try adjusting
-              or clearing the filters above.
+              {t('browse.noResultsDesc') ||
+                'No approved equipment matches your current search filters. Try adjusting or clearing the filters above.'}
             </p>
             <button onClick={handleResetFilters} className="btn-primary">
-              Reset Filters
+              {t('browse.resetBtn') || 'Reset Filters'}
             </button>
           </div>
         ) : (
           <>
             <div className="results-count-bar">
-              <span>Showing {equipmentList.length} available equipment</span>
+              <span>{t('browse.showingCount', { count: equipmentList.length }) || `Showing ${equipmentList.length} available equipment`}</span>
 
               <div className="view-mode-toggle">
                 <button
@@ -310,7 +312,7 @@ const BrowseEquipment = () => {
                   onClick={() => setViewMode('list')}
                   title="View equipment cards"
                 >
-                  📋 List View
+                  {t('browse.listView') || '📋 List View'}
                 </button>
                 <button
                   type="button"
@@ -318,7 +320,7 @@ const BrowseEquipment = () => {
                   onClick={() => setViewMode('map')}
                   title="View equipment on map"
                 >
-                  🗺️ Map View
+                  {t('browse.mapView') || '🗺️ Map View'}
                 </button>
               </div>
             </div>

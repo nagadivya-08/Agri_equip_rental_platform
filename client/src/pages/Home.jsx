@@ -1,12 +1,15 @@
 import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import SpecularButton from '../components/SpecularButton';
 import AudioToggle from '../components/AudioToggle';
 import ThemeSwitch from '../components/ThemeSwitch';
+import LanguageSelector from '../components/LanguageSelector';
 
 const Home = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -41,32 +44,57 @@ const Home = () => {
     {
       number: '1',
       icon: '🔍',
-      title: 'Search & Select',
-      desc: 'Browse local machinery by type, location, and daily budget. Select rental dates on the availability calendar.',
-      tag: '🚜 Easy Selection',
+      title: t('home.step1Title') || 'Search & Select',
+      desc: t('home.step1Desc') || 'Browse local machinery by type, location, and daily budget. Select rental dates on the availability calendar.',
+      tag: t('home.step1Tag') || '🚜 Easy Selection',
     },
     {
       number: '2',
       icon: '🤝',
-      title: 'Approval & Payment',
-      desc: 'The owner reviews and approves your request. Pay safely online using credit/debit cards or UPI via Razorpay.',
-      tag: '💳 Secure Escrow',
+      title: t('home.step2Title') || 'Approval & Payment',
+      desc: t('home.step2Desc') || 'The owner reviews and approves your request. Pay safely online using credit/debit cards or UPI via Razorpay.',
+      tag: t('home.step2Tag') || '💳 Secure Escrow',
     },
     {
       number: '3',
       icon: '🚜',
-      title: 'Work & Review',
-      desc: 'Complete your agricultural tasks with top-performing machinery, return it, and share feedback with the community.',
-      tag: '⭐ Verified Quality',
+      title: t('home.step3Title') || 'Work & Review',
+      desc: t('home.step3Desc') || 'Complete your agricultural tasks with top-performing machinery, return it, and share feedback with the community.',
+      tag: t('home.step3Tag') || '⭐ Verified Quality',
     },
   ];
 
   const categories = [
-    { type: 'tractor', name: 'Tractors', icon: '🚜', desc: 'Powerful 40-75 HP utility and 4WD tractors' },
-    { type: 'harvester', name: 'Harvesters', icon: '🌾', desc: 'Combine and multi-crop automated harvesters' },
-    { type: 'sprayer', name: 'Sprayers', icon: '💧', desc: 'Boom, mist, and tractor-mounted sprayers' },
-    { type: 'tiller', name: 'Power Tillers', icon: '⚙️', desc: 'Rotary tillers and cultivators for soil prep' },
-    { type: 'drone', name: 'Agri Drones', icon: '🛸', desc: 'Precision aerial spraying and crop mapping' },
+    {
+      type: 'tractor',
+      name: t('home.catTractors') || 'Tractors',
+      icon: '🚜',
+      desc: t('home.catTractorsDesc') || 'Powerful 40-75 HP utility and 4WD tractors',
+    },
+    {
+      type: 'harvester',
+      name: t('home.catHarvesters') || 'Harvesters',
+      icon: '🌾',
+      desc: t('home.catHarvestersDesc') || 'Combine and multi-crop automated harvesters',
+    },
+    {
+      type: 'sprayer',
+      name: t('home.catSprayers') || 'Sprayers',
+      icon: '💧',
+      desc: t('home.catSprayersDesc') || 'Boom, mist, and tractor-mounted sprayers',
+    },
+    {
+      type: 'tiller',
+      name: t('home.catTillers') || 'Power Tillers',
+      icon: '⚙️',
+      desc: t('home.catTillersDesc') || 'Rotary tillers and cultivators for soil prep',
+    },
+    {
+      type: 'drone',
+      name: t('home.catDrones') || 'Agri Drones',
+      icon: '🛸',
+      desc: t('home.catDronesDesc') || 'Precision aerial spraying and crop mapping',
+    },
   ];
 
   return (
@@ -99,17 +127,25 @@ const Home = () => {
       {/* Hero Section */}
       <section className="home-hero">
         <div className="home-hero-container">
-          <div className="home-hero-badge">
-            🌱 Modern Agricultural Equipment Sharing
+          {/* Prominent Language Selection Bar on Home Page */}
+          <div className="home-hero-lang-selector">
+            <LanguageSelector variant="hero" />
           </div>
+
+          <div className="home-hero-badge">
+            {t('home.badge') || '🌱 Modern Agricultural Equipment Sharing'}
+          </div>
+
           <h1 className="home-hero-title">
-            Rent Modern Farming Equipment <br />
-            <span className="text-highlight">Directly from Local Owners</span>
+            {t('home.heroTitle') || 'Rent Modern Farming Equipment'} <br />
+            <span className="text-highlight">
+              {t('home.heroTitleHighlight') || 'Directly from Local Owners'}
+            </span>
           </h1>
+
           <p className="home-hero-subtitle">
-            Power your farming season without the burden of heavy capital machinery loans. 
-            Discover verified tractors, harvesters, and precision tools with transparent pricing 
-            and secure payments.
+            {t('home.heroSubtitle') ||
+              'Power your farming season without the burden of heavy capital machinery loans. Discover verified tractors, harvesters, and precision tools with transparent pricing and secure payments.'}
           </p>
 
           <div className="home-hero-actions">
@@ -129,7 +165,7 @@ const Home = () => {
               followMouse
               onClick={() => navigate('/equipment')}
             >
-              🚜 Browse Equipment
+              {t('home.browseBtn') || '🚜 Browse Equipment'}
             </SpecularButton>
 
             {user ? (
@@ -149,7 +185,7 @@ const Home = () => {
                 followMouse
                 onClick={() => navigate('/dashboard')}
               >
-                Go to Dashboard ({user.name}) →
+                {t('home.dashboardBtn') || 'Go to Dashboard'} ({user.name}) →
               </SpecularButton>
             ) : (
               <SpecularButton
@@ -168,7 +204,7 @@ const Home = () => {
                 followMouse
                 onClick={() => navigate('/register')}
               >
-                ✨ Join AgriRent Free
+                {t('home.joinBtn') || '✨ Join AgriRent Free'}
               </SpecularButton>
             )}
           </div>
@@ -176,19 +212,21 @@ const Home = () => {
           <div className="hero-trust-metrics">
             <div className="metric-item">
               <span className="metric-icon">🛡️</span>
-              <span className="metric-text">Admin Verified Machinery</span>
+              <span className="metric-text">
+                {t('home.verifiedMachinery') || 'Admin Verified Machinery'}
+              </span>
             </div>
             <div className="metric-item">
               <span className="metric-icon">💳</span>
-              <span className="metric-text">Razorpay Escrow Protection</span>
+              <span className="metric-text">
+                {t('home.securePayments') || 'Secure Online Payments'}
+              </span>
             </div>
             <div className="metric-item">
-              <span className="metric-icon">⭐</span>
-              <span className="metric-text">Peer Reviewed Quality</span>
-            </div>
-            <div className="metric-item">
-              <span className="metric-icon">📍</span>
-              <span className="metric-text">Geospatial Local Search</span>
+              <span className="metric-icon">⚡</span>
+              <span className="metric-text">
+                {t('home.fastBooking') || 'Instant Booking System'}
+              </span>
             </div>
           </div>
         </div>
@@ -198,13 +236,13 @@ const Home = () => {
       <section className="owner-cta-banner">
         <div className="section-container owner-cta-content">
           <div className="owner-cta-text">
-            <h2>Own Farming Machinery? Put It to Work.</h2>
+            <h2>{t('home.ownerBannerTitle') || 'Own Farming Machinery? Put It to Work.'}</h2>
             <p>
-              Tractors and equipment sit idle between farming cycles. Turn your machinery into a steady 
-              revenue stream by renting it out to nearby farmers. You stay in control of dates, pricing, and approvals.
+              {t('home.ownerBannerSubtitle') ||
+                'Tractors and equipment sit idle between farming cycles. Turn your machinery into a steady revenue stream by renting it out to nearby farmers.'}
             </p>
           </div>
-          {user?.role === 'owner' && (
+          {user?.role === 'owner' ? (
             <div className="owner-cta-action">
               <SpecularButton
                 size="lg"
@@ -221,7 +259,27 @@ const Home = () => {
                 followMouse
                 onClick={() => navigate('/add-equipment')}
               >
-                + List New Equipment
+                {t('nav.addEquipment') || '+ List New Equipment'}
+              </SpecularButton>
+            </div>
+          ) : (
+            <div className="owner-cta-action">
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#ffffff"
+                tintOpacity={0.96}
+                textColor="#064e3b"
+                lineColor="#10b981"
+                baseColor="#d1fae5"
+                intensity={1.5}
+                shineSize={20}
+                shineFade={45}
+                thickness={1.5}
+                followMouse
+                onClick={() => navigate('/register')}
+              >
+                {t('home.listEquipmentBtn') || '🚜 List Your Equipment Today'}
               </SpecularButton>
             </div>
           )}
@@ -232,10 +290,11 @@ const Home = () => {
       <section className="home-section how-it-works-section">
         <div className="section-container">
           <div className="section-header">
-            <span className="section-eyebrow">Simple & Reliable</span>
-            <h2 className="section-title">How AgriRent Works</h2>
+            <span className="section-eyebrow">{t('home.howItWorksTitle') || 'How It Works'}</span>
+            <h2 className="section-title">{t('home.howItWorksTitle') || 'How AgriRent Works'}</h2>
             <p className="section-desc">
-              Three seamless steps to get the machinery you need into your fields on time.
+              {t('home.howItWorksSubtitle') ||
+                'Three seamless steps to get the machinery you need into your fields on time.'}
             </p>
           </div>
 
@@ -262,7 +321,7 @@ const Home = () => {
                       <span className="cover-number">{step.number}</span>
                       <span className="cover-icon">{step.icon}</span>
                       <h3 className="cover-title">{step.title}</h3>
-                      <span className="cover-hint">Hover to open 📖</span>
+                      <span className="cover-hint">Hover / Click 📖</span>
                     </div>
                   </div>
                 </div>
@@ -276,10 +335,15 @@ const Home = () => {
       <section className="home-section categories-section">
         <div className="section-container">
           <div className="section-header">
-            <span className="section-eyebrow">Machinery Fleet</span>
-            <h2 className="section-title">Explore by Equipment Category</h2>
+            <span className="section-eyebrow">
+              {t('home.categoriesTitle') || 'Machinery Fleet'}
+            </span>
+            <h2 className="section-title">
+              {t('home.categoriesTitle') || 'Explore by Equipment Category'}
+            </h2>
             <p className="section-desc">
-              From land preparation to harvest, find specialized equipment for every crop stage.
+              {t('home.categoriesSubtitle') ||
+                'From land preparation to harvest, find specialized equipment for every crop stage.'}
             </p>
           </div>
 
@@ -317,11 +381,15 @@ const Home = () => {
                   <div className="tracker tr-24" />
                   <div className="tracker tr-25" />
                   <div className="tilt-card">
-                    <span className="tilt-card-prompt">EXPLORE FLEET</span>
+                    <span className="tilt-card-prompt">
+                      {t('home.exploreFleet') || 'EXPLORE FLEET'}
+                    </span>
                     <span className="tilt-card-icon">{cat.icon}</span>
                     <h4 className="tilt-card-title">{cat.name}</h4>
                     <p className="tilt-card-desc">{cat.desc}</p>
-                    <span className="tilt-card-link-text">Explore {cat.name} →</span>
+                    <span className="tilt-card-link-text">
+                      {cat.name} →
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -339,33 +407,34 @@ const Home = () => {
               <span className="logo-text">AgriRent</span>
             </div>
             <p className="footer-tagline">
-              Connecting farmers with modern, high-yield agricultural machinery directly from local owners.
+              {t('home.copyright') ||
+                'Connecting farmers with modern, high-yield agricultural machinery directly from local owners.'}
             </p>
           </div>
           <div className="home-footer-links">
             <div className="footer-col">
-              <h4>Platform</h4>
-              <Link to="/equipment">Browse Equipment</Link>
-              <Link to="/register">Create Account</Link>
-              <Link to="/login">Sign In</Link>
+              <h4>{t('nav.browse') || 'Platform'}</h4>
+              <Link to="/equipment">{t('nav.browse') || 'Browse Equipment'}</Link>
+              <Link to="/register">{t('nav.register') || 'Create Account'}</Link>
+              <Link to="/login">{t('nav.login') || 'Sign In'}</Link>
             </div>
             <div className="footer-col">
-              <h4>Categories</h4>
-              <Link to="/equipment?type=tractor">Tractors</Link>
-              <Link to="/equipment?type=harvester">Harvesters</Link>
-              <Link to="/equipment?type=sprayer">Sprayers</Link>
-              <Link to="/equipment?type=drone">Agri Drones</Link>
+              <h4>{t('home.categoriesTitle') || 'Categories'}</h4>
+              <Link to="/equipment?type=tractor">{t('home.catTractors') || 'Tractors'}</Link>
+              <Link to="/equipment?type=harvester">{t('home.catHarvesters') || 'Harvesters'}</Link>
+              <Link to="/equipment?type=sprayer">{t('home.catSprayers') || 'Sprayers'}</Link>
+              <Link to="/equipment?type=drone">{t('home.catDrones') || 'Agri Drones'}</Link>
             </div>
             <div className="footer-col">
-              <h4>Trust & Security</h4>
-              <span className="footer-badge-item">🛡️ Admin Verified Equipment</span>
-              <span className="footer-badge-item">💳 Escrow Protected Payments</span>
-              <span className="footer-badge-item">⭐ Peer Reviewed Machinery</span>
+              <h4>{t('home.verifiedMachinery') || 'Trust & Security'}</h4>
+              <span className="footer-badge-item">🛡️ {t('home.verifiedMachinery') || 'Admin Verified Machinery'}</span>
+              <span className="footer-badge-item">💳 {t('home.securePayments') || 'Secure Online Payments'}</span>
+              <span className="footer-badge-item">⚡ {t('home.fastBooking') || 'Instant Booking System'}</span>
             </div>
           </div>
         </div>
         <div className="home-footer-bottom">
-          <p>© {new Date().getFullYear()} AgriRent Platform. Modern Agricultural Equipment Sharing.</p>
+          <p>© {new Date().getFullYear()} AgriRent Platform. {t('home.copyright') || 'Modern Agricultural Equipment Sharing.'}</p>
         </div>
       </footer>
     </div>

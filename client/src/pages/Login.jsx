@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import ThreeAgriculturalBackground from '../components/ThreeAgriculturalBackground';
 import SpecularButton from '../components/SpecularButton';
 
@@ -12,6 +13,7 @@ const Login = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,69 +51,72 @@ const Login = () => {
       <ThreeAgriculturalBackground />
       <div className="auth-container">
         <div className="auth-card auth-card-glass">
-          <h2>Login to AgriRent</h2>
-          <p className="auth-subtitle">Welcome back! Access your equipment dashboard.</p>
+          <h2>{t('auth.welcomeBack') || 'Login to AgriRent'}</h2>
+          <p className="auth-subtitle">
+            {t('auth.loginSubtitle') || 'Welcome back! Access your equipment dashboard.'}
+          </p>
 
-        {error && <p className="error-text">{error}</p>}
+          {error && <p className="error-text">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="e.g. john@example.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (error) setError('');
-              }}
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="email">{t('auth.email') || 'Email Address'}</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="e.g. john@example.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError('');
+                }}
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                if (error) setError('');
-              }}
-              required
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="password">{t('auth.password') || 'Password'}</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError('');
+                }}
+                required
+              />
+            </div>
 
-          <SpecularButton
-            type="submit"
-            size="md"
-            radius={12}
-            tint="#059669"
-            tintOpacity={0.92}
-            textColor="#ffffff"
-            lineColor="#34d399"
-            baseColor="#047857"
-            intensity={1.5}
-            shineSize={18}
-            shineFade={45}
-            thickness={1.5}
-            followMouse
-            disabled={submitting}
-            className="w-full-btn"
-          >
-            {submitting ? 'Logging in...' : 'Log In'}
-          </SpecularButton>
-        </form>
+            <SpecularButton
+              type="submit"
+              size="md"
+              radius={12}
+              tint="#059669"
+              tintOpacity={0.92}
+              textColor="#ffffff"
+              lineColor="#34d399"
+              baseColor="#047857"
+              intensity={1.5}
+              shineSize={18}
+              shineFade={45}
+              thickness={1.5}
+              followMouse
+              disabled={submitting}
+              className="w-full-btn"
+            >
+              {submitting ? (t('common.loading') || 'Logging in...') : (t('auth.loginBtn') || 'Sign In')}
+            </SpecularButton>
+          </form>
 
-        <p className="auth-switch">
-          Don't have an account? <Link to="/register">Register here</Link>
-        </p>
+          <p className="auth-switch">
+            {t('auth.dontHaveAccount') || "Don't have an account?"}{' '}
+            <Link to="/register">{t('auth.registerHere') || 'Register here'}</Link>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

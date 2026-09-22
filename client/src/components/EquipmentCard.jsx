@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/imageUrl';
+import { useLanguage } from '../context/LanguageContext';
 
 const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
+  const { t } = useLanguage();
 
   const primaryImage =
     equipment.images && equipment.images.length > 0
@@ -34,9 +36,9 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
         {/* Status Badge for Owner View */}
         {showStatus && (
           <span className={`status-badge status-${equipment.status}`}>
-            {equipment.status === 'pending' && '⏳ Pending Review'}
-            {equipment.status === 'approved' && '✅ Approved'}
-            {equipment.status === 'rejected' && '❌ Rejected'}
+            {equipment.status === 'pending' && `⏳ ${t('common.pending') || 'Pending Review'}`}
+            {equipment.status === 'approved' && `✅ ${t('common.approved') || 'Approved'}`}
+            {equipment.status === 'rejected' && `❌ ${t('common.rejected') || 'Rejected'}`}
           </span>
         )}
 
@@ -71,7 +73,7 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
 
         <div className="card-pricing">
           <span className="price-amount">₹{equipment.pricePerDay}</span>
-          <span className="price-unit">/ day</span>
+          <span className="price-unit">{t('common.perDay') || '/ day'}</span>
         </div>
 
         {/* Action Buttons */}
@@ -82,13 +84,13 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
                 to={`/edit-equipment/${equipment._id}`}
                 className="btn-card-edit"
               >
-                ✏️ Edit
+                ✏️ {t('common.edit') || 'Edit'}
               </Link>
               <button
                 onClick={() => onDelete(equipment._id, equipment.name)}
                 className="btn-card-delete"
               >
-                🗑️ Delete
+                🗑️ {t('common.delete') || 'Delete'}
               </button>
             </div>
           ) : (
@@ -96,7 +98,7 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
               to={`/equipment/${equipment._id}`}
               className="btn-card-details"
             >
-              View Details →
+              {t('common.viewDetails') || 'View Details'} →
             </Link>
           )}
         </div>
