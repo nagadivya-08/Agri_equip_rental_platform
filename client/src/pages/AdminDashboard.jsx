@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import Loader from '../components/Loader';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -45,9 +46,10 @@ const AdminDashboard = () => {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading platform metrics...</p>
-        </div>
+        <Loader
+          message="Loading platform metrics..."
+          submessage="Analyzing machinery transactions & system metrics..."
+        />
       ) : stats ? (
         <>
           {/* Metrics Overview Cards */}

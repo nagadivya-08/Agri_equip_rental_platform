@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import Loader from '../components/Loader';
 
 const AdminAllListings = () => {
   const [listings, setListings] = useState([]);
@@ -71,9 +72,10 @@ const AdminAllListings = () => {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <div className="loading-container">
-          <p>Loading equipment catalog...</p>
-        </div>
+        <Loader
+          message="Loading equipment catalog..."
+          submessage="Fetching verified machinery listings..."
+        />
       ) : listings.length === 0 ? (
         <div className="empty-state-card">
           <span className="empty-icon">📭</span>

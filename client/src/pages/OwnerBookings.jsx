@@ -194,9 +194,11 @@ const OwnerBookings = () => {
     return (
       <div className="owner-bookings-page">
         <div className="page-container">
-          <div className="loading-container">
-            <p>Loading incoming equipment bookings...</p>
-          </div>
+          <Spinner
+            fullPage
+            message="Loading incoming equipment bookings..."
+            submessage="Fetching reservations and rental requests..."
+          />
         </div>
       </div>
     );

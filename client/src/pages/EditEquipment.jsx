@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import Loader from '../components/Loader';
 
 const EditEquipment = () => {
   const { id } = useParams();
@@ -142,9 +143,11 @@ const EditEquipment = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <p>Loading equipment details...</p>
-      </div>
+      <Loader
+        fullPage
+        message="Loading equipment details..."
+        submessage="Fetching machinery specifications and media..."
+      />
     );
   }
 
