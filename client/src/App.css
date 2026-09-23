@@ -7286,6 +7286,67 @@ body.theme-light {
   }
 }
 
+/* ==========================================================================
+   Password Visibility Toggle (Login & Registration)
+   ========================================================================== */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 44px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  line-height: 1;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.15);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+.password-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  display: block;
+}
+
+[data-theme='light'] .password-toggle-btn {
+  color: #64748b;
+}
+
+[data-theme='light'] .password-toggle-btn:hover {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+}
+
 
 
 
