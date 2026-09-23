@@ -57,7 +57,7 @@ const createEquipment = async (req, res) => {
         coordinates,
       },
       locationName: locationName ? locationName.trim() : '',
-      status: 'pending',
+      status: 'approved',
       isAvailable: true,
     });
 

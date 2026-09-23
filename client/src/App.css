@@ -7052,6 +7052,34 @@ body.theme-light {
   color: #1e3a8a;
 }
 
+.approval-notice-banner.live-listing-banner {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #a7f3d0;
+}
+
+.approval-notice-banner.live-listing-banner strong {
+  color: #34d399;
+}
+
+.approval-notice-banner.live-listing-banner p {
+  color: #d1fae5;
+}
+
+[data-theme='light'] .approval-notice-banner.live-listing-banner {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+
+[data-theme='light'] .approval-notice-banner.live-listing-banner strong {
+  color: #065f46;
+}
+
+[data-theme='light'] .approval-notice-banner.live-listing-banner p {
+  color: #047857;
+}
+
 /* Owner Reputation Section (Dashboard) */
 .owner-reputation-section {
   margin-top: 32px;

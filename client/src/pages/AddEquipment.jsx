@@ -122,7 +122,7 @@ const AddEquipment = () => {
         },
       });
 
-      toast.success('🚜 Equipment listing submitted! Awaiting administrator review.');
+      toast.success('🚜 Equipment listing published! It is now live and available for renters to book.');
       navigate('/my-listings');
     } catch (err) {
       const msg =
@@ -351,19 +351,19 @@ const AddEquipment = () => {
             onCapture={handlePhotoCaptured}
           />
 
-          {/* Admin Approval Notice Banner */}
-          <div className="approval-notice-banner">
-            <span className="approval-notice-icon">ℹ️</span>
+          {/* Instant Publication & Renter Discovery Notice Banner */}
+          <div className="approval-notice-banner live-listing-banner">
+            <span className="approval-notice-icon">📢</span>
             <div>
-              <strong>Admin Approval Notice:</strong>
+              <strong>Instant Catalog Visibility:</strong>
               <p>
-                Your equipment listing will be reviewed by platform administrators before becoming visible to renters in the public catalog.
+                Once submitted, your equipment listing will immediately appear in the rental catalog for farmers and renters to discover and request.
               </p>
             </div>
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Submitting for Approval...' : '🚀 Submit for Approval'}
+            {loading ? 'Publishing Equipment Listing...' : '🚀 Publish & List Equipment'}
           </button>
         </form>
       </div>
