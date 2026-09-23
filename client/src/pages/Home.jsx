@@ -194,7 +194,7 @@ const Home = () => {
                 followMouse
                 onClick={() => navigate('/register')}
               >
-                {t('home.joinBtn') || '✨ Join AgriRent Free'}
+                {t('home.joinBtn') || '✨ Sign Up Free'}
               </SpecularButton>
             )}
           </div>

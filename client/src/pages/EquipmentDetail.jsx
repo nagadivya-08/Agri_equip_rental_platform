@@ -246,11 +246,43 @@ const EquipmentDetail = () => {
         <div className="detail-gallery-col">
           <div className="main-image-viewport">
             {currentImage ? (
-              <img
-                src={currentImage}
-                alt={equipment.name}
-                className="detail-main-image"
-              />
+              <>
+                <img
+                  src={currentImage}
+                  alt={equipment.name}
+                  className="detail-main-image"
+                />
+                {images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      className="gallery-nav-btn gallery-prev-btn"
+                      onClick={() =>
+                        setActiveImageIndex((prev) =>
+                          prev === 0 ? images.length - 1 : prev - 1
+                        )
+                      }
+                      title="Previous Image"
+                      aria-label="Previous image"
+                    >
+                      ❮
+                    </button>
+                    <button
+                      type="button"
+                      className="gallery-nav-btn gallery-next-btn"
+                      onClick={() =>
+                        setActiveImageIndex((prev) =>
+                          prev === images.length - 1 ? 0 : prev + 1
+                        )
+                      }
+                      title="Next Image"
+                      aria-label="Next image"
+                    >
+                      ❯
+                    </button>
+                  </>
+                )}
+              </>
             ) : (
               <div className="detail-no-image">
                 <span>🚜</span>

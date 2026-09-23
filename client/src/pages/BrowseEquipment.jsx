@@ -37,6 +37,7 @@ const BrowseEquipment = () => {
   }, []);
 
   // Filters state (prefill from query string if available)
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [type, setType] = useState(searchParams.get('type') || '');
   const [minPrice, setMinPrice] = useState('500');
   const [maxPrice, setMaxPrice] = useState('');
@@ -95,6 +96,9 @@ const BrowseEquipment = () => {
 
     try {
       const params = new URLSearchParams();
+      if (search && search.trim() !== '') {
+        params.append('search', search.trim());
+      }
       if (type && type.toLowerCase() !== 'all' && type.trim() !== '') {
         params.append('type', type.trim());
       }
@@ -121,9 +125,10 @@ const BrowseEquipment = () => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [type, minPrice, maxPrice]);
+  }, [search, type, minPrice, maxPrice]);
 
   const handleResetFilters = () => {
+    setSearch('');
     setType('');
     setMinPrice('500');
     setMaxPrice('');
@@ -161,44 +166,52 @@ const BrowseEquipment = () => {
         {/* Filter Toolbar */}
         <div className="filter-card">
           <div className="filter-row">
-            <div className="filter-group type-search-filter">
-              <label htmlFor="type">{t('browse.equipmentType') || 'Equipment Type'}</label>
+            {/* Keyword Search Filter */}
+            <div className="filter-group search-filter-group">
+              <label htmlFor="search-input">Search Equipment</label>
               <div className="type-search-input-wrapper">
-                <span className="type-search-icon" aria-hidden="true">🚜</span>
+                <span className="type-search-icon" aria-hidden="true">🔍</span>
                 <input
-                  id="type"
-                  list="equipment-types-list"
+                  id="search-input"
                   type="text"
                   className="type-search-input"
-                  placeholder={t('browse.searchPlaceholder') || 'Type or select equipment type (e.g. Tractor, Tiller, Sprayer...)'}
-                  value={type.toLowerCase() === 'all' ? '' : type}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val.toLowerCase() === 'all types' || val.toLowerCase() === 'all') {
-                      setType('');
-                    } else {
-                      setType(val);
-                    }
-                  }}
+                  placeholder="Search by name, model, village..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   autoComplete="off"
                 />
-                {type && type.toLowerCase() !== 'all' && (
+                {search && (
                   <button
                     type="button"
                     className="type-search-clear-btn"
-                    onClick={() => setType('')}
-                    title={t('browse.clearFilters') || 'Clear filter / Show all equipment'}
-                    aria-label="Clear equipment type filter"
+                    onClick={() => setSearch('')}
+                    title="Clear search"
+                    aria-label="Clear search"
                   >
                     ✕
                   </button>
                 )}
               </div>
-              <datalist id="equipment-types-list">
-                {EQUIPMENT_TYPES.map((item) => (
-                  <option key={item.value} value={item.label} />
-                ))}
-              </datalist>
+            </div>
+
+            {/* Type Filter Dropdown - Connected to EQUIPMENT_TYPES */}
+            <div className="filter-group type-dropdown-group">
+              <label htmlFor="equipment-type-select">{t('browse.equipmentType') || 'Equipment Type'}</label>
+              <div className="type-select-wrapper">
+                <select
+                  id="equipment-type-select"
+                  className="type-select-input"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">All Equipment Types ({EQUIPMENT_TYPES.length})</option>
+                  {EQUIPMENT_TYPES.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="filter-group price-filter">

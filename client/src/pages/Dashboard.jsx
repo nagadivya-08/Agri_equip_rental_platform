@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLocation, Link } from 'react-router-dom';
 import api from '../api/axios';
@@ -9,6 +9,39 @@ const Dashboard = () => {
 
   const [adminTestResult, setAdminTestResult] = useState(null);
   const [testingAdmin, setTestingAdmin] = useState(false);
+
+  // Quick stats state for renter
+  const [stats, setStats] = useState({
+    activeCount: 0,
+    completedCount: 0,
+    totalCount: 0,
+    loading: true,
+  });
+
+  useEffect(() => {
+    if (user?.role === 'renter') {
+      api
+        .get('/bookings/my')
+        .then((res) => {
+          const bookings = res.data.data || [];
+          const activeCount = bookings.filter((b) =>
+            ['pending', 'awaiting_payment', 'confirmed'].includes(b.status)
+          ).length;
+          const completedCount = bookings.filter(
+            (b) => b.status === 'completed'
+          ).length;
+          setStats({
+            activeCount,
+            completedCount,
+            totalCount: bookings.length,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          setStats((prev) => ({ ...prev, loading: false }));
+        });
+    }
+  }, [user]);
 
   // If redirected with an unauthorized message
   const redirectMessage = location.state?.message;
@@ -50,6 +83,40 @@ const Dashboard = () => {
         {redirectMessage && (
           <div className="notice-banner warning-banner">
             ⚠️ {redirectMessage}
+          </div>
+        )}
+
+        {/* Quick Stats Section for Renters */}
+        {user?.role === 'renter' && (
+          <div className="dashboard-stats-section">
+            <h3>Rental Summary</h3>
+            {stats.loading ? (
+              <div className="stats-loading">Loading your rental statistics...</div>
+            ) : (
+              <div className="dashboard-stats-grid">
+                <div className="stat-card stat-active">
+                  <div className="stat-icon">🔄</div>
+                  <div className="stat-content">
+                    <span className="stat-value">{stats.activeCount}</span>
+                    <span className="stat-label">Active Rentals</span>
+                  </div>
+                </div>
+                <div className="stat-card stat-completed">
+                  <div className="stat-icon">🏁</div>
+                  <div className="stat-content">
+                    <span className="stat-value">{stats.completedCount}</span>
+                    <span className="stat-label">Completed Rentals</span>
+                  </div>
+                </div>
+                <div className="stat-card stat-total">
+                  <div className="stat-icon">📦</div>
+                  <div className="stat-content">
+                    <span className="stat-value">{stats.totalCount}</span>
+                    <span className="stat-label">Total Bookings</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

@@ -263,7 +263,7 @@ const MyBookings = () => {
                 : null;
             const days = calculateDays(booking.startDate, booking.endDate);
             const isAwaitingPayment = booking.status === 'awaiting_payment';
-            const canCancel = ['pending', 'awaiting_payment', 'confirmed'].includes(
+            const canCancel = ['pending', 'confirmed'].includes(
               booking.status
             );
 
@@ -381,12 +381,18 @@ const MyBookings = () => {
                       )}
 
                       {booking.status === 'completed' && (
-                        <button
-                          onClick={() => setActiveReviewBooking(booking)}
-                          className="btn-leave-review"
-                        >
-                          ⭐ Leave a Review
-                        </button>
+                        booking.hasReviewed ? (
+                          <span className="review-submitted-tag">
+                            ✅ Review submitted
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => setActiveReviewBooking(booking)}
+                            className="btn-leave-review"
+                          >
+                            ⭐ Leave a Review
+                          </button>
+                        )
                       )}
                     </div>
 
@@ -425,7 +431,11 @@ const MyBookings = () => {
         <ReviewForm
           booking={activeReviewBooking}
           onSuccess={() => {
+            const bookedId = activeReviewBooking?._id;
             setActiveReviewBooking(null);
+            setBookings((prev) =>
+              prev.map((b) => (b._id === bookedId ? { ...b, hasReviewed: true } : b))
+            );
             setActionMessage({
               type: 'success',
               text: 'Thank you! Your review has been published.',

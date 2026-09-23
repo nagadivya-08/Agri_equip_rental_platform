@@ -64,7 +64,7 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
               <span className="card-rating-count">({equipment.reviewCount})</span>
             </span>
           ) : (
-            <span className="card-rating-new">★ New</span>
+            <span className="card-rating-new">★ No reviews yet</span>
           )}
         </div>
 

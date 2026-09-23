@@ -6248,3 +6248,212 @@ body.theme-light {
   color: #64748b !important;
 }
 
+/* ==========================================================================
+   Renter Pages Audit Enhancements
+   ========================================================================== */
+
+/* Type Select Dropdown in Filter Toolbar */
+.type-dropdown-group {
+  flex: 1.5;
+  min-width: 220px;
+}
+
+.search-filter-group {
+  flex: 2;
+  min-width: 220px;
+}
+
+.type-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.type-select-input {
+  width: 100% !important;
+  padding: 11px 16px !important;
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  cursor: pointer !important;
+  outline: none !important;
+  appearance: auto !important;
+  transition: all 0.2s ease !important;
+}
+
+.type-select-input option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+[data-theme='light'] .type-select-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme='light'] .type-select-input option {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+/* Dashboard Quick Stats for Renters */
+.dashboard-stats-section {
+  margin-bottom: 28px;
+}
+
+.dashboard-stats-section h3 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  color: #34d399;
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+[data-theme='light'] .stat-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .stat-value {
+  color: #0f172a;
+}
+
+/* Equipment Detail Prev/Next Gallery Nav Arrows */
+.main-image-viewport {
+  position: relative;
+}
+
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.gallery-nav-btn:hover {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #34d399;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.gallery-prev-btn {
+  left: 12px;
+}
+
+.gallery-next-btn {
+  right: 12px;
+}
+
+/* Review Submitted Status Tag */
+.review-submitted-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Mobile Responsive Filters (~375px) */
+@media (max-width: 640px) {
+  .browse-page .filter-card {
+    padding: 16px 14px;
+    margin-bottom: 20px;
+  }
+
+  .filter-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .filter-group,
+  .search-filter-group,
+  .type-dropdown-group,
+  .price-filter {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .price-inputs {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .price-stepper-box {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .filter-action {
+    width: 100% !important;
+  }
+
+  .btn-reset-filters {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px !important;
+  }
+}
+
+

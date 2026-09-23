@@ -1,6 +1,7 @@
 const Booking = require('../models/Booking');
 const Equipment = require('../models/Equipment');
 const User = require('../models/User');
+const Review = require('../models/Review');
 const { sendEmailNotification } = require('../utils/sendEmail');
 
 // Helper to calculate difference in calendar days inclusive of both start and end dates
@@ -146,10 +147,22 @@ const getMyBookings = async (req, res) => {
       .populate('ownerId', 'name email phone')
       .sort({ createdAt: -1 });
 
+    // Check which completed bookings have already been reviewed by this renter
+    const userReviews = await Review.find({ reviewerId: req.user._id }).select('bookingId');
+    const reviewedBookingIds = new Set(
+      userReviews.map((r) => r.bookingId?.toString())
+    );
+
+    const bookingsWithReviewStatus = bookings.map((b) => {
+      const obj = b.toObject();
+      obj.hasReviewed = reviewedBookingIds.has(b._id.toString());
+      return obj;
+    });
+
     return res.status(200).json({
       success: true,
-      count: bookings.length,
-      data: bookings,
+      count: bookingsWithReviewStatus.length,
+      data: bookingsWithReviewStatus,
     });
   } catch (error) {
     console.error('Get my bookings error:', error);

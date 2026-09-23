@@ -40,7 +40,7 @@ export default {
     selectLanguagePrompt: 'Choose Your Preferred Language:',
     browseBtn: '🚜 Browse Equipment',
     dashboardBtn: 'Go to Dashboard',
-    joinBtn: '✨ Join AgriRent Free',
+    joinBtn: '✨ Sign Up Free',
     verifiedMachinery: 'Admin Verified Machinery',
     securePayments: 'Secure Online Payments',
     fastBooking: 'Instant Booking System',
