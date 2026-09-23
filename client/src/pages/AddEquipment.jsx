@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { EQUIPMENT_TYPES } from '../constants/equipmentTypes';
+import CameraCaptureModal from '../components/CameraCaptureModal';
 
 const AddEquipment = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const AddEquipment = () => {
 
   const [selectedImages, setSelectedImages] = useState([]); // File objects
   const [imagePreviews, setImagePreviews] = useState([]); // Object URLs for previews
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const fileInputRef = useRef(null);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -54,6 +57,21 @@ const AddEquipment = () => {
 
     const updatedPreviews = updatedFiles.map((file) => URL.createObjectURL(file));
     setImagePreviews(updatedPreviews);
+  };
+
+  const handlePhotoCaptured = (file) => {
+    if (selectedImages.length >= 5) {
+      setError('You can upload a maximum of 5 images in total.');
+      toast.error('Maximum 5 images allowed.');
+      return;
+    }
+
+    const updated = [...selectedImages, file];
+    setSelectedImages(updated);
+    const previews = updated.map((f) => URL.createObjectURL(f));
+    setImagePreviews(previews);
+    if (error) setError('');
+    toast.success('📸 Photo added from camera!');
   };
 
   const handleSubmit = async (e) => {
@@ -260,20 +278,52 @@ const AddEquipment = () => {
           </div>
 
           {/* Image Upload & Previews */}
-          <div className="form-group">
+          <div className="form-group image-upload-section">
             <label htmlFor="images">
-              Upload Images (Max 5, JPEG/PNG/WebP)
+              Equipment Photos (Max 5, JPEG/PNG/WebP)
             </label>
-            <input
-              id="images"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              disabled={selectedImages.length >= 5}
-            />
+            <p className="field-hint-text">
+              Add photos using your device camera or browse existing image files on your device.
+            </p>
+
+            <div className="image-source-actions">
+              <button
+                type="button"
+                className="btn-source-action btn-camera-action"
+                onClick={() => setIsCameraOpen(true)}
+                disabled={selectedImages.length >= 5}
+              >
+                <span className="source-icon">📷</span>
+                <span className="source-title">Take Photo with Camera</span>
+                <span className="source-desc">Live camera access</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-source-action btn-browse-action"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={selectedImages.length >= 5}
+              >
+                <span className="source-icon">📁</span>
+                <span className="source-title">Browse Files on Device</span>
+                <span className="source-desc">Choose from gallery / storage</span>
+              </button>
+
+              {/* Hidden file input for device browse */}
+              <input
+                ref={fileInputRef}
+                id="images"
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+                disabled={selectedImages.length >= 5}
+              />
+            </div>
+
             <small className="helper-text">
-              Selected {selectedImages.length} of 5 images
+              Selected {selectedImages.length} of 5 photos
             </small>
 
             {imagePreviews.length > 0 && (
@@ -294,6 +344,12 @@ const AddEquipment = () => {
               </div>
             )}
           </div>
+
+          <CameraCaptureModal
+            isOpen={isCameraOpen}
+            onClose={() => setIsCameraOpen(false)}
+            onCapture={handlePhotoCaptured}
+          />
 
           {/* Admin Approval Notice Banner */}
           <div className="approval-notice-banner">

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import Loader from '../components/Loader';
 import { EQUIPMENT_TYPES, getEquipmentTypeLabel } from '../constants/equipmentTypes';
+import CameraCaptureModal from '../components/CameraCaptureModal';
 
 const EditEquipment = () => {
   const { id } = useParams();
@@ -23,6 +24,8 @@ const EditEquipment = () => {
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [newPreviews, setNewPreviews] = useState([]);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -92,6 +95,22 @@ const EditEquipment = () => {
     const updated = newImages.filter((_, idx) => idx !== indexToRemove);
     setNewImages(updated);
     setNewPreviews(updated.map((f) => URL.createObjectURL(f)));
+  };
+
+  const handlePhotoCaptured = (file) => {
+    const totalCount = existingImages.length + newImages.length;
+    if (totalCount >= 5) {
+      setError('You can have a maximum of 5 images in total.');
+      toast.error('Maximum 5 images allowed.');
+      return;
+    }
+
+    const updatedNewFiles = [...newImages, file];
+    setNewImages(updatedNewFiles);
+    const previews = updatedNewFiles.map((f) => URL.createObjectURL(f));
+    setNewPreviews(previews);
+    if (error) setError('');
+    toast.success('📸 Photo added from camera!');
   };
 
   const handleSubmit = async (e) => {
@@ -320,16 +339,50 @@ const EditEquipment = () => {
               </div>
             )}
 
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              disabled={existingImages.length + newImages.length >= 5}
-            />
+            <div className="image-source-actions">
+              <button
+                type="button"
+                className="btn-source-action btn-camera-action"
+                onClick={() => setIsCameraOpen(true)}
+                disabled={existingImages.length + newImages.length >= 5}
+              >
+                <span className="source-icon">📷</span>
+                <span className="source-title">Take Photo with Camera</span>
+                <span className="source-desc">Live camera access</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-source-action btn-browse-action"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={existingImages.length + newImages.length >= 5}
+              >
+                <span className="source-icon">📁</span>
+                <span className="source-title">Browse Files on Device</span>
+                <span className="source-desc">Choose from gallery / storage</span>
+              </button>
+
+              {/* Hidden file input for device browse */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+                disabled={existingImages.length + newImages.length >= 5}
+              />
+            </div>
+
             <small className="helper-text">
-              Total images: {existingImages.length + newImages.length} of 5
+              Total photos: {existingImages.length + newImages.length} of 5
             </small>
+
+            <CameraCaptureModal
+              isOpen={isCameraOpen}
+              onClose={() => setIsCameraOpen(false)}
+              onCapture={handlePhotoCaptured}
+            />
 
             {newPreviews.length > 0 && (
               <div>
