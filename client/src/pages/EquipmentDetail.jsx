@@ -9,7 +9,11 @@ import { getImageUrl } from '../utils/imageUrl';
 import Spinner from '../components/Spinner';
 import toast from 'react-hot-toast';
 import SpecularButton from '../components/SpecularButton';
-import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
+import {
+  getEquipmentTypeLabel,
+  getEquipmentTypeDetails,
+  getRelatedEquipmentTypes,
+} from '../constants/equipmentTypes';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -19,6 +23,10 @@ const EquipmentDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Equipment type metadata & related categories
+  const typeDetails = equipment ? getEquipmentTypeDetails(equipment.type) : null;
+  const relatedTypes = equipment ? getRelatedEquipmentTypes(equipment.type) : [];
 
   // Reviews state
   const [reviews, setReviews] = useState([]);
@@ -482,6 +490,98 @@ const EquipmentDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Equipment Type Agricultural Details & Specifications */}
+      {typeDetails && (
+        <div className="equipment-type-insights-card">
+          <div className="insights-header">
+            <span className="insights-icon">{typeDetails.icon}</span>
+            <div className="insights-header-text">
+              <div className="insights-badge-row">
+                <span className="insights-category-badge">{typeDetails.category}</span>
+                <span className="insights-type-badge">{typeDetails.label} Guide</span>
+              </div>
+              <h2 className="insights-heading">
+                About {typeDetails.label}s in Modern Agriculture
+              </h2>
+            </div>
+          </div>
+
+          <p className="insights-desc">{typeDetails.description}</p>
+
+          <div className="insights-specs-grid">
+            <div className="insights-spec-item">
+              <span className="spec-label">⚡ Typical Power & Capacity</span>
+              <span className="spec-val">{typeDetails.typicalPower}</span>
+            </div>
+            <div className="insights-spec-item">
+              <span className="spec-label">🌾 Best Suited Operations</span>
+              <span className="spec-val">{typeDetails.bestSuitedFor}</span>
+            </div>
+          </div>
+
+          {typeDetails.keyBenefits && typeDetails.keyBenefits.length > 0 && (
+            <div className="insights-benefits">
+              <span className="benefits-title">Key Field Advantages:</span>
+              <div className="benefits-tags">
+                {typeDetails.keyBenefits.map((benefit, idx) => (
+                  <span key={idx} className="benefit-tag">
+                    ✓ {benefit}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Related Equipment Types Section (At least 2 related types per equipment) */}
+      {relatedTypes && relatedTypes.length > 0 && (
+        <div className="related-equipment-types-section">
+          <div className="related-types-header">
+            <div className="related-title-cluster">
+              <span className="related-cluster-icon">🔗</span>
+              <div>
+                <h2>Related Equipment Types</h2>
+                <p>
+                  Complementary machinery often rented alongside {typeDetails?.label || 'this machine'} for enhanced field operations:
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="related-types-grid">
+            {relatedTypes.map((rel) => (
+              <div key={rel.value} className="related-type-card">
+                <div className="rel-card-top">
+                  <span className="rel-icon">{rel.icon}</span>
+                  <div className="rel-title-group">
+                    <h3 className="rel-title">{rel.label}</h3>
+                    <span className="rel-category">{rel.category}</span>
+                  </div>
+                </div>
+
+                <p className="rel-desc">{rel.description}</p>
+
+                <div className="rel-meta-row">
+                  <span className="rel-spec">
+                    <strong>Specs:</strong> {rel.typicalPower}
+                  </span>
+                </div>
+
+                <div className="rel-card-actions">
+                  <Link
+                    to={`/equipment?type=${rel.value}`}
+                    className="btn-browse-related-type"
+                  >
+                    Browse {rel.label} Listings →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Reviews Section */}
       <div className="detail-reviews-container">

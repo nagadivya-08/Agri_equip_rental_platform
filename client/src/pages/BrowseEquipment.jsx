@@ -6,7 +6,11 @@ import EquipmentCard from '../components/EquipmentCard';
 import MapView from '../components/MapView';
 import Spinner from '../components/Spinner';
 import AudioToggle from '../components/AudioToggle';
-import { EQUIPMENT_TYPES } from '../constants/equipmentTypes';
+import {
+  EQUIPMENT_TYPES,
+  getEquipmentTypeDetails,
+  getRelatedEquipmentTypes,
+} from '../constants/equipmentTypes';
 
 const BrowseEquipment = () => {
   const { t } = useLanguage();
@@ -299,6 +303,63 @@ const BrowseEquipment = () => {
             </div>
           </div>
         </div>
+
+        {/* Active Selected Equipment Type Details & Related Categories Banner */}
+        {type && type.toLowerCase() !== 'all' && (
+          (() => {
+            const details = getEquipmentTypeDetails(type);
+            const related = getRelatedEquipmentTypes(type);
+            if (!details) return null;
+
+            return (
+              <div className="active-type-details-banner">
+                <div className="active-type-header">
+                  <div className="active-type-badge-cluster">
+                    <span className="active-type-icon">{details.icon}</span>
+                    <div>
+                      <div className="active-type-tags">
+                        <span className="active-type-cat">{details.category}</span>
+                        <span className="active-type-title">{details.label} Category Guide</span>
+                      </div>
+                      <p className="active-type-desc">{details.description}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="active-type-specs-row">
+                  <span className="active-spec-pill">
+                    ⚡ <strong>Power/Specs:</strong> {details.typicalPower}
+                  </span>
+                  <span className="active-spec-pill">
+                    🌾 <strong>Best Suited:</strong> {details.bestSuitedFor}
+                  </span>
+                </div>
+
+                {related && related.length > 0 && (
+                  <div className="active-type-related-container">
+                    <span className="related-types-caption">
+                      🔗 Related Equipment Types (click to view):
+                    </span>
+                    <div className="related-types-chips">
+                      {related.map((rel) => (
+                        <button
+                          key={rel.value}
+                          type="button"
+                          className="related-type-chip-btn"
+                          onClick={() => setType(rel.value)}
+                          title={`Switch filter to ${rel.label} (${rel.category})`}
+                        >
+                          <span className="chip-icon">{rel.icon}</span>
+                          <span className="chip-name">{rel.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()
+        )}
 
         {error && <p className="error-text">{error}</p>}
 
