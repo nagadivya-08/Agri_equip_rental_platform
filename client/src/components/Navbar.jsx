@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
 import LanguageSelector from './LanguageSelector';
-import ThemeSwitch from './ThemeSwitch';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
-  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -28,10 +25,9 @@ const Navbar = () => {
           🚜 AgriRent
         </Link>
 
-        {/* Top Navbar Controls: Language & Theme Switch (Always visible) */}
+        {/* Top Navbar Controls: Language Selector */}
         <div className="nav-controls-container">
           <LanguageSelector />
-          <ThemeSwitch isDark={isDark} onToggle={toggleTheme} id="navThemeSwitch" />
         </div>
 
         {/* Mobile Hamburger Toggle Button */}
