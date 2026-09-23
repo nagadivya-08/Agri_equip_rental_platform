@@ -94,20 +94,29 @@ const BrowseEquipment = () => {
     });
   };
 
-  const fetchEquipment = async () => {
+  const fetchEquipment = async (overrideParams = {}) => {
     setLoading(true);
     setError('');
 
     try {
+      const activeSearch =
+        overrideParams.search !== undefined ? overrideParams.search : search;
+      const activeType =
+        overrideParams.type !== undefined ? overrideParams.type : type;
+      const activeMinPrice =
+        overrideParams.minPrice !== undefined ? overrideParams.minPrice : minPrice;
+      const activeMaxPrice =
+        overrideParams.maxPrice !== undefined ? overrideParams.maxPrice : maxPrice;
+
       const params = new URLSearchParams();
-      if (search && search.trim() !== '') {
-        params.append('search', search.trim());
+      if (activeSearch && activeSearch.trim() !== '') {
+        params.append('search', activeSearch.trim());
       }
-      if (type && type.toLowerCase() !== 'all' && type.trim() !== '') {
-        params.append('type', type.trim());
+      if (activeType && activeType.toLowerCase() !== 'all' && activeType.trim() !== '') {
+        params.append('type', activeType.trim());
       }
-      if (minPrice) params.append('minPrice', minPrice);
-      if (maxPrice) params.append('maxPrice', maxPrice);
+      if (activeMinPrice) params.append('minPrice', activeMinPrice);
+      if (activeMaxPrice) params.append('maxPrice', activeMaxPrice);
 
       const response = await api.get(`/equipment?${params.toString()}`);
       setEquipmentList(response.data.data || []);
@@ -122,20 +131,24 @@ const BrowseEquipment = () => {
     }
   };
 
-  // Debounced filter trigger
+  // Initial load on page mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchEquipment();
-    }, 300);
+    fetchEquipment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [search, type, minPrice, maxPrice]);
+  // Handler when user clicks "Apply Filters" button or submits the filter form
+  const handleApplyFilters = (e) => {
+    if (e) e.preventDefault();
+    fetchEquipment();
+  };
 
   const handleResetFilters = () => {
     setSearch('');
     setType('');
     setMinPrice('500');
     setMaxPrice('');
+    fetchEquipment({ search: '', type: '', minPrice: '500', maxPrice: '' });
   };
 
   return (
@@ -167,8 +180,8 @@ const BrowseEquipment = () => {
           </p>
         </div>
 
-        {/* Filter Toolbar */}
-        <div className="filter-card">
+        {/* Filter Toolbar Form */}
+        <form onSubmit={handleApplyFilters} className="filter-card">
           <div className="filter-row">
             {/* Keyword Search Filter */}
             <div className="filter-group search-filter-group">
@@ -292,8 +305,17 @@ const BrowseEquipment = () => {
               </div>
             </div>
 
-            <div className="filter-action">
+            <div className="filter-actions-group">
               <button
+                type="submit"
+                className="btn-apply-filters"
+                disabled={loading}
+                title="Apply all selected search, category, and price filters"
+              >
+                {loading ? (t('browse.applyingFilters') || 'Applying...') : (t('browse.applyFilters') || '🔍 Apply Filters')}
+              </button>
+              <button
+                type="button"
                 onClick={handleResetFilters}
                 className="btn-reset-filters"
                 title={t('browse.clearFilters') || 'Clear Filters'}
@@ -302,7 +324,7 @@ const BrowseEquipment = () => {
               </button>
             </div>
           </div>
-        </div>
+        </form>
 
         {/* Active Selected Equipment Type Details & Related Categories Banner */}
         {type && type.toLowerCase() !== 'all' && (
@@ -346,7 +368,10 @@ const BrowseEquipment = () => {
                           key={rel.value}
                           type="button"
                           className="related-type-chip-btn"
-                          onClick={() => setType(rel.value)}
+                          onClick={() => {
+                            setType(rel.value);
+                            fetchEquipment({ type: rel.value });
+                          }}
                           title={`Switch filter to ${rel.label} (${rel.category})`}
                         >
                           <span className="chip-icon">{rel.icon}</span>
