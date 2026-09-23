@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import Spinner from '../components/Spinner';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const AdminPendingListings = () => {
   const [pendingListings, setPendingListings] = useState([]);
@@ -170,7 +171,7 @@ const AdminPendingListings = () => {
                     </td>
                     <td>
                       <span className="detail-type-pill">
-                        {item.type ? item.type.toUpperCase() : 'EQUIPMENT'}
+                        {getEquipmentTypeLabel(item.type)}
                       </span>
                     </td>
                     <td>

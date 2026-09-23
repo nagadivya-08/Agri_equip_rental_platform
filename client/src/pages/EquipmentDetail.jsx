@@ -9,6 +9,7 @@ import { getImageUrl } from '../utils/imageUrl';
 import Spinner from '../components/Spinner';
 import toast from 'react-hot-toast';
 import SpecularButton from '../components/SpecularButton';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const EquipmentDetail = () => {
   const { id } = useParams();
@@ -281,7 +282,7 @@ const EquipmentDetail = () => {
           <div className="detail-header">
             <div className="detail-type-rating-line">
               <span className="detail-type-pill">
-                {equipment.type ? equipment.type.toUpperCase() : 'EQUIPMENT'}
+                {getEquipmentTypeLabel(equipment.type)}
               </span>
               <div className="detail-rating-pill">
                 {reviewsCount > 0 ? (

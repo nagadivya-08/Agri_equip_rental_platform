@@ -80,10 +80,14 @@ const getEquipment = async (req, res) => {
       isAvailable: true,
     };
 
-    // Filter by type (supports texting/searching by type)
+    // Filter by type (supports texting/searching by type, snake_case or human-readable)
     if (type && type.toLowerCase() !== 'all' && type.trim() !== '') {
-      const cleanType = type.toLowerCase().trim().replace(/agricultural\s*/i, '');
-      query.type = new RegExp(cleanType, 'i');
+      const normalized = type
+        .toLowerCase()
+        .trim()
+        .replace(/agricultural\s*/i, '')
+        .replace(/[\s_-]+/g, '[\\s_-]*');
+      query.type = new RegExp(normalized, 'i');
     }
 
     // Filter by price range

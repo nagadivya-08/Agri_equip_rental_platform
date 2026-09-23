@@ -6,6 +6,7 @@ import EquipmentCard from '../components/EquipmentCard';
 import MapView from '../components/MapView';
 import Spinner from '../components/Spinner';
 import AudioToggle from '../components/AudioToggle';
+import { EQUIPMENT_TYPES } from '../constants/equipmentTypes';
 
 const BrowseEquipment = () => {
   const { t } = useLanguage();
@@ -194,12 +195,9 @@ const BrowseEquipment = () => {
                 )}
               </div>
               <datalist id="equipment-types-list">
-                <option value="Tractor" />
-                <option value="Harvester" />
-                <option value="Sprayer" />
-                <option value="Tiller" />
-                <option value="Agricultural Drone" />
-                <option value="Other" />
+                {EQUIPMENT_TYPES.map((item) => (
+                  <option key={item.value} value={item.label} />
+                ))}
               </datalist>
             </div>
 

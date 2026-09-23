@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import Loader from '../components/Loader';
+import { EQUIPMENT_TYPES, getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const EditEquipment = () => {
   const { id } = useParams();
@@ -189,12 +190,16 @@ const EditEquipment = () => {
                 onChange={handleChange}
                 required
               >
-                <option value="tractor">Tractor</option>
-                <option value="harvester">Harvester</option>
-                <option value="sprayer">Sprayer</option>
-                <option value="tiller">Tiller</option>
-                <option value="drone">Agricultural Drone</option>
-                <option value="other">Other Equipment</option>
+                {EQUIPMENT_TYPES.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+                {!EQUIPMENT_TYPES.some((t) => t.value === formData.type) && formData.type && (
+                  <option value={formData.type}>
+                    {getEquipmentTypeLabel(formData.type)}
+                  </option>
+                )}
               </select>
             </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import Loader from '../components/Loader';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const AdminAllListings = () => {
   const [listings, setListings] = useState([]);
@@ -126,7 +127,7 @@ const AdminAllListings = () => {
                     </td>
                     <td>
                       <span className="detail-type-pill">
-                        {item.type ? item.type.toUpperCase() : 'EQUIPMENT'}
+                        {getEquipmentTypeLabel(item.type)}
                       </span>
                     </td>
                     <td>

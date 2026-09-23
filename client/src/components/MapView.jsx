@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getImageUrl } from '../utils/imageUrl';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 // Fix Leaflet marker asset resolution in Vite/Webpack bundlers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -110,7 +111,7 @@ const MapView = ({ equipmentList = [] }) => {
                       </div>
                     )}
                     <div className="popup-content">
-                      <span className="popup-type-tag">{equipment.type}</span>
+                      <span className="popup-type-tag">{getEquipmentTypeLabel(equipment.type)}</span>
                       <h4 className="popup-title">{equipment.name}</h4>
                       <p className="popup-price">
                         <strong>₹{equipment.pricePerDay}</strong> / day

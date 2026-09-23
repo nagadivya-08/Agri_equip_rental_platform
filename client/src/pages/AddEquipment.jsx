@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { EQUIPMENT_TYPES } from '../constants/equipmentTypes';
 
 const AddEquipment = () => {
   const navigate = useNavigate();
@@ -158,12 +159,11 @@ const AddEquipment = () => {
                 onChange={handleChange}
                 required
               >
-                <option value="tractor">Tractor</option>
-                <option value="harvester">Harvester</option>
-                <option value="sprayer">Sprayer</option>
-                <option value="tiller">Tiller</option>
-                <option value="drone">Agricultural Drone</option>
-                <option value="other">Other Equipment</option>
+                {EQUIPMENT_TYPES.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
               </select>
             </div>
 

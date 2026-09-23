@@ -78,7 +78,36 @@ const equipmentValidation = [
     .trim()
     .notEmpty()
     .withMessage('Equipment type is required')
-    .isIn(['tractor', 'harvester', 'sprayer', 'tiller', 'drone', 'other'])
+    .isIn([
+      'tractor',
+      'power_tiller',
+      'tiller',
+      'rotavator',
+      'plough',
+      'cultivator',
+      'disc_harrow',
+      'land_leveler',
+      'seed_drill',
+      'planter',
+      'transplanter',
+      'water_pump',
+      'sprinkler_system',
+      'combine_harvester',
+      'harvester',
+      'reaper',
+      'thresher',
+      'chaff_cutter',
+      'rice_mill',
+      'grain_dryer',
+      'trailer',
+      'power_sprayer',
+      'sprayer',
+      'drone_sprayer',
+      'drone',
+      'baler',
+      'weeder',
+      'other',
+    ])
     .withMessage('Unsupported equipment type'),
   body('pricePerDay')
     .notEmpty()

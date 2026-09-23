@@ -5,6 +5,7 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/ReviewForm';
 import Spinner from '../components/Spinner';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -283,7 +284,7 @@ const MyBookings = () => {
                 <div className="booking-card-content">
                   <div className="booking-header-line">
                     <span className="detail-type-pill">
-                      {equip.type ? equip.type.toUpperCase() : 'EQUIPMENT'}
+                      {getEquipmentTypeLabel(equip.type)}
                     </span>
                     <div className="status-badges-cluster">
                       <span className={`status-badge status-${booking.status}`}>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/imageUrl';
 import { useLanguage } from '../context/LanguageContext';
+import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
 const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
   const { t } = useLanguage();
@@ -49,7 +50,7 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
 
       <div className="card-content">
         <div className="card-type-tag">
-          {equipment.type ? equipment.type.toUpperCase() : 'EQUIPMENT'}
+          {getEquipmentTypeLabel(equipment.type)}
         </div>
 
         <h3 className="card-title" title={equipment.name}>
