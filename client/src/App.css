@@ -2576,7 +2576,8 @@
   border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
-.status-confirmed {
+.status-confirmed,
+.status-approved {
   background: rgba(16, 185, 129, 0.2);
   color: #34d399;
   border: 1px solid rgba(52, 211, 153, 0.4);
@@ -6917,6 +6918,374 @@ body.theme-light {
   border-color: #e2e8f0;
   color: #0f172a;
 }
+
+/* ==========================================================================
+   Owner Portal Components & Cross-Cutting Styles
+   ========================================================================== */
+
+/* Status Badges - Light Mode Overrides */
+[data-theme='light'] .status-pending {
+  background: #fef3c7;
+  color: #b45309;
+  border-color: #fcd34d;
+}
+
+[data-theme='light'] .status-confirmed,
+[data-theme='light'] .status-approved {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+[data-theme='light'] .status-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+
+[data-theme='light'] .status-completed {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #7dd3fc;
+}
+
+[data-theme='light'] .status-cancelled {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
+/* Card Rejection Box (MyListings & EquipmentCard) */
+.card-rejection-box {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #fca5a5;
+}
+
+.card-rejection-box .rejection-icon {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.card-rejection-box .rejection-text {
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.card-rejection-box .rejection-text strong {
+  color: #f87171;
+}
+
+[data-theme='light'] .card-rejection-box {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+[data-theme='light'] .card-rejection-box .rejection-text strong {
+  color: #b91c1c;
+}
+
+/* Form Inline Validation Errors */
+.field-error-text {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #f87171;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* AddEquipment Admin Approval Notice Banner */
+.approval-notice-banner {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #bfdbfe;
+}
+
+.approval-notice-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.approval-notice-banner strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #93c5fd;
+  margin-bottom: 2px;
+}
+
+.approval-notice-banner p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: #dbeafe;
+}
+
+[data-theme='light'] .approval-notice-banner {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+[data-theme='light'] .approval-notice-banner strong {
+  color: #1d4ed8;
+}
+
+[data-theme='light'] .approval-notice-banner p {
+  color: #1e3a8a;
+}
+
+/* Owner Reputation Section (Dashboard) */
+.owner-reputation-section {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.reputation-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.reputation-header-row h3 {
+  font-size: 1.25rem;
+  color: #34d399;
+  margin: 0 0 4px 0;
+}
+
+.reputation-summary-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 6px 14px;
+  border-radius: 9999px;
+}
+
+.rep-stars {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.rep-count {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.empty-reviews-box {
+  text-align: center;
+  padding: 32px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #94a3b8;
+}
+
+.empty-reviews-icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.empty-reviews-box p {
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0 0 6px 0;
+}
+
+.empty-reviews-box small {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  max-width: 400px;
+  display: inline-block;
+}
+
+.owner-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.owner-review-item-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.owner-review-item-card:hover {
+  border-color: rgba(52, 211, 153, 0.3);
+  transform: translateY(-1px);
+}
+
+.review-top-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reviewer-info strong {
+  color: #f8fafc;
+  font-size: 0.95rem;
+}
+
+.reviewed-equipment-tag {
+  font-size: 0.78rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.review-rating-stars {
+  color: #fbbf24;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+}
+
+.rating-numeric {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
+.review-comment-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+  font-style: italic;
+  margin: 6px 0 8px 0;
+}
+
+.review-date-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Light Theme for Owner Reputation */
+[data-theme='light'] .owner-reputation-section {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .reputation-header-row h3 {
+  color: #059669;
+}
+
+[data-theme='light'] .rep-count {
+  color: #475569;
+}
+
+[data-theme='light'] .empty-reviews-box {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+[data-theme='light'] .empty-reviews-box p {
+  color: #1e293b;
+}
+
+[data-theme='light'] .owner-review-item-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme='light'] .reviewer-info strong {
+  color: #0f172a;
+}
+
+[data-theme='light'] .reviewed-equipment-tag {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+[data-theme='light'] .review-comment-text {
+  color: #334155;
+}
+
+/* Mobile Responsiveness (~375px) */
+@media (max-width: 640px) {
+  .booking-card-item {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-thumbnail,
+  .booking-thumbnail-placeholder {
+    min-height: 140px;
+    height: 140px;
+  }
+
+  .booking-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .my-listings-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .my-listings-header .btn-primary {
+    text-align: center;
+  }
+
+  .reputation-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reputation-summary-badge {
+    align-self: flex-start;
+  }
+
+  .equipment-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 
 

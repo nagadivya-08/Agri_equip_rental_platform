@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../api/axios';
 import Loader from '../components/Loader';
 import { EQUIPMENT_TYPES, getEquipmentTypeLabel } from '../constants/equipmentTypes';
@@ -97,8 +98,16 @@ const EditEquipment = () => {
     e.preventDefault();
     setError('');
 
-    if (!formData.name || !formData.type || !formData.pricePerDay) {
-      setError('Please fill in required fields (Name, Type, Price).');
+    if (
+      !formData.name ||
+      !formData.type ||
+      !formData.pricePerDay ||
+      isNaN(Number(formData.pricePerDay)) ||
+      Number(formData.pricePerDay) <= 0
+    ) {
+      const errTxt = 'Please fill in valid required fields (Name, Type, and Price > 0).';
+      setError(errTxt);
+      toast.error(errTxt);
       return;
     }
 
@@ -130,13 +139,15 @@ const EditEquipment = () => {
         },
       });
 
+      toast.success('🚜 Equipment listing updated successfully!');
       navigate('/my-listings');
     } catch (err) {
-      setError(
+      const errMsg =
         err.response?.data?.message ||
         err.message ||
-        'Failed to update equipment listing'
-      );
+        'Failed to update equipment listing';
+      setError(errMsg);
+      toast.error(errMsg);
     } finally {
       setSubmitting(false);
     }

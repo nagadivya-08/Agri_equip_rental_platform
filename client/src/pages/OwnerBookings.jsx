@@ -173,7 +173,9 @@ const OwnerBookings = () => {
 
   const hasEndDatePassed = (endDate) => {
     if (!endDate) return false;
-    return new Date(endDate) <= new Date();
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+    return end <= new Date();
   };
 
   const formatStatusLabel = (status) => {
@@ -335,15 +337,16 @@ const OwnerBookings = () => {
 
                   <div className="booking-meta-grid">
                     <div className="meta-block">
-                      <span className="meta-label">Renter Information</span>
+                      <span className="meta-label">Renter Details</span>
                       <span className="meta-value">
-                        👤 {renter.name || 'Anonymous Renter'}
-                        {renter.phone && (
-                          <div>
-                            📞 <a href={`tel:${renter.phone}`}>{renter.phone}</a>
-                          </div>
-                        )}
-                        {renter.email && <div>✉️ {renter.email}</div>}
+                        <div>👤 {renter.name || 'Anonymous Renter'}</div>
+                        <div>
+                          📞 {renter.phone ? (
+                            <a href={`tel:${renter.phone}`}>{renter.phone}</a>
+                          ) : (
+                            <span style={{ opacity: 0.7 }}>Not provided</span>
+                          )}
+                        </div>
                       </span>
                     </div>
 

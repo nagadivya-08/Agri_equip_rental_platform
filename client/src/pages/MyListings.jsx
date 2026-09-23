@@ -10,6 +10,7 @@ const MyListings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [deletingId, setDeletingId] = useState(null);
 
   const fetchMyEquipment = async () => {
     setLoading(true);
@@ -38,6 +39,7 @@ const MyListings = () => {
     );
     if (!confirm) return;
 
+    setDeletingId(id);
     try {
       await api.delete(`/equipment/${id}`);
       const successMsg = `"${name}" was successfully deleted.`;
@@ -51,6 +53,8 @@ const MyListings = () => {
         err.message ||
         'Failed to delete equipment listing';
       toast.error(errMsg);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -100,6 +104,7 @@ const MyListings = () => {
                 isOwnerView={true}
                 showStatus={true}
                 onDelete={handleDelete}
+                isDeleting={deletingId === item._id}
               />
             ))}
           </div>

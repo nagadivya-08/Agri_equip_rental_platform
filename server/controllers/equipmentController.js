@@ -24,6 +24,13 @@ const createEquipment = async (req, res) => {
       });
     }
 
+    if (Number(pricePerDay) <= 0 || isNaN(Number(pricePerDay))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Price per day must be a positive number greater than zero',
+      });
+    }
+
     // Process uploaded images
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
@@ -185,10 +192,39 @@ const getMyEquipment = async (req, res) => {
       createdAt: -1,
     });
 
+    // Aggregate average rating and review count for owner's listings
+    const equipmentIds = equipment.map((e) => e._id);
+    const ratingStats = await Review.aggregate([
+      { $match: { equipmentId: { $in: equipmentIds } } },
+      {
+        $group: {
+          _id: '$equipmentId',
+          averageRating: { $avg: '$rating' },
+          reviewCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const ratingMap = {};
+    ratingStats.forEach((stat) => {
+      ratingMap[stat._id.toString()] = {
+        averageRating: Math.round(stat.averageRating * 10) / 10,
+        reviewCount: stat.reviewCount,
+      };
+    });
+
+    const dataWithRatings = equipment.map((item) => {
+      const obj = item.toObject ? item.toObject() : { ...item };
+      const stat = ratingMap[item._id.toString()];
+      obj.averageRating = stat ? stat.averageRating : 0;
+      obj.reviewCount = stat ? stat.reviewCount : 0;
+      return obj;
+    });
+
     return res.status(200).json({
       success: true,
-      count: equipment.length,
-      data: equipment,
+      count: dataWithRatings.length,
+      data: dataWithRatings,
     });
   } catch (error) {
     console.error('Get my equipment error:', error);
@@ -286,7 +322,14 @@ const updateEquipment = async (req, res) => {
     if (type) updateFields.type = type.toLowerCase().trim();
     if (description !== undefined) updateFields.description = description.trim();
     if (pricePerDay !== undefined && pricePerDay !== '') {
-      updateFields.pricePerDay = Number(pricePerDay);
+      const parsedPrice = Number(pricePerDay);
+      if (isNaN(parsedPrice) || parsedPrice <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Price per day must be a positive number greater than zero',
+        });
+      }
+      updateFields.pricePerDay = parsedPrice;
     }
     if (locationName !== undefined) updateFields.locationName = locationName.trim();
     if (isAvailable !== undefined) {

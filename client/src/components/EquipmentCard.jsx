@@ -3,7 +3,13 @@ import { getImageUrl } from '../utils/imageUrl';
 import { useLanguage } from '../context/LanguageContext';
 import { getEquipmentTypeLabel } from '../constants/equipmentTypes';
 
-const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
+const EquipmentCard = ({
+  equipment,
+  isOwnerView,
+  showStatus,
+  onDelete,
+  isDeleting,
+}) => {
   const { t } = useLanguage();
 
   const primaryImage =
@@ -72,6 +78,20 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
           📍 {equipment.locationName || 'Location not specified'}
         </p>
 
+        {/* Rejection Note for Rejected Listings */}
+        {showStatus && equipment.status === 'rejected' && (
+          <div className="card-rejection-box">
+            <span className="rejection-icon">⚠️</span>
+            <div className="rejection-text">
+              <strong>Admin Rejection Note:</strong>{' '}
+              <span>
+                {equipment.rejectionReason ||
+                  'Listing did not meet platform safety or verification guidelines.'}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div className="card-pricing">
           <span className="price-amount">₹{equipment.pricePerDay}</span>
           <span className="price-unit">{t('common.perDay') || '/ day'}</span>
@@ -89,9 +109,10 @@ const EquipmentCard = ({ equipment, isOwnerView, showStatus, onDelete }) => {
               </Link>
               <button
                 onClick={() => onDelete(equipment._id, equipment.name)}
+                disabled={isDeleting}
                 className="btn-card-delete"
               >
-                🗑️ {t('common.delete') || 'Delete'}
+                {isDeleting ? 'Deleting...' : `🗑️ ${t('common.delete') || 'Delete'}`}
               </button>
             </div>
           ) : (

@@ -64,8 +64,16 @@ const AddEquipment = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Equipment name is required';
     if (!formData.type) newErrors.type = 'Equipment type is required';
-    if (!formData.pricePerDay) newErrors.pricePerDay = 'Price per day is required';
-    else if (Number(formData.pricePerDay) < 0) newErrors.pricePerDay = 'Price cannot be negative';
+    if (
+      !formData.pricePerDay ||
+      isNaN(Number(formData.pricePerDay)) ||
+      Number(formData.pricePerDay) <= 0
+    ) {
+      newErrors.pricePerDay = 'Price per day must be a positive number greater than zero';
+    }
+    if (!formData.locationName.trim()) {
+      newErrors.locationName = 'Location / town / village is required';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
@@ -145,8 +153,12 @@ const AddEquipment = () => {
               placeholder="e.g. Mahindra 575 DI Tractor"
               value={formData.name}
               onChange={handleChange}
+              className={fieldErrors.name ? 'input-error' : ''}
               required
             />
+            {fieldErrors.name && (
+              <span className="field-error-text">⚠️ {fieldErrors.name}</span>
+            )}
           </div>
 
           <div className="form-row">
@@ -157,6 +169,7 @@ const AddEquipment = () => {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
+                className={fieldErrors.type ? 'input-error' : ''}
                 required
               >
                 {EQUIPMENT_TYPES.map((item) => (
@@ -165,6 +178,9 @@ const AddEquipment = () => {
                   </option>
                 ))}
               </select>
+              {fieldErrors.type && (
+                <span className="field-error-text">⚠️ {fieldErrors.type}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -174,11 +190,15 @@ const AddEquipment = () => {
                 type="number"
                 name="pricePerDay"
                 placeholder="e.g. 2500"
-                min="0"
+                min="1"
                 value={formData.pricePerDay}
                 onChange={handleChange}
+                className={fieldErrors.pricePerDay ? 'input-error' : ''}
                 required
               />
+              {fieldErrors.pricePerDay && (
+                <span className="field-error-text">⚠️ {fieldErrors.pricePerDay}</span>
+              )}
             </div>
           </div>
 
@@ -191,7 +211,12 @@ const AddEquipment = () => {
               placeholder="e.g. Guntur, Andhra Pradesh"
               value={formData.locationName}
               onChange={handleChange}
+              className={fieldErrors.locationName ? 'input-error' : ''}
+              required
             />
+            {fieldErrors.locationName && (
+              <span className="field-error-text">⚠️ {fieldErrors.locationName}</span>
+            )}
           </div>
 
           <div className="form-row">
@@ -270,8 +295,19 @@ const AddEquipment = () => {
             )}
           </div>
 
+          {/* Admin Approval Notice Banner */}
+          <div className="approval-notice-banner">
+            <span className="approval-notice-icon">ℹ️</span>
+            <div>
+              <strong>Admin Approval Notice:</strong>
+              <p>
+                Your equipment listing will be reviewed by platform administrators before becoming visible to renters in the public catalog.
+              </p>
+            </div>
+          </div>
+
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Publishing Listing...' : 'Publish Equipment Listing'}
+            {loading ? 'Submitting for Approval...' : '🚀 Submit for Approval'}
           </button>
         </form>
       </div>
