@@ -153,7 +153,7 @@ const Register = () => {
                 value={formData.role}
                 onChange={handleChange}
               >
-                <option value="renter">{t('auth.roleFarmer') || 'Renter (I want to rent equipment)'}</option>
+                <option value="renter">{t('auth.roleFarmer') || 'Rent Equipment (Renter)'}</option>
                 <option value="owner">{t('auth.roleOwner') || 'Owner (I want to list my equipment)'}</option>
               </select>
             </div>

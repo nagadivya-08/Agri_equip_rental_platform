@@ -111,7 +111,7 @@ export default {
     fullName: 'Full Name',
     phone: 'Phone Number',
     role: 'I want to:',
-    roleFarmer: 'Rent Equipment (Farmer)',
+    roleFarmer: 'Rent Equipment (Renter)',
     roleOwner: 'List & Rent Out Equipment (Owner)',
     registerBtn: 'Create Account',
     alreadyHaveAccount: 'Already have an account?',

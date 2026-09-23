@@ -111,7 +111,7 @@ export default {
     fullName: 'पूरा नाम',
     phone: 'फ़ोन नंबर',
     role: 'मेरी भूमिका:',
-    roleFarmer: 'उपकरण किराए पर लेना (किसान)',
+    roleFarmer: 'उपकरण किराए पर लेना (रेंटर)',
     roleOwner: 'उपकरण किराए पर देना (मालिक)',
     registerBtn: 'खाता बनाएं',
     alreadyHaveAccount: 'क्या आपके पास पहले से खाता है?',
