@@ -15,6 +15,7 @@ const AdminPendingListings = () => {
   const [rejectingItem, setRejectingItem] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [approvingId, setApprovingId] = useState(null);
 
   const fetchPending = async () => {
     setLoading(true);
@@ -38,6 +39,7 @@ const AdminPendingListings = () => {
   }, []);
 
   const handleApprove = async (id, name) => {
+    setApprovingId(id);
     try {
       await api.patch(`/admin/listings/${id}/approve`);
       setPendingListings((prev) => prev.filter((item) => item._id !== id));
@@ -51,6 +53,8 @@ const AdminPendingListings = () => {
         err.message ||
         'Failed to approve equipment';
       toast.error(errMsg);
+    } finally {
+      setApprovingId(null);
     }
   };
 
@@ -190,12 +194,14 @@ const AdminPendingListings = () => {
                         <button
                           onClick={() => handleApprove(item._id, item.name)}
                           className="btn-approve"
+                          disabled={approvingId === item._id || processing}
                         >
-                          ✅ Approve
+                          {approvingId === item._id ? 'Approving...' : '✅ Approve'}
                         </button>
                         <button
                           onClick={() => openRejectModal(item)}
                           className="btn-reject"
+                          disabled={approvingId === item._id || processing}
                         >
                           ❌ Reject
                         </button>

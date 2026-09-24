@@ -92,6 +92,9 @@ const Navbar = () => {
               <Link to="/dashboard" className="nav-link user-profile-link" onClick={closeMenu}>
                 {t('nav.dashboard') || 'Dashboard'} ({user.name})
               </Link>
+              <Link to="/profile" className="nav-link" onClick={closeMenu} title="Edit Profile">
+                👤 {t('nav.profile') || 'Edit Profile'}
+              </Link>
               <span className={`role-pill role-pill-${user.role}`}>
                 {user.role}
               </span>

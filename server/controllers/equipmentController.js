@@ -414,6 +414,20 @@ const deleteEquipment = async (req, res) => {
       });
     }
 
+    // Check for active/unresolved bookings (pending, awaiting_payment, or confirmed)
+    const activeBookings = await Booking.find({
+      equipmentId: req.params.id,
+      status: { $in: ['pending', 'awaiting_payment', 'confirmed'] },
+    });
+
+    if (activeBookings.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'Cannot delete: this equipment has active bookings. Cancel or complete them first.',
+      });
+    }
+
     await Equipment.findByIdAndDelete(req.params.id);
 
     return res.status(200).json({

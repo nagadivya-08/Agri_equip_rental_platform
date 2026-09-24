@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLocation, Link } from 'react-router-dom';
 import api from '../api/axios';
+import ReputationSummary from '../components/ReputationSummary';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -23,14 +24,6 @@ const Dashboard = () => {
     activeListings: 0,
     pendingRequests: 0,
     totalEarnings: 0,
-    loading: true,
-  });
-
-  // Owner reviews / reputation state
-  const [ownerReviewsData, setOwnerReviewsData] = useState({
-    averageRating: 0,
-    reviewsCount: 0,
-    reviews: [],
     loading: true,
   });
 
@@ -80,23 +73,6 @@ const Dashboard = () => {
           loading: false,
         });
       });
-
-      // 2. Fetch owner's reputation / reviews received from renters
-      if (user?._id) {
-        api
-          .get(`/users/${user._id}/reviews`)
-          .then((res) => {
-            setOwnerReviewsData({
-              averageRating: res.data.averageRating || 0,
-              reviewsCount: res.data.count || 0,
-              reviews: res.data.data || [],
-              loading: false,
-            });
-          })
-          .catch(() => {
-            setOwnerReviewsData((prev) => ({ ...prev, loading: false }));
-          });
-      }
     }
   }, [user]);
 
@@ -132,9 +108,14 @@ const Dashboard = () => {
       <div className="dashboard-card">
         <div className="dashboard-header">
           <h2>Welcome, {user?.name}!</h2>
-          <button onClick={logout} className="logout-button">
-            Logout
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <Link to="/profile" className="btn-secondary" style={{ padding: '0.45rem 0.9rem', fontSize: '0.88rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              👤 Edit Profile
+            </Link>
+            <button onClick={logout} className="logout-button">
+              Logout
+            </button>
+          </div>
         </div>
 
         {redirectMessage && (
@@ -261,72 +242,25 @@ const Dashboard = () => {
                 </Link>
               </>
             )}
+
+            {/* Common Profile Action */}
+            <Link to="/profile" className="action-card">
+              <span className="action-icon">👤</span>
+              <div className="action-info">
+                <h4>Edit Profile</h4>
+                <p>Update personal info, phone, and change password</p>
+              </div>
+            </Link>
           </div>
         </div>
 
         {/* Owner Reputation / Reviews Received Section */}
         {user?.role === 'owner' && (
-          <div className="owner-reputation-section">
-            <div className="reputation-header-row">
-              <div>
-                <h3>⭐ My Reputation & Reviews Received</h3>
-                <p className="section-desc">
-                  Feedback and star ratings submitted by farmers and renters who hired your equipment
-                </p>
-              </div>
-              <div className="reputation-summary-badge">
-                <span className="rep-stars">★ {ownerReviewsData.averageRating}</span>
-                <span className="rep-count">
-                  ({ownerReviewsData.reviewsCount}{' '}
-                  {ownerReviewsData.reviewsCount === 1 ? 'review' : 'reviews'})
-                </span>
-              </div>
-            </div>
-
-            {ownerReviewsData.loading ? (
-              <div className="stats-loading">Loading reviews received...</div>
-            ) : ownerReviewsData.reviews.length === 0 ? (
-              <div className="empty-reviews-box">
-                <span className="empty-reviews-icon">🌾</span>
-                <p>No reviews received from renters yet.</p>
-                <small>
-                  Once renters complete their equipment rental and submit feedback, their reviews and ratings will be showcased here.
-                </small>
-              </div>
-            ) : (
-              <div className="owner-reviews-list">
-                {ownerReviewsData.reviews.map((rev) => (
-                  <div key={rev._id} className="owner-review-item-card">
-                    <div className="review-top-line">
-                      <div className="reviewer-info">
-                        <strong>👤 {rev.reviewerId?.name || 'Verified Renter'}</strong>
-                        {rev.equipmentId?.name && (
-                          <span className="reviewed-equipment-tag">
-                            🚜 {rev.equipmentId.name}
-                          </span>
-                        )}
-                      </div>
-                      <div className="review-rating-stars">
-                        {'★'.repeat(rev.rating)}
-                        {'☆'.repeat(5 - rev.rating)}
-                        <span className="rating-numeric"> {rev.rating}/5</span>
-                      </div>
-                    </div>
-                    {rev.comment && (
-                      <p className="review-comment-text">"{rev.comment}"</p>
-                    )}
-                    <span className="review-date-tag">
-                      {new Date(rev.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <ReputationSummary
+            userId={user?._id}
+            title="⭐ My Reputation & Reviews Received"
+            subtitle="Feedback and star ratings submitted by farmers and renters who hired your equipment"
+          />
         )}
 
         <div className="user-details-grid">

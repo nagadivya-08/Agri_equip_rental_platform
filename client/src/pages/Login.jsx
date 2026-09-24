@@ -133,6 +133,12 @@ const Login = () => {
               </div>
             </div>
 
+            <div className="forgot-password-link-wrapper">
+              <Link to="/forgot-password" className="forgot-password-link">
+                Forgot Password?
+              </Link>
+            </div>
+
             <SpecularButton
               type="submit"
               size="md"

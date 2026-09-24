@@ -105,7 +105,47 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
-  color: #f8fafc;
+  color: var(--text-main);
+}
+
+/* Semantic UI Colors for Light Theme */
+:root[data-theme='light'],
+[data-theme='light'],
+body.theme-light {
+  --text-main: #0f172a;
+  --text-muted: #334155;
+  --text-subtle: #475569;
+
+  --bg-app: #f1f8f4;
+  --bg-card: rgba(255, 255, 255, 0.94);
+  --bg-card-solid: #ffffff;
+  --border-light: rgba(16, 185, 129, 0.22);
+  --border-focus: var(--primary-600);
+}
+
+[data-theme='light'] body,
+body.theme-light {
+  color: #0f172a !important;
+  background-color: #f1f8f4 !important;
+  background-image: 
+    radial-gradient(ellipse at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 48%),
+    radial-gradient(ellipse at 85% 15%, rgba(245, 158, 11, 0.08) 0%, transparent 42%),
+    linear-gradient(180deg, #f0fdf4 0%, #e8f5e9 40%, #f1f8f4 100%) !important;
+}
+
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] h4,
+[data-theme='light'] h5,
+[data-theme='light'] h6,
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3,
+body.theme-light h4,
+body.theme-light h5,
+body.theme-light h6 {
+  color: #0f172a !important;
 }
 
 /* Sleek Scrollbar */

@@ -1932,6 +1932,26 @@
   color: #cbd5e1;
 }
 
+.subtag-admin {
+  background: rgba(168, 85, 247, 0.18);
+  color: #c084fc;
+}
+
+.subtag-confirmed {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+}
+
+.subtag-completed {
+  background: rgba(6, 182, 212, 0.18);
+  color: #22d3ee;
+}
+
+.subtag-cancelled {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+}
+
 /* Admin Modules Grid */
 .admin-actions-section {
   text-align: left;
@@ -2001,10 +2021,12 @@
   font-weight: 700;
 }
 
-/* Admin Tables */
-.table-responsive {
+/* Admin Tables with Mobile Horizontal Scroll */
+.table-responsive,
+.admin-table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: rgba(15, 23, 42, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
@@ -5377,6 +5399,10 @@
   color: #0f172a;
 }
 
+.home-page.theme-light .book-inner-step {
+  color: #047857;
+}
+
 .home-page.theme-light .book-inner-title {
   color: #0f172a;
 }
@@ -5391,19 +5417,142 @@
   border-color: rgba(16, 185, 129, 0.25);
 }
 
-/* Light Theme for Categories */
-.home-page.theme-light .category-card {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(226, 232, 240, 0.9);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+.home-page.theme-light .cover {
+  background: linear-gradient(145deg, rgba(240, 253, 244, 0.96) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.home-page.theme-light .category-name {
+.home-page.theme-light .cover-title {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+.home-page.theme-light .cover-number {
+  color: rgba(15, 23, 42, 0.15);
+}
+
+.home-page.theme-light .cover-hint {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Light Theme for Categories */
+.home-page.theme-light .categories-section {
+  background: rgba(240, 253, 244, 0.45);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.home-page.theme-light .tilt-card,
+.home-page.theme-light .category-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   color: #0f172a;
 }
 
+.home-page.theme-light .tilt-card-prompt {
+  color: #059669;
+}
+
+.home-page.theme-light .tilt-card-title,
+.home-page.theme-light .category-name {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+.home-page.theme-light .tilt-card-desc,
 .home-page.theme-light .category-desc {
+  color: #475569;
+}
+
+.home-page.theme-light .tilt-card-link-text {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.home-page.theme-light .tracker:hover ~ .tilt-card {
+  border-color: #10b981;
+  box-shadow: 0 16px 36px rgba(16, 185, 129, 0.16);
+}
+
+.home-page.theme-light .tracker:hover ~ .tilt-card .tilt-card-link-text {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+}
+
+/* Light Theme for Owner Call to Action Banner */
+.home-page.theme-light .owner-cta-banner {
+  color: #0f172a;
+}
+
+.home-page.theme-light .owner-cta-text h2 {
+  color: #064e3b;
+  text-shadow: none;
+}
+
+.home-page.theme-light .owner-cta-text p {
+  color: #334155;
+  text-shadow: none;
+}
+
+/* Light Theme for Translucent Home Footer */
+.home-page.theme-light .home-footer {
+  background: rgba(240, 253, 244, 0.94);
+  border-top: 1px solid rgba(16, 185, 129, 0.28);
+  color: #475569;
+}
+
+.home-page.theme-light .home-footer-brand .footer-logo {
+  color: #064e3b;
+}
+
+.home-page.theme-light .home-footer-brand .footer-tagline {
+  color: #475569;
+}
+
+.home-page.theme-light .home-footer-links .footer-col h4 {
+  color: #064e3b;
+}
+
+.home-page.theme-light .home-footer-links .footer-col a {
+  color: #334155;
+}
+
+.home-page.theme-light .home-footer-links .footer-col a:hover {
+  color: #059669;
+}
+
+.home-page.theme-light .home-footer-links .footer-badge-item {
+  color: #475569;
+}
+
+.home-page.theme-light .home-footer-bottom {
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
   color: #64748b;
+}
+
+.home-page.theme-light .home-footer-bottom p {
+  color: #64748b;
+}
+
+/* Light Theme for Audio Toggle & Theme Toggle */
+.home-page.theme-light .toggleSwitch,
+[data-theme='light'] .toggleSwitch {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.home-page.theme-light .toggleSwitch .speaker svg path,
+[data-theme='light'] .toggleSwitch .speaker svg path,
+.home-page.theme-light .toggleSwitch .mute-speaker svg path,
+[data-theme='light'] .toggleSwitch .mute-speaker svg path {
+  stroke: #064e3b !important;
+  fill: #064e3b !important;
 }
 
 /* Light Theme for Value Proposition / Community */
@@ -6098,19 +6247,23 @@ body.theme-light {
 
 [data-theme='light'] .page-title,
 [data-theme='light'] .page-header-row h1,
-[data-theme='light'] .page-header-row h2 {
+[data-theme='light'] .page-header-row h2,
+[data-theme='light'] .admin-page-header h1,
+[data-theme='light'] .admin-page-header h2 {
   color: #064e3b !important;
 }
 
-[data-theme='light'] .page-subtitle {
+[data-theme='light'] .page-subtitle,
+[data-theme='light'] .admin-page-header p {
   color: #475569 !important;
 }
 
 /* Light Theme for Equipment Cards across entire site */
 [data-theme='light'] .equipment-card {
-  background: rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   border: 1px solid rgba(203, 213, 225, 0.85) !important;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06) !important;
+  color: #0f172a !important;
 }
 
 [data-theme='light'] .equipment-card:hover {
@@ -6123,7 +6276,7 @@ body.theme-light {
 }
 
 [data-theme='light'] .card-location {
-  color: #64748b !important;
+  color: #475569 !important;
 }
 
 [data-theme='light'] .price-amount {
@@ -6131,6 +6284,41 @@ body.theme-light {
 }
 
 [data-theme='light'] .price-unit {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .card-type-tag,
+[data-theme='light'] .browse-page .card-type-tag {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #047857 !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+}
+
+[data-theme='light'] .card-rating-badge,
+[data-theme='light'] .browse-page .card-rating-badge {
+  background: rgba(254, 243, 199, 0.9) !important;
+  color: #92400e !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme='light'] .card-rating-new,
+[data-theme='light'] .browse-page .card-rating-new {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme='light'] .card-rating-count,
+[data-theme='light'] .browse-page .card-rating-count {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .card-rating-num {
+  color: #713f12 !important;
+}
+
+[data-theme='light'] .card-image-placeholder {
+  background: #f1f5f9 !important;
   color: #64748b !important;
 }
 
@@ -6142,9 +6330,10 @@ body.theme-light {
 /* Light Theme for Filter Card & Inputs */
 [data-theme='light'] .browse-page .filter-card,
 [data-theme='light'] .filter-card {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
   border: 1px solid rgba(16, 185, 129, 0.28) !important;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
 }
 
 [data-theme='light'] .browse-page .filter-group label,
@@ -6194,6 +6383,22 @@ body.theme-light {
   color: #0f172a !important;
 }
 
+[data-theme='light'] .browse-page .empty-state-card,
+[data-theme='light'] .empty-state-card {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  color: #0f172a !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme='light'] .empty-state-card h3 {
+  color: #064e3b !important;
+}
+
+[data-theme='light'] .empty-state-card p {
+  color: #475569 !important;
+}
+
 /* Light Theme for My Listings, My Bookings, Owner Bookings */
 [data-theme='light'] .my-listings-page,
 [data-theme='light'] .owner-bookings-page,
@@ -6205,6 +6410,68 @@ body.theme-light {
     linear-gradient(180deg, #f0fdf4 0%, #e8f5e9 40%, #f1f8f4 100%) !important;
 }
 
+[data-theme='light'] .my-listings-header,
+[data-theme='light'] .page-header-row {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .my-listings-header h2,
+[data-theme='light'] .page-header-row .page-title {
+  color: #064e3b !important;
+}
+
+[data-theme='light'] .my-listings-header .page-subtitle,
+[data-theme='light'] .page-header-row .page-subtitle {
+  color: #475569 !important;
+}
+
+/* Light Theme Booking Card Items */
+[data-theme='light'] .booking-card-item {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .booking-card-item:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.15) !important;
+}
+
+[data-theme='light'] .booking-equip-title,
+[data-theme='light'] .booking-equip-title a {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .booking-equip-title a:hover {
+  color: #059669 !important;
+}
+
+[data-theme='light'] .booking-location {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .booking-meta-grid {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme='light'] .meta-label {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .meta-value {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .price-highlight {
+  color: #047857 !important;
+}
+
+/* Light Theme Cards & Containers */
 [data-theme='light'] .listings-header-card,
 [data-theme='light'] .dashboard-card,
 [data-theme='light'] .form-card,
@@ -6221,6 +6488,177 @@ body.theme-light {
   color: #064e3b !important;
 }
 
+/* Auth Pages Light Theme Overrides */
+[data-theme='light'] .auth-card-glass {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 0 20px rgba(16, 185, 129, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .auth-card-glass h2 {
+  color: #064e3b !important;
+  text-shadow: none !important;
+}
+
+[data-theme='light'] .auth-card-glass .auth-subtitle {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .auth-card-glass .form-group label {
+  color: #1e293b !important;
+}
+
+[data-theme='light'] .auth-card-glass .form-group input,
+[data-theme='light'] .auth-card-glass .form-group select,
+[data-theme='light'] .auth-card-glass .form-group textarea {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme='light'] .auth-card-glass .form-group input::placeholder,
+[data-theme='light'] .auth-card-glass .form-group select::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme='light'] .auth-card-glass .form-group input:focus,
+[data-theme='light'] .auth-card-glass .form-group select:focus,
+[data-theme='light'] .auth-card-glass .form-group textarea:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .auth-card-glass .auth-switch {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .auth-card-glass .auth-switch a {
+  color: #059669 !important;
+}
+
+[data-theme='light'] .auth-card-glass .auth-switch a:hover {
+  color: #047857 !important;
+}
+
+[data-theme='light'] .forgot-password-link {
+  color: #059669 !important;
+}
+
+[data-theme='light'] .forgot-password-link:hover {
+  color: #047857 !important;
+}
+
+/* User Details Grid on Dashboard */
+[data-theme='light'] .user-details-grid {
+  border-top: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .detail-item {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .detail-label {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .detail-value {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .dashboard-header {
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .dashboard-header h2 {
+  color: #064e3b !important;
+}
+
+/* Admin Dashboard & Management Pages */
+[data-theme='light'] .stat-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .stat-card .stat-number,
+[data-theme='light'] .stat-number,
+[data-theme='light'] .stat-value {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .stat-pending-num {
+  color: #b45309 !important;
+}
+
+[data-theme='light'] .stat-approved-num {
+  color: #15803d !important;
+}
+
+[data-theme='light'] .stat-card .stat-title,
+[data-theme='light'] .stat-title {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .stat-card .stat-subtext,
+[data-theme='light'] .stat-subtext,
+[data-theme='light'] .stat-label {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .admin-actions-section h3,
+[data-theme='light'] .dashboard-actions-section h3,
+[data-theme='light'] .dashboard-stats-section h3 {
+  color: #064e3b !important;
+}
+
+[data-theme='light'] .admin-module-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme='light'] .admin-module-card:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.16) !important;
+}
+
+[data-theme='light'] .module-info h4 {
+  color: #064e3b !important;
+}
+
+[data-theme='light'] .module-info p {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .module-arrow {
+  color: #059669 !important;
+}
+
+[data-theme='light'] .admin-page-header {
+  border-bottom-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .admin-filter-box {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .admin-filter-box select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme='light'] .admin-alert-banner {
+  background: #fffbeb !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
+}
+
+/* Action Cards */
 [data-theme='light'] .action-card {
   background: rgba(255, 255, 255, 0.94) !important;
   border: 1px solid rgba(226, 232, 240, 0.9) !important;
@@ -6240,16 +6678,22 @@ body.theme-light {
   border-color: #10b981 !important;
 }
 
-/* Light Theme for Detail Page */
+/* Light Theme for Detail Page & Booking Sidebars */
 [data-theme='light'] .detail-card,
 [data-theme='light'] .detail-section,
-[data-theme='light'] .booking-sidebar-card {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+[data-theme='light'] .booking-sidebar-card,
+[data-theme='light'] .owner-card,
+[data-theme='light'] .booking-card {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
   color: #0f172a !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06) !important;
 }
 
-[data-theme='light'] .detail-section h3 {
+[data-theme='light'] .detail-section h3,
+[data-theme='light'] .owner-card h3,
+[data-theme='light'] .booking-card h3,
+[data-theme='light'] .booking-card-title {
   color: #064e3b !important;
 }
 
@@ -6258,9 +6702,162 @@ body.theme-light {
   text-shadow: none !important;
 }
 
-[data-theme='light'] .booking-equip-title,
-[data-theme='light'] .booking-equip-title a {
+[data-theme='light'] .detail-description-text {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .detail-location {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .price-big {
+  color: #047857 !important;
+}
+
+[data-theme='light'] .price-term {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .detail-type-pill {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #047857 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme='light'] .owner-details p {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .owner-details strong {
   color: #0f172a !important;
+}
+
+[data-theme='light'] .phone-link {
+  color: #059669 !important;
+}
+
+[data-theme='light'] .datepicker-label {
+  color: #1e293b !important;
+}
+
+[data-theme='light'] .datepicker-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+}
+
+[data-theme='light'] .datepicker-input:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .datepicker-hint {
+  color: #64748b !important;
+}
+
+[data-theme='light'] .price-calculation-card {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+[data-theme='light'] .price-calculation-card .calc-row {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .price-calculation-card strong {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .calc-total-row {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .calc-total-val {
+  color: #047857 !important;
+}
+
+[data-theme='light'] .calc-divider {
+  background: #e2e8f0 !important;
+}
+
+[data-theme='light'] .booking-auth-prompt {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme='light'] .booking-auth-prompt p {
+  color: #065f46 !important;
+}
+
+[data-theme='light'] .booking-role-notice {
+  background: #f0f9ff !important;
+  border-color: #bae6fd !important;
+  color: #0369a1 !important;
+}
+
+[data-theme='light'] .react-datepicker {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme='light'] .react-datepicker__header {
+  background-color: #f1f8f4 !important;
+  border-bottom-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme='light'] .react-datepicker__current-month,
+[data-theme='light'] .react-datepicker-time__header,
+[data-theme='light'] .react-datepicker__day-name {
+  color: #047857 !important;
+}
+
+[data-theme='light'] .react-datepicker__day {
+  color: #0f172a !important;
+}
+
+[data-theme='light'] .react-datepicker__day--disabled {
+  color: #cbd5e1 !important;
+}
+
+/* Light Theme Navigation Extras */
+[data-theme='light'] .user-profile-link {
+  color: #064e3b !important;
+}
+
+[data-theme='light'] .role-pill-owner {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme='light'] .role-pill-renter {
+  background: #f0f9ff !important;
+  color: #0369a1 !important;
+  border-color: #bae6fd !important;
+}
+
+[data-theme='light'] .role-pill-admin {
+  background: #fdf2f8 !important;
+  color: #991b1b !important;
+  border-color: #fecaca !important;
+}
+
+[data-theme='light'] .nav-btn-logout {
+  background: #fff1f2 !important;
+  color: #e11d48 !important;
+  border-color: #fecdd3 !important;
+}
+
+[data-theme='light'] .nav-btn-logout:hover {
+  background: #ffe4e6 !important;
+  color: #be123c !important;
+}
+
+[data-theme='light'] .hamburger-bar {
+  background-color: #0f172a !important;
 }
 
 /* Light Theme for Tables (Admin, Bookings) */
@@ -7902,6 +8499,214 @@ body.theme-light {
 [data-theme='light'] .camera-error-box p {
   color: #475569;
 }
+
+/* ==========================================================================
+   Forgot Password Link & Flow
+   ========================================================================== */
+.forgot-password-link-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.25rem;
+  margin-bottom: 1.15rem;
+}
+
+.forgot-password-link {
+  font-size: 0.85rem;
+  color: #34d399;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #6ee7b7;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Compact Reputation Summary (Equipment Detail & Embedded)
+   ========================================================================== */
+.reputation-compact {
+  padding: 1rem !important;
+  margin-top: 0.75rem !important;
+  background: rgba(15, 23, 42, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+}
+
+.reputation-compact .reputation-header-row {
+  margin-bottom: 0.75rem !important;
+}
+
+.reputation-compact .owner-review-item-card {
+  padding: 0.65rem 0.85rem !important;
+}
+
+/* ==========================================================================
+   Edit Profile & Account Security
+   ========================================================================== */
+.edit-profile-page {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.edit-profile-page .form-group input:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+[data-theme='light'] .edit-profile-page .form-group input:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #cbd5e1;
+}
+
+[data-theme='light'] .reputation-compact {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* ==========================================================================
+   Admin Search, Filter Toolbar & Ban Warning Modal
+   ========================================================================== */
+.admin-search-input {
+  width: 100%;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 23, 42, 0.7);
+  color: #ffffff;
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.admin-search-input:focus {
+  border-color: #34d399;
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25);
+}
+
+.admin-filter-label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.admin-filter-select {
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-size: 0.88rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-filter-select:focus {
+  border-color: #34d399;
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25);
+}
+
+.ban-modal-body {
+  margin: 1.25rem 0;
+  color: #e2e8f0;
+  line-height: 1.55;
+}
+
+.ban-modal-desc {
+  margin: 0 0 0.75rem 0;
+  color: inherit;
+}
+
+.ban-cancelled-badge {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #34d399;
+  font-size: 0.9rem;
+}
+
+.ban-warning-alert-card {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 10px;
+  padding: 1rem;
+  color: #fef3c7;
+}
+
+.ban-alert-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.ban-alert-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+}
+
+.ban-alert-action {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #fbbf24;
+}
+
+/* Light Theme Overrides for Admin Users & Ban Modal */
+[data-theme='light'] .admin-search-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme='light'] .admin-filter-label {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .admin-filter-select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme='light'] .ban-modal-body {
+  color: #334155 !important;
+}
+
+[data-theme='light'] .ban-cancelled-badge {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+[data-theme='light'] .ban-warning-alert-card {
+  background: #fffbeb !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
+}
+
+[data-theme='light'] .ban-alert-title {
+  color: #b45309 !important;
+}
+
+[data-theme='light'] .ban-alert-desc {
+  color: #475569 !important;
+}
+
+[data-theme='light'] .ban-alert-action {
+  color: #b45309 !important;
+}
+
 
 
 

@@ -7,6 +7,9 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import EditProfile from './pages/EditProfile';
 import Dashboard from './pages/Dashboard';
 import BrowseEquipment from './pages/BrowseEquipment';
 import EquipmentDetail from './pages/EquipmentDetail';
@@ -51,13 +54,23 @@ function App() {
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* User Dashboard */}
+          {/* User Dashboard & Profile */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
               </ProtectedRoute>
             }
           />

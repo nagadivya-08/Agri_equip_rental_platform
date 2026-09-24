@@ -10,6 +10,7 @@ const MyListings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [deleteError, setDeleteError] = useState('');
   const [deletingId, setDeletingId] = useState(null);
 
   const fetchMyEquipment = async () => {
@@ -40,11 +41,13 @@ const MyListings = () => {
     if (!confirm) return;
 
     setDeletingId(id);
+    setDeleteError('');
     try {
       await api.delete(`/equipment/${id}`);
       const successMsg = `"${name}" was successfully deleted.`;
       toast.success(successMsg);
       setDeleteMessage(successMsg);
+      setDeleteError('');
       setEquipmentList((prev) => prev.filter((item) => item._id !== id));
       setTimeout(() => setDeleteMessage(''), 4000);
     } catch (err) {
@@ -52,7 +55,9 @@ const MyListings = () => {
         err.response?.data?.message ||
         err.message ||
         'Failed to delete equipment listing';
-      toast.error(errMsg);
+      setDeleteError(errMsg);
+      toast.error(errMsg, { duration: 6000 });
+      setTimeout(() => setDeleteError(''), 8000);
     } finally {
       setDeletingId(null);
     }
@@ -76,6 +81,19 @@ const MyListings = () => {
         {deleteMessage && (
           <div className="notice-banner success-banner">
             ✅ {deleteMessage}
+          </div>
+        )}
+
+        {deleteError && (
+          <div className="notice-banner warning-banner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>⚠️ {deleteError}</span>
+            <button
+              onClick={() => setDeleteError('')}
+              style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: '1.1rem', padding: '0 0.5rem' }}
+              title="Dismiss notice"
+            >
+              ✕
+            </button>
           </div>
         )}
 

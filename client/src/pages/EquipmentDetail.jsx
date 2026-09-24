@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ReviewsList from '../components/ReviewsList';
+import ReputationSummary from '../components/ReputationSummary';
 import { getImageUrl } from '../utils/imageUrl';
 import Spinner from '../components/Spinner';
 import toast from 'react-hot-toast';
@@ -381,6 +382,17 @@ const EquipmentDetail = () => {
                 )}
               </p>
             </div>
+
+            {/* Owner Reputation & Reviews Summary */}
+            {equipment.ownerId?._id && (
+              <div style={{ marginTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
+                <ReputationSummary
+                  userId={equipment.ownerId._id}
+                  title={`⭐ Owner Reputation: ${equipment.ownerId.name || 'Verified Owner'}`}
+                  compact={true}
+                />
+              </div>
+            )}
           </div>
 
           {/* Booking Section */}

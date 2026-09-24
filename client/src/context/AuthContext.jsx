@@ -55,6 +55,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Update user state in memory without re-login
+  const updateUser = (updatedUser) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedUser } : updatedUser));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -63,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         logout,
+        updateUser,
       }}
     >
       {children}

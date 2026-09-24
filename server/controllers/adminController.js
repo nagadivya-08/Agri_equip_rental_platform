@@ -1,5 +1,7 @@
 const Equipment = require('../models/Equipment');
 const User = require('../models/User');
+const Booking = require('../models/Booking');
+const Report = require('../models/Report');
 const { sendEmailNotification } = require('../utils/sendEmail');
 
 // @desc    Get all pending equipment listings
@@ -187,6 +189,13 @@ const banUser = async (req, res) => {
     }
 
     // Safety: Prevent banning admins or oneself
+    if (userToBan._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot ban your own account.',
+      });
+    }
+
     if (userToBan.role === 'admin') {
       return res.status(400).json({
         success: false,
@@ -196,6 +205,26 @@ const banUser = async (req, res) => {
 
     userToBan.banned = true;
     await userToBan.save();
+
+    // Auto-cancel unfinalized bookings (pending or awaiting_payment) where user is renter or owner
+    const cancelResult = await Booking.updateMany(
+      {
+        $or: [{ renterId: userToBan._id }, { ownerId: userToBan._id }],
+        status: { $in: ['pending', 'awaiting_payment'] },
+      },
+      { $set: { status: 'cancelled' } }
+    );
+
+    const autoCancelledCount =
+      cancelResult.modifiedCount !== undefined
+        ? cancelResult.modifiedCount
+        : cancelResult.nModified || 0;
+
+    // Count untouched confirmed bookings (already paid) that need manual admin attention
+    const confirmedCount = await Booking.countDocuments({
+      $or: [{ renterId: userToBan._id }, { ownerId: userToBan._id }],
+      status: 'confirmed',
+    });
 
     return res.status(200).json({
       success: true,
@@ -207,6 +236,8 @@ const banUser = async (req, res) => {
         role: userToBan.role,
         banned: userToBan.banned,
       },
+      autoCancelledCount,
+      confirmedBookingsCount: confirmedCount,
     });
   } catch (error) {
     console.error('Error banning user:', error);
@@ -263,20 +294,34 @@ const getStats = async (req, res) => {
       totalUsers,
       totalOwners,
       totalRenters,
+      totalAdmins,
       bannedUsers,
       totalEquipment,
       pendingEquipment,
       approvedEquipment,
       rejectedEquipment,
+      totalBookings,
+      pendingBookings,
+      confirmedBookings,
+      completedBookings,
+      cancelledBookings,
+      openReports,
     ] = await Promise.all([
       User.countDocuments(),
       User.countDocuments({ role: 'owner' }),
       User.countDocuments({ role: 'renter' }),
+      User.countDocuments({ role: 'admin' }),
       User.countDocuments({ banned: true }),
       Equipment.countDocuments(),
       Equipment.countDocuments({ status: 'pending' }),
       Equipment.countDocuments({ status: 'approved' }),
       Equipment.countDocuments({ status: 'rejected' }),
+      Booking.countDocuments(),
+      Booking.countDocuments({ status: 'pending' }),
+      Booking.countDocuments({ status: 'confirmed' }),
+      Booking.countDocuments({ status: 'completed' }),
+      Booking.countDocuments({ status: 'cancelled' }),
+      Report.countDocuments({ status: 'open' }),
     ]);
 
     return res.status(200).json({
@@ -286,6 +331,7 @@ const getStats = async (req, res) => {
           total: totalUsers,
           owners: totalOwners,
           renters: totalRenters,
+          admins: totalAdmins,
           banned: bannedUsers,
         },
         equipment: {
@@ -293,6 +339,16 @@ const getStats = async (req, res) => {
           pending: pendingEquipment,
           approved: approvedEquipment,
           rejected: rejectedEquipment,
+        },
+        bookings: {
+          total: totalBookings,
+          pending: pendingBookings,
+          confirmed: confirmedBookings,
+          completed: completedBookings,
+          cancelled: cancelledBookings,
+        },
+        reports: {
+          open: openReports,
         },
       },
     });
