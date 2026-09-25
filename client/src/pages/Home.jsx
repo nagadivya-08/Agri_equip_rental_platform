@@ -138,29 +138,29 @@ const Home = () => {
               'Power your farming season without the burden of heavy capital machinery loans. Discover verified tractors, harvesters, and precision tools with transparent pricing and secure payments.'}
           </p>
 
-          <div className="home-hero-actions">
-            {user && user.role === 'renter' && (
-              <SpecularButton
-                size="lg"
-                radius={14}
-                tint="#10b981"
-                tintOpacity={0.9}
-                textColor="#ffffff"
-                lineColor="#6ee7b7"
-                baseColor="#047857"
-                intensity={1.5}
-                shineSize={20}
-                shineFade={45}
-                thickness={1.5}
-                speed={0.4}
-                followMouse
-                onClick={() => navigate('/equipment')}
-              >
-                {t('home.browseBtn') || '🚜 Browse Equipment'}
-              </SpecularButton>
-            )}
+          {user && (
+            <div className="home-hero-actions">
+              {user.role === 'renter' && (
+                <SpecularButton
+                  size="lg"
+                  radius={14}
+                  tint="#10b981"
+                  tintOpacity={0.9}
+                  textColor="#ffffff"
+                  lineColor="#6ee7b7"
+                  baseColor="#047857"
+                  intensity={1.5}
+                  shineSize={20}
+                  shineFade={45}
+                  thickness={1.5}
+                  speed={0.4}
+                  followMouse
+                  onClick={() => navigate('/equipment')}
+                >
+                  {t('home.browseBtn') || '🚜 Browse Equipment'}
+                </SpecularButton>
+              )}
 
-            {user ? (
               <SpecularButton
                 size="lg"
                 radius={14}
@@ -179,47 +179,8 @@ const Home = () => {
               >
                 {t('home.dashboardBtn') || 'Go to Dashboard'} ({user.name}) →
               </SpecularButton>
-            ) : (
-              <>
-                <SpecularButton
-                  size="lg"
-                  radius={14}
-                  tint="#10b981"
-                  tintOpacity={0.9}
-                  textColor="#ffffff"
-                  lineColor="#6ee7b7"
-                  baseColor="#047857"
-                  intensity={1.5}
-                  shineSize={20}
-                  shineFade={45}
-                  thickness={1.5}
-                  speed={0.4}
-                  followMouse
-                  onClick={() => navigate('/login')}
-                >
-                  {t('nav.login') || 'Sign In to Rent'}
-                </SpecularButton>
-                <SpecularButton
-                  size="lg"
-                  radius={14}
-                  tint="#ffffff"
-                  tintOpacity={isDark ? 0.16 : 0.9}
-                  blur={12}
-                  textColor={isDark ? '#ffffff' : '#064e3b'}
-                  lineColor={isDark ? '#fbbf24' : '#10b981'}
-                  baseColor={isDark ? '#334155' : '#a7f3d0'}
-                  intensity={1.3}
-                  shineSize={18}
-                  shineFade={40}
-                  thickness={1.2}
-                  followMouse
-                  onClick={() => navigate('/register')}
-                >
-                  {t('home.joinBtn') || '✨ Sign Up Free'}
-                </SpecularButton>
-              </>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="hero-trust-metrics">
             <div className="metric-item">
