@@ -8,9 +8,6 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const [adminTestResult, setAdminTestResult] = useState(null);
-  const [testingAdmin, setTestingAdmin] = useState(false);
-
   // Quick stats state for renter
   const [stats, setStats] = useState({
     activeCount: 0,
@@ -78,30 +75,6 @@ const Dashboard = () => {
 
   // If redirected with an unauthorized message
   const redirectMessage = location.state?.message;
-
-  const handleAdminTest = async () => {
-    setTestingAdmin(true);
-    setAdminTestResult(null);
-    try {
-      const response = await api.get('/auth/admin-test');
-      setAdminTestResult({
-        success: true,
-        status: response.status,
-        message: response.data.message,
-      });
-    } catch (err) {
-      setAdminTestResult({
-        success: false,
-        status: err.response?.status || 500,
-        message:
-          err.response?.data?.message ||
-          err.message ||
-          'Failed to call admin-test endpoint',
-      });
-    } finally {
-      setTestingAdmin(false);
-    }
-  };
 
   return (
     <div className="dashboard-container">
@@ -287,37 +260,6 @@ const Dashboard = () => {
               {user?.verified ? 'Verified ✅' : 'Standard Account'}
             </span>
           </div>
-        </div>
-
-        {/* Role verification test section */}
-        <div className="admin-test-section">
-          <h3>Role Authorization Test (GET /api/auth/admin-test)</h3>
-          <p className="section-desc">
-            Test route protected by <code>protect</code> and <code>authorizeRoles("admin")</code>.
-            Non-admin roles should receive HTTP 403 Forbidden.
-          </p>
-
-          <button
-            onClick={handleAdminTest}
-            className="test-button"
-            disabled={testingAdmin}
-          >
-            {testingAdmin ? 'Testing...' : 'Test Admin Route'}
-          </button>
-
-          {adminTestResult && (
-            <div
-              className={`test-result-box ${
-                adminTestResult.success ? 'test-success' : 'test-failure'
-              }`}
-            >
-              <p className="result-status">
-                Status: <strong>{adminTestResult.status}</strong>{' '}
-                {adminTestResult.success ? 'OK' : 'Forbidden / Denied'}
-              </p>
-              <p className="result-msg">{adminTestResult.message}</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
