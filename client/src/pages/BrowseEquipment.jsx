@@ -6,6 +6,7 @@ import EquipmentCard from '../components/EquipmentCard';
 import MapView from '../components/MapView';
 import Spinner from '../components/Spinner';
 import AudioToggle from '../components/AudioToggle';
+import EquipmentIcon from '../components/EquipmentIcon';
 import {
   EQUIPMENT_TYPES,
   getEquipmentTypeDetails,
@@ -337,7 +338,9 @@ const BrowseEquipment = () => {
               <div className="active-type-details-banner">
                 <div className="active-type-header">
                   <div className="active-type-badge-cluster">
-                    <span className="active-type-icon">{details.icon}</span>
+                    <span className="active-type-icon">
+                      <EquipmentIcon icon={details.icon} alt={details.label} />
+                    </span>
                     <div>
                       <div className="active-type-tags">
                         <span className="active-type-cat">{details.category}</span>
@@ -374,7 +377,9 @@ const BrowseEquipment = () => {
                           }}
                           title={`Switch filter to ${rel.label} (${rel.category})`}
                         >
-                          <span className="chip-icon">{rel.icon}</span>
+                          <span className="chip-icon">
+                            <EquipmentIcon icon={rel.icon} alt={rel.label} />
+                          </span>
                           <span className="chip-name">{rel.label}</span>
                         </button>
                       ))}

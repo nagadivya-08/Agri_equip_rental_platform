@@ -10,6 +10,7 @@ import { getImageUrl } from '../utils/imageUrl';
 import Spinner from '../components/Spinner';
 import toast from 'react-hot-toast';
 import SpecularButton from '../components/SpecularButton';
+import EquipmentIcon from '../components/EquipmentIcon';
 import {
   getEquipmentTypeLabel,
   getEquipmentTypeDetails,
@@ -507,7 +508,9 @@ const EquipmentDetail = () => {
       {typeDetails && (
         <div className="equipment-type-insights-card">
           <div className="insights-header">
-            <span className="insights-icon">{typeDetails.icon}</span>
+            <span className="insights-icon">
+              <EquipmentIcon icon={typeDetails.icon} alt={typeDetails.label} />
+            </span>
             <div className="insights-header-text">
               <div className="insights-badge-row">
                 <span className="insights-category-badge">{typeDetails.category}</span>
@@ -566,7 +569,9 @@ const EquipmentDetail = () => {
             {relatedTypes.map((rel) => (
               <div key={rel.value} className="related-type-card">
                 <div className="rel-card-top">
-                  <span className="rel-icon">{rel.icon}</span>
+                  <span className="rel-icon">
+                    <EquipmentIcon icon={rel.icon} alt={rel.label} />
+                  </span>
                   <div className="rel-title-group">
                     <h3 className="rel-title">{rel.label}</h3>
                     <span className="rel-category">{rel.category}</span>

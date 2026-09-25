@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Soil surface line with tilled earth texture -->
+  <path d="M4 56 C14 54 22 57 32 55 C42 53 50 56 60 55" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.6"/>
+  <path d="M2 58 L62 58" stroke="#78350f" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  
+  <!-- 3-point tractor hitch A-frame mounting bracket -->
+  <polygon points="32,7 23,24 41,24" fill="#047857" stroke="#065f46" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="32" cy="13" r="2.5" fill="#facc15" stroke="#065f46" stroke-width="1.2"/>
+  <circle cx="26" cy="22" r="1.5" fill="#ffffff" opacity="0.9"/>
+  <circle cx="38" cy="22" r="1.5" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Diagonal heavy duty steel support braces -->
+  <line x1="15" y1="24" x2="28" y2="14" stroke="#065f46" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="49" y1="24" x2="36" y2="14" stroke="#065f46" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Main horizontal toolbar beam (implement frame) -->
+  <rect x="5" y="24" width="54" height="7" rx="2" fill="#059669" stroke="#047857" stroke-width="1.5"/>
+  <rect x="7" y="25.5" width="50" height="2" fill="#34d399" opacity="0.8"/>
+
+  <!-- Spring Tines (Heavy-Duty Curved S-Tines) -->
+  <!-- Tine 1 (left outer) -->
+  <path d="M12 31 C9 37 8 44 14 50 L11 55" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="8,57 14,51 17,56" fill="#f59e0b" stroke="#d97706" stroke-width="0.8"/>
+
+  <!-- Tine 2 -->
+  <path d="M22 31 C19 37 18 44 24 50 L21 55" stroke="#1e293b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="18,57 24,51 27,56" fill="#f59e0b" stroke="#d97706" stroke-width="0.8"/>
+
+  <!-- Tine 3 (center) -->
+  <path d="M32 31 C29 37 28 44 34 50 L31 55" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="28,57 34,51 37,56" fill="#f59e0b" stroke="#d97706" stroke-width="0.8"/>
+
+  <!-- Tine 4 -->
+  <path d="M42 31 C39 37 38 44 44 50 L41 55" stroke="#1e293b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="38,57 44,51 47,56" fill="#f59e0b" stroke="#d97706" stroke-width="0.8"/>
+
+  <!-- Tine 5 (right outer) -->
+  <path d="M52 31 C49 37 48 44 54 50 L51 55" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="48,57 54,51 57,56" fill="#f59e0b" stroke="#d97706" stroke-width="0.8"/>
+
+  <!-- Heavy duty coiled spring dampers on top of tines -->
+  <circle cx="12" cy="33" r="2.8" fill="#64748b" stroke="#334155" stroke-width="1"/>
+  <circle cx="22" cy="33" r="2.8" fill="#64748b" stroke="#334155" stroke-width="1"/>
+  <circle cx="32" cy="33" r="2.8" fill="#64748b" stroke="#334155" stroke-width="1"/>
+  <circle cx="42" cy="33" r="2.8" fill="#64748b" stroke="#334155" stroke-width="1"/>
+  <circle cx="52" cy="33" r="2.8" fill="#64748b" stroke="#334155" stroke-width="1"/>
+</svg>

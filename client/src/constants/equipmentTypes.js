@@ -76,7 +76,7 @@ export const EQUIPMENT_TYPES = [
   {
     value: 'cultivator',
     label: 'Cultivator',
-    icon: '🔱',
+    icon: '/icons/cultivator.svg',
     category: 'Secondary Tillage & Inter-Cultivation',
     description:
       'Spring-loaded or rigid-tine implement that stirs and pulverizes soil before planting, aerates root zones, and eradicates emerging weeds.',
