@@ -160,6 +160,24 @@ const Home = () => {
       icon: '🛸',
       desc: t('home.catDronesDesc') || 'Precision aerial spraying and crop mapping',
     },
+    {
+      type: 'rotavator',
+      name: t('home.catRotavators') || 'Rotavators',
+      icon: '🔄',
+      desc: t('home.catRotavatorsDesc') || 'Rotary tillers for fast single-pass seedbed preparation',
+    },
+    {
+      type: 'seed_drill',
+      name: t('home.catSeedDrills') || 'Seed Drills',
+      icon: '🌱',
+      desc: t('home.catSeedDrillsDesc') || 'Precision row seeding and calibrated fertilizer placement',
+    },
+    {
+      type: 'cultivator',
+      name: t('home.catCultivators') || 'Cultivators',
+      icon: '⛏️',
+      desc: t('home.catCultivatorsDesc') || 'Secondary soil aeration, root zone loosening, and weeding',
+    },
   ];
 
   return (
