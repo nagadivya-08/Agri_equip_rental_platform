@@ -119,29 +119,31 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-main);
 }
 
-/* Semantic UI Colors for Light Theme */
+/* Semantic UI Colors for Light Theme (Lush Pastoral Agricultural Palette - No Stark White) */
 :root[data-theme='light'],
 [data-theme='light'],
 body.theme-light {
-  --text-main: #0f172a;
-  --text-muted: #334155;
-  --text-subtle: #475569;
+  --text-main: #064e3b;
+  --text-muted: #1e3a2f;
+  --text-subtle: #2d5a47;
 
-  --bg-app: #f1f8f4;
-  --bg-card: rgba(255, 255, 255, 0.94);
-  --bg-card-solid: #ffffff;
-  --border-light: rgba(16, 185, 129, 0.22);
+  --bg-app: #d8ecde;
+  --bg-card: rgba(232, 245, 236, 0.94);
+  --bg-card-solid: #e2f2e6;
+  --border-light: rgba(16, 185, 129, 0.32);
   --border-focus: var(--primary-600);
 }
 
 [data-theme='light'] body,
 body.theme-light {
-  color: #0f172a !important;
-  background-color: #f1f8f4 !important;
+  color: #064e3b !important;
+  background-color: #d8ecde !important;
   background-image: 
-    radial-gradient(ellipse at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 48%),
-    radial-gradient(ellipse at 85% 15%, rgba(245, 158, 11, 0.08) 0%, transparent 42%),
-    linear-gradient(180deg, #f0fdf4 0%, #e8f5e9 40%, #f1f8f4 100%) !important;
+    radial-gradient(ellipse at 15% 15%, rgba(16, 185, 129, 0.22) 0%, transparent 52%),
+    radial-gradient(ellipse at 85% 15%, rgba(245, 158, 11, 0.16) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 75%, rgba(5, 150, 105, 0.18) 0%, transparent 60%),
+    linear-gradient(180deg, #e4f4e8 0%, #d5edd8 35%, #c8e6cd 70%, #bde0c3 100%) !important;
+  background-attachment: fixed !important;
 }
 
 [data-theme='light'] h1,
@@ -156,7 +158,7 @@ body.theme-light h3,
 body.theme-light h4,
 body.theme-light h5,
 body.theme-light h6 {
-  color: #0f172a !important;
+  color: #064e3b !important;
 }
 
 /* Sleek Scrollbar */
