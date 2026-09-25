@@ -211,11 +211,15 @@ const forgotPassword = async (req, res) => {
 
       await user.save();
 
-      const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+      const origin =
+        req.headers.origin ||
+        (req.headers.referer ? new URL(req.headers.referer).origin : null);
+      const clientUrl = process.env.CLIENT_URL || origin || 'http://localhost:5173';
       const resetUrl = `${clientUrl}/reset-password/${resetToken}`;
 
+      let emailResult = null;
       try {
-        await sendEmail({
+        emailResult = await sendEmail({
           to: user.email,
           subject: '🔐 Password Reset Request - AgriRent Platform',
           text: `Hello ${user.name},\n\nYou requested a password reset for your AgriRent account.\n\nPlease click the link below to reset your password (valid for 1 hour):\n\n${resetUrl}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n\nBest regards,\nAgriRent Team`,
@@ -238,6 +242,13 @@ const forgotPassword = async (req, res) => {
         user.resetPasswordExpires = undefined;
         await user.save();
       }
+
+      return res.status(200).json({
+        success: true,
+        message: 'If that email exists, a reset link has been sent.',
+        previewUrl: emailResult?.previewUrl || null,
+        resetUrl: resetUrl,
+      });
     }
 
     // Always return generic success message (don't reveal whether email exists)
