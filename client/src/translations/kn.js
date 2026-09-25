@@ -91,6 +91,8 @@ export default {
     minPrice: 'ಕನಿಷ್ಠ ಬೆಲೆ',
     maxPrice: 'ಗರಿಷ್ಠ ಬೆಲೆ',
     clearFilters: 'ಫಿಲ್ಟರ್‌ಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ',
+    applyFilters: 'ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಅನ್ವಯಿಸಿ',
+    applyingFilters: 'ಅನ್ವಯಿಸಲಾಗುತ್ತಿದೆ...',
     showingCount: '{count} ಲಭ್ಯವಿರುವ ಉಪಕರಣಗಳು',
     listView: '📋 ಪಟ್ಟಿ ವೀಕ್ಷಣೆ',
     mapView: '🗺️ ನಕ್ಷೆ ವೀಕ್ಷಣೆ',

@@ -91,6 +91,8 @@ export default {
     minPrice: 'न्यूनतम किराया',
     maxPrice: 'अधिकतम किराया',
     clearFilters: 'फ़िल्टर साफ़ करें',
+    applyFilters: 'फ़िल्टर लागू करें',
+    applyingFilters: 'लागू किया जा रहा है...',
     showingCount: '{count} उपलब्ध उपकरण दिखाए जा रहे हैं',
     listView: '📋 सूची दृश्य',
     mapView: '🗺️ मानचित्र दृश्य',

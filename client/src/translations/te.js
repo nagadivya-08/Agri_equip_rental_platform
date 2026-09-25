@@ -91,6 +91,8 @@ export default {
     minPrice: 'కనిష్ట ధర',
     maxPrice: 'గరిష్ట ధర',
     clearFilters: 'ఫిల్టర్‌లను క్లియర్ చేయండి',
+    applyFilters: 'ఫిల్టర్‌లను వర్తింపజేయండి',
+    applyingFilters: 'వర్తింపజేస్తోంది...',
     showingCount: '{count} అందుబాటులో ఉన్న పరికరాలు చూపబడుతున్నాయి',
     listView: '📋 జాబితా వీక్షణ',
     mapView: '🗺️ మ్యాప్ వీక్షణ',

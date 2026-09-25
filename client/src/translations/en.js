@@ -91,6 +91,8 @@ export default {
     minPrice: 'Min Price',
     maxPrice: 'Max Price',
     clearFilters: 'Clear Filters',
+    applyFilters: 'Applyfilters',
+    applyingFilters: 'Applying...',
     showingCount: 'Showing {count} available equipment',
     listView: '📋 List View',
     mapView: '🗺️ Map View',

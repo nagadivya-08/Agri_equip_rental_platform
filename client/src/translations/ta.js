@@ -91,6 +91,8 @@ export default {
     minPrice: 'குறைந்தபட்ச விலை',
     maxPrice: 'அதிகபட்ச விலை',
     clearFilters: 'வடிகட்டிகளை அழிக்கவும்',
+    applyFilters: 'வடிகட்டிகளைப் பயன்படுத்து',
+    applyingFilters: 'பயன்படுத்துகிறது...',
     showingCount: '{count} உபகரணங்கள் கிடைக்கின்றன',
     listView: '📋 பட்டியல் பார்வை',
     mapView: '🗺️ வரைபடப் பார்வை',

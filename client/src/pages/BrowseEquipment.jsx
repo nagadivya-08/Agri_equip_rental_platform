@@ -312,7 +312,7 @@ const BrowseEquipment = () => {
                 disabled={loading}
                 title="Apply all selected search, category, and price filters"
               >
-                {loading ? (t('browse.applyingFilters') || 'Applying...') : (t('browse.applyFilters') || '🔍 Apply Filters')}
+                {loading ? t('browse.applyingFilters', 'Applying...') : t('browse.applyFilters', 'Applyfilters')}
               </button>
               <button
                 type="button"
