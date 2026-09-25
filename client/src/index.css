@@ -78,6 +78,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  background-color: var(--bg-app);
+  color-scheme: dark;
+}
+
+[data-theme='light'] html,
+html[data-theme='light'] {
+  background-color: var(--bg-app);
+  color-scheme: light;
+}
+
 /* Ambient Layered Dark Agricultural Background */
 body {
   margin: 0;

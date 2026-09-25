@@ -25,6 +25,8 @@ export default {
     myBookings: 'என் முன்பதிவுகள்',
     bookingRequests: 'முன்பதிவு கோரிக்கைகள்',
     dashboard: 'டாஷ்போர்டு',
+    profile: 'சுயவிவரத்தைத் திருத்து',
+    editProfile: 'சுயவிவரத்தைத் திருத்து',
     addEquipment: '+ உபகரணம் சேர்க்கவும்',
     admin: 'நிர்வாக தளம்',
     login: 'உள்நுழைக',

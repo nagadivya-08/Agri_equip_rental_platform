@@ -25,6 +25,8 @@ export default {
     myBookings: 'मेरी बुकिंग',
     bookingRequests: 'बुकिंग अनुरोध',
     dashboard: 'डैशबोर्ड',
+    profile: 'प्रोफ़ाइल संपादित करें',
+    editProfile: 'प्रोफ़ाइल संपादित करें',
     addEquipment: '+ उपकरण जोड़ें',
     admin: 'एडमिन पोर्टल',
     login: 'लॉगिन',

@@ -25,6 +25,8 @@ export default {
     myBookings: 'My Bookings',
     bookingRequests: 'Booking Requests',
     dashboard: 'Dashboard',
+    profile: 'Edit Profile',
+    editProfile: 'Edit Profile',
     addEquipment: '+ Add Equipment',
     admin: 'Admin Portal',
     login: 'Login',

@@ -25,6 +25,8 @@ export default {
     myBookings: 'ನನ್ನ ಬುಕಿಂಗ್‌ಗಳು',
     bookingRequests: 'ಬುಕಿಂಗ್ ವಿನಂತಿಗಳು',
     dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
+    profile: 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
+    editProfile: 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
     addEquipment: '+ ಉಪಕರಣ ಸೇರಿಸಿ',
     admin: 'ನಿರ್ವಾಹಕ ಪೋರ್ಟಲ್',
     login: 'ಲಾಗಿನ್',

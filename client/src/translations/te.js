@@ -25,6 +25,8 @@ export default {
     myBookings: 'నా బుకింగ్‌లు',
     bookingRequests: 'బుకింగ్ అభ్యర్థనలు',
     dashboard: 'డ్యాష్‌బోర్డ్',
+    profile: 'ఎడిట్ ప్రొఫైల్',
+    editProfile: 'ఎడిట్ ప్రొఫైల్',
     addEquipment: '+ పరికరాన్ని జోడించండి',
     admin: 'అడ్మిన్ పోర్టల్',
     login: 'లాగిన్',
