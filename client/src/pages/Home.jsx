@@ -139,24 +139,26 @@ const Home = () => {
           </p>
 
           <div className="home-hero-actions">
-            <SpecularButton
-              size="lg"
-              radius={14}
-              tint="#10b981"
-              tintOpacity={0.9}
-              textColor="#ffffff"
-              lineColor="#6ee7b7"
-              baseColor="#047857"
-              intensity={1.5}
-              shineSize={20}
-              shineFade={45}
-              thickness={1.5}
-              speed={0.4}
-              followMouse
-              onClick={() => navigate('/equipment')}
-            >
-              {t('home.browseBtn') || '🚜 Browse Equipment'}
-            </SpecularButton>
+            {user && user.role === 'renter' && (
+              <SpecularButton
+                size="lg"
+                radius={14}
+                tint="#10b981"
+                tintOpacity={0.9}
+                textColor="#ffffff"
+                lineColor="#6ee7b7"
+                baseColor="#047857"
+                intensity={1.5}
+                shineSize={20}
+                shineFade={45}
+                thickness={1.5}
+                speed={0.4}
+                followMouse
+                onClick={() => navigate('/equipment')}
+              >
+                {t('home.browseBtn') || '🚜 Browse Equipment'}
+              </SpecularButton>
+            )}
 
             {user ? (
               <SpecularButton
@@ -178,24 +180,44 @@ const Home = () => {
                 {t('home.dashboardBtn') || 'Go to Dashboard'} ({user.name}) →
               </SpecularButton>
             ) : (
-              <SpecularButton
-                size="lg"
-                radius={14}
-                tint="#ffffff"
-                tintOpacity={isDark ? 0.16 : 0.9}
-                blur={12}
-                textColor={isDark ? '#ffffff' : '#064e3b'}
-                lineColor={isDark ? '#fbbf24' : '#10b981'}
-                baseColor={isDark ? '#334155' : '#a7f3d0'}
-                intensity={1.3}
-                shineSize={18}
-                shineFade={40}
-                thickness={1.2}
-                followMouse
-                onClick={() => navigate('/register')}
-              >
-                {t('home.joinBtn') || '✨ Sign Up Free'}
-              </SpecularButton>
+              <>
+                <SpecularButton
+                  size="lg"
+                  radius={14}
+                  tint="#10b981"
+                  tintOpacity={0.9}
+                  textColor="#ffffff"
+                  lineColor="#6ee7b7"
+                  baseColor="#047857"
+                  intensity={1.5}
+                  shineSize={20}
+                  shineFade={45}
+                  thickness={1.5}
+                  speed={0.4}
+                  followMouse
+                  onClick={() => navigate('/login')}
+                >
+                  {t('nav.login') || 'Sign In to Rent'}
+                </SpecularButton>
+                <SpecularButton
+                  size="lg"
+                  radius={14}
+                  tint="#ffffff"
+                  tintOpacity={isDark ? 0.16 : 0.9}
+                  blur={12}
+                  textColor={isDark ? '#ffffff' : '#064e3b'}
+                  lineColor={isDark ? '#fbbf24' : '#10b981'}
+                  baseColor={isDark ? '#334155' : '#a7f3d0'}
+                  intensity={1.3}
+                  shineSize={18}
+                  shineFade={40}
+                  thickness={1.2}
+                  followMouse
+                  onClick={() => navigate('/register')}
+                >
+                  {t('home.joinBtn') || '✨ Sign Up Free'}
+                </SpecularButton>
+              </>
             )}
           </div>
 
@@ -341,7 +363,13 @@ const Home = () => {
             {categories.map((cat) => (
               <Link
                 key={cat.type}
-                to={`/equipment?type=${cat.type}`}
+                to={
+                  user && user.role === 'renter'
+                    ? `/equipment?type=${cat.type}`
+                    : user
+                    ? '/dashboard'
+                    : '/login'
+                }
                 className="category-tilt-container noselect"
               >
                 <div className="canvas">
@@ -403,17 +431,59 @@ const Home = () => {
           </div>
           <div className="home-footer-links">
             <div className="footer-col">
-              <h4>{t('nav.browse') || 'Platform'}</h4>
-              <Link to="/equipment">{t('nav.browse') || 'Browse Equipment'}</Link>
-              <Link to="/register">{t('nav.register') || 'Create Account'}</Link>
-              <Link to="/login">{t('nav.login') || 'Sign In'}</Link>
+              <h4>{t('home.platformTitle') || 'Platform'}</h4>
+              {user && user.role === 'renter' && (
+                <span className="footer-text-item">{t('nav.browse') || 'Browse Equipment'}</span>
+              )}
+              <span className="footer-text-item">{t('nav.register') || 'Register'}</span>
+              <span className="footer-text-item">{t('nav.login') || 'Login'}</span>
             </div>
             <div className="footer-col">
               <h4>{t('home.categoriesTitle') || 'Categories'}</h4>
-              <Link to="/equipment?type=tractor">{t('home.catTractors') || 'Tractors'}</Link>
-              <Link to="/equipment?type=harvester">{t('home.catHarvesters') || 'Harvesters'}</Link>
-              <Link to="/equipment?type=sprayer">{t('home.catSprayers') || 'Sprayers'}</Link>
-              <Link to="/equipment?type=drone">{t('home.catDrones') || 'Agri Drones'}</Link>
+              <Link
+                to={
+                  user && user.role === 'renter'
+                    ? '/equipment?type=tractor'
+                    : user
+                    ? '/dashboard'
+                    : '/login'
+                }
+              >
+                {t('home.catTractors') || 'Tractors'}
+              </Link>
+              <Link
+                to={
+                  user && user.role === 'renter'
+                    ? '/equipment?type=harvester'
+                    : user
+                    ? '/dashboard'
+                    : '/login'
+                }
+              >
+                {t('home.catHarvesters') || 'Harvesters'}
+              </Link>
+              <Link
+                to={
+                  user && user.role === 'renter'
+                    ? '/equipment?type=sprayer'
+                    : user
+                    ? '/dashboard'
+                    : '/login'
+                }
+              >
+                {t('home.catSprayers') || 'Sprayers'}
+              </Link>
+              <Link
+                to={
+                  user && user.role === 'renter'
+                    ? '/equipment?type=drone'
+                    : user
+                    ? '/dashboard'
+                    : '/login'
+                }
+              >
+                {t('home.catDrones') || 'Agri Drones'}
+              </Link>
             </div>
             <div className="footer-col">
               <h4>{t('home.verifiedMachinery') || 'Trust & Security'}</h4>

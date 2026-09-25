@@ -46,9 +46,6 @@ const Navbar = () => {
           <Link to="/" className="nav-link" onClick={closeMenu}>
             {t('nav.home') || 'Home'}
           </Link>
-          <Link to="/equipment" className="nav-link" onClick={closeMenu}>
-            {t('nav.browse') || 'Browse Equipment'}
-          </Link>
 
           {/* Admin Navigation */}
           {user && user.role === 'admin' && (
@@ -82,9 +79,14 @@ const Navbar = () => {
 
           {/* Renter Navigation */}
           {user && user.role === 'renter' && (
-            <Link to="/my-bookings" className="nav-link" onClick={closeMenu}>
-              {t('nav.myBookings') || 'My Bookings'}
-            </Link>
+            <>
+              <Link to="/equipment" className="nav-link" onClick={closeMenu}>
+                {t('nav.browse') || 'Browse Equipment'}
+              </Link>
+              <Link to="/my-bookings" className="nav-link" onClick={closeMenu}>
+                {t('nav.myBookings') || 'My Bookings'}
+              </Link>
+            </>
           )}
 
           {user ? (

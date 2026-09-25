@@ -74,6 +74,7 @@ export default {
     ownerBannerSubtitle: 'Turn your tractors and implements into steady income when not in use. List your machinery on AgriRent with zero upfront fees.',
     listEquipmentBtn: '🚜 List Your Equipment Today',
     copyright: 'AgriRent. Empowering Indian agriculture through shared technology.',
+    platformTitle: 'Platform',
   },
   browse: {
     title: 'Find Agricultural Equipment',

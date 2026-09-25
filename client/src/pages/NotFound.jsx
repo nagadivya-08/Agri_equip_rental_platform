@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const NotFound = () => {
+  const { user } = useAuth();
+
   return (
     <div className="not-found-page">
       <div className="not-found-card">
@@ -16,9 +19,19 @@ const NotFound = () => {
           <Link to="/" className="btn-primary">
             🏠 Return Home
           </Link>
-          <Link to="/equipment" className="btn-secondary">
-            🚜 Browse Equipment
-          </Link>
+          {user && user.role === 'renter' ? (
+            <Link to="/equipment" className="btn-secondary">
+              🚜 Browse Equipment
+            </Link>
+          ) : user ? (
+            <Link to="/dashboard" className="btn-secondary">
+              📊 Go to Dashboard
+            </Link>
+          ) : (
+            <Link to="/login" className="btn-secondary">
+              🔑 Sign In
+            </Link>
+          )}
         </div>
       </div>
     </div>

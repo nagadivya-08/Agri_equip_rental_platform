@@ -75,9 +75,23 @@ function App() {
             }
           />
 
-          {/* Public Equipment Routes */}
-          <Route path="/equipment" element={<BrowseEquipment />} />
-          <Route path="/equipment/:id" element={<EquipmentDetail />} />
+          {/* Equipment Routes - Renter Only for Browsing */}
+          <Route
+            path="/equipment"
+            element={
+              <ProtectedRoute allowedRoles={['renter']}>
+                <BrowseEquipment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/equipment/:id"
+            element={
+              <ProtectedRoute allowedRoles={['renter', 'owner', 'admin']}>
+                <EquipmentDetail />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Owner-Protected Equipment Management Routes */}
           <Route

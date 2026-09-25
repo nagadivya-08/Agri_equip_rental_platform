@@ -13,8 +13,8 @@ const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const { equipmentValidation } = require('../middleware/validators');
 
-// Public routes
-router.get('/', getEquipment);
+// Renter-only equipment browsing route
+router.get('/', protect, authorizeRoles('renter'), getEquipment);
 
 // Owner protected routes
 router.post(

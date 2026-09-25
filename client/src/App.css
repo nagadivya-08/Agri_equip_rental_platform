@@ -5093,6 +5093,15 @@
   transform: translateX(3px);
 }
 
+.home-footer-links .footer-col .footer-text-item {
+  display: block;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  cursor: default;
+  user-select: text;
+}
+
 .home-footer-links .footer-badge-item {
   display: block;
   color: #94a3b8;
@@ -5683,6 +5692,10 @@
 
 .home-page.theme-light .home-footer-links .footer-col a:hover {
   color: #059669;
+}
+
+.home-page.theme-light .home-footer-links .footer-col .footer-text-item {
+  color: #475569;
 }
 
 .home-page.theme-light .home-footer-links .footer-badge-item {
