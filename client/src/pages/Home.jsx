@@ -13,27 +13,97 @@ const Home = () => {
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [activeStep, setActiveStep] = useState(null);
 
-  const toggleAudio = () => {
-    if (videoRef.current) {
-      const nextMuted = !isMuted;
-      videoRef.current.muted = nextMuted;
-      setIsMuted(nextMuted);
-      if (!nextMuted) {
-        videoRef.current.play().catch(() => {});
+  // Directly toggle audio playback synchronously within user gesture
+  const toggleAudio = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+
+    const video = videoRef.current;
+    const audio = audioRef.current;
+
+    // Detect mobile / touch devices (iOS Safari, Android Chrome)
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (/iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1));
+
+    if (!nextMuted) {
+      // UNMUTING:
+      if (isMobile) {
+        // Mobile browsers (especially iOS WebKit) silence <video> audio under ambient audio sessions,
+        // but fully allow dedicated HTML5 <audio> playback through the device speaker.
+        if (audio) {
+          if (video && !isNaN(video.currentTime) && video.currentTime > 0) {
+            try {
+              audio.currentTime = video.currentTime;
+            } catch (_) {}
+          }
+          audio.muted = false;
+          audio.volume = 1.0;
+          const aPromise = audio.play();
+          if (aPromise !== undefined) {
+            aPromise.catch(() => {
+              // Fallback: try unmuting video directly
+              if (video) {
+                video.muted = false;
+                video.removeAttribute('muted');
+                video.volume = 1.0;
+                video.play().catch(() => {});
+              }
+            });
+          }
+        }
+      } else {
+        // Desktop: directly unmute background video
+        if (video) {
+          video.muted = false;
+          video.defaultMuted = false;
+          video.removeAttribute('muted');
+          video.volume = 1.0;
+          const vPromise = video.play();
+          if (vPromise !== undefined) {
+            vPromise.catch(() => {
+              if (audio) {
+                if (video && !isNaN(video.currentTime)) audio.currentTime = video.currentTime;
+                audio.muted = false;
+                audio.volume = 1.0;
+                audio.play().catch(() => {});
+              }
+            });
+          }
+        }
+      }
+    } else {
+      // MUTING:
+      if (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.setAttribute('muted', '');
+      }
+      if (audio) {
+        audio.pause();
       }
     }
   };
 
-  // Autoplay video smoothly whenever theme switches or muted toggles
+  // Autoplay video smoothly whenever theme switches
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = isMuted;
       videoRef.current.play().catch(() => {});
     }
-  }, [isDark, isMuted]);
+    // If audio was already playing when theme switched, continue playing new theme audio
+    if (!isMuted && audioRef.current) {
+      if (videoRef.current && !isNaN(videoRef.current.currentTime)) {
+        audioRef.current.currentTime = videoRef.current.currentTime;
+      }
+      audioRef.current.play().catch(() => {});
+    }
+  }, [isDark]);
 
   const steps = [
     {
@@ -108,6 +178,16 @@ const Home = () => {
         >
           <source src={isDark ? '/dark_theme.mp4' : '/light_theme.mp4'} type="video/mp4" />
         </video>
+        {/* Dedicated audio element for reliable mobile playback */}
+        <audio
+          key={isDark ? 'home-dark-theme-audio' : 'home-light-theme-audio'}
+          ref={audioRef}
+          loop
+          playsInline
+          preload="auto"
+        >
+          <source src={isDark ? '/dark_theme.mp4' : '/light_theme.mp4'} type="audio/mp4" />
+        </audio>
         <div className="home-video-overlay" />
       </div>
 

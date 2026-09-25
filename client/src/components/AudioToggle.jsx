@@ -4,23 +4,18 @@ import React from 'react';
  * AudioToggle Component
  * Interactive volume button to toggle background video sound ON / OFF.
  */
-const AudioToggle = ({ isMuted, onToggle, id = 'checkboxInput' }) => {
+const AudioToggle = ({ isMuted, onToggle, id = 'homeAudioToggle' }) => {
   return (
     <div className="audio-toggle-wrapper">
-      <input
-        type="checkbox"
+      <button
+        type="button"
         id={id}
-        className="audio-checkbox-input"
-        checked={isMuted}
-        onChange={onToggle}
+        className={`toggleSwitch ${isMuted ? 'is-muted' : 'is-unmuted'}`}
+        onClick={onToggle}
         aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
-      />
-      <label
-        htmlFor={id}
-        className="toggleSwitch"
         title={isMuted ? 'Click to turn audio ON 🔊' : 'Click to mute audio 🔇'}
       >
-        <div className="speaker">
+        <span className="speaker" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 75 75">
             <path
               d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
@@ -31,14 +26,14 @@ const AudioToggle = ({ isMuted, onToggle, id = 'checkboxInput' }) => {
               style={{ fill: 'none', stroke: '#fff', strokeWidth: 5, strokeLinecap: 'round' }}
             />
           </svg>
-        </div>
-        <div className="mute-speaker">
+        </span>
+        <span className="mute-speaker" aria-hidden="true">
           <svg version="1.0" viewBox="0 0 75 75" stroke="#fff" strokeWidth={5}>
             <path d="m39,14-17,15H6V48H22l17,15z" fill="#fff" strokeLinejoin="round" />
             <path d="m49,26 20,24m0-24-20,24" fill="#fff" strokeLinecap="round" />
           </svg>
-        </div>
-      </label>
+        </span>
+      </button>
     </div>
   );
 };
