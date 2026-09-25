@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
-  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -27,17 +25,8 @@ const Navbar = () => {
           🚜 AgriRent
         </Link>
 
-        {/* Top Navbar Controls: Theme Toggle & Language Selector */}
+        {/* Top Navbar Controls: Language Selector */}
         <div className="nav-controls-container">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="nav-theme-toggle-btn"
-            title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-            aria-label={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-          >
-            {isDark ? '☀️' : '🌙'}
-          </button>
           <LanguageSelector />
         </div>
 
